@@ -7,7 +7,7 @@ const userRoutes = require('./routes/user');
 const driveRoutes = require('./routes/drive');
 
 require('dotenv').config();
-require('./routes/passport-config');
+require('./config/passport-config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,18 +33,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
-    prompt: 'select_account consent',
-    accessType: 'offline',
-    responseType: 'code',
-    include_granted_scopes: false
-  })
-);
-
-
-
 // Google OAuth callback route
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
@@ -64,7 +52,7 @@ app.get('/auth/google/callback',
 app.get('/logout', (req, res, next) => {
   const accessToken = req.user?.accessToken;
 
-  // Try to revoke the access token if it exists
+  // Optionally revoke token
   if (accessToken) {
     fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
       method: 'POST',
@@ -76,7 +64,6 @@ app.get('/logout', (req, res, next) => {
     });
   }
 
-  // Properly logout and destroy session
   req.logout(function (err) {
     if (err) return next(err);
     req.session.destroy(() => {
@@ -85,6 +72,7 @@ app.get('/logout', (req, res, next) => {
     });
   });
 });
+
 
 app.listen(PORT, () => {
   console.log(`🔧 Server running at http://localhost:${PORT}`);
