@@ -101,7 +101,18 @@
 
   <script>
     const stored = JSON.parse(localStorage.getItem("selectedWorld")) || JSON.parse(localStorage.getItem("currentWorld"));
-    const worldName = stored?.name || "Unnamed World";
+    let worldName = stored?.name;
+
+    if (!worldName) {
+      const filename = localStorage.getItem("worldFilename"); // e.g., "test.json"
+      if (filename && filename.endsWith(".json")) {
+        worldName = filename.replace(".json", "").replace(/[-_]/g, " ");
+        worldName = worldName.charAt(0).toUpperCase() + worldName.slice(1);
+      } else {
+        worldName = "Unnamed World";
+      }
+    }
+
     document.getElementById("world-name").textContent = worldName;
   </script>
 </body>
