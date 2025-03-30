@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Living World Engine – Dashboard</title>
   <link rel="stylesheet" href="landing.css" />
   <style>
-    body {{
+    body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
@@ -15,49 +16,54 @@
       padding: 30px;
       justify-items: center;
       text-align: center;
-    }}
-    h1 {{
+    }
+    h1 {
       font-size: 3em;
       color: #ffd700;
       margin: 0;
-    }}
-    h2 {{
+    }
+    h2 {
       font-size: 1.5em;
       margin: 0;
       color: #e0c097;
-    }}
-    #world-name {{
+    }
+    #world-name {
       font-size: 1.8em;
       font-weight: bold;
       color: #fff3c4;
-    }}
-    #dm-inspiration {{
+    }
+    #dm-inspiration {
       font-style: italic;
       color: #d1c7ae;
       max-width: 80%;
-    }}
-    .nav-tabs {{
+    }
+    .nav-tabs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 10px;
       width: 100%;
       max-width: 1200px;
-    }}
-    .nav-tabs a {{
+      margin-top: 20px;
+    }
+    .nav-tabs a {
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 10px 20px;
+      padding: 10px;
       border-radius: 6px;
-      transition: background-color 0.3s ease;
-    }}
-    .nav-tabs a:hover {{
+      display: inline-block;
+      font-weight: bold;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .nav-tabs a:hover {
       background-color: #8a5f2e;
-    }}
-    .tab-content {{
+      transform: scale(1.03);
+    }
+    .tab-content {
       margin-top: 20px;
       font-size: 1.2em;
-    }}
+    }
   </style>
 </head>
 <body>
@@ -91,9 +97,9 @@
 
   <script>
     const selectedWorld = JSON.parse(localStorage.getItem("selectedWorld"));
-    if (selectedWorld && selectedWorld.name) {{
+    if (selectedWorld && selectedWorld.name) {
       document.getElementById("world-name").textContent = selectedWorld.name;
-    }}
+    }
   </script>
 </body>
 </html>
