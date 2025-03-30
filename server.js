@@ -61,30 +61,30 @@ app.get('/auth/google/callback',
   }
 );
 
-app.get('/logout', async (req, res) => {
+app.get('/logout', (req, res, next) => {
   const accessToken = req.user?.accessToken;
 
+  // Try to revoke the access token if it exists
   if (accessToken) {
-    try {
-      await fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      });
-    } catch (err) {
+    fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).catch(err => {
       console.error("Error revoking token:", err);
-    }
+    });
   }
 
-  req.logout(() => {
+  // Properly logout and destroy session
+  req.logout(function (err) {
+    if (err) return next(err);
     req.session.destroy(() => {
-      res.clearCookie('connect.sid', { path: '/' });
+      res.clearCookie('connect.sid');
       res.redirect('/');
     });
   });
 });
-
 
 app.listen(PORT, () => {
   console.log(`🔧 Server running at http://localhost:${PORT}`);
