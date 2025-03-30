@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +5,80 @@
   <title>Living World Engine - Manage Worlds</title>
   <link rel="stylesheet" href="landing.css" />
   <style>
-    .flex { display: flex; gap: 40px; }
-    .half { width: 50%; }
+    body {
+      background-color: #2b1f13;
+      font-family: 'Georgia', serif;
+      color: #f4e3c1;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-style: italic;
+      color: #d6c7ae;
+      margin-bottom: 30px;
+    }
+
+    .flex {
+      display: flex;
+      gap: 50px;
+    }
+
+    .half {
+      width: 50%;
+    }
+
+    label, input, button {
+      display: block;
+      margin: 10px 0;
+      font-size: 1em;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 6px;
+      font-family: 'Georgia', serif;
+      background-color: #3b2c1e;
+      color: #f4e3c1;
+      border: 1px solid #7a5c3e;
+    }
+
+    button {
+      background-color: #6a4b2f;
+      color: #fff3dc;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #8a6644;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+    }
+
+    .bottom {
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
@@ -25,12 +96,10 @@
         <input type="file" id="importFile" accept=".json" />
         <button onclick="importWorldFromFile()">Import</button>
 
-        <h4>Save to Google Drive</h4>
+        <h4>Google Drive</h4>
         <button id="saveDriveBtn">Save to Drive</button>
-        
-        <h4>Load from Google Drive</h4>
         <button id="loadDriveBtn">Load from Drive</button>
-        
+
         <h4>Delete Selected World</h4>
         <input type="text" id="deleteFile" placeholder="Enter world filename" />
         <button onclick="deleteWorldFromList()">Delete</button>
@@ -48,7 +117,7 @@
       </div>
     </div>
 
-    <div style="margin-top: 40px;">
+    <div class="bottom">
       <button onclick="window.location.href='/logout'">Log Out</button>
     </div>
   </div>
