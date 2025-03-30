@@ -97,8 +97,11 @@
         <button onclick="importWorldFromFile()">Import</button>
 
         <h4>Google Drive</h4>
+        <input type="text" id="driveWorldName" placeholder="Enter Drive world name (without .json)" />
         <button id="saveDriveBtn">Save to Drive</button>
         <button id="loadDriveBtn">Load from Drive</button>
+        <button onclick="loadSelectedDriveWorld()">Load Selected World</button>
+        
 
         <h4>Delete Selected World</h4>
         <input type="text" id="deleteFile" placeholder="Enter world filename" />

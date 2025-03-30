@@ -144,4 +144,23 @@ function downloadBlankWorld() {
   alert(`Blank world "${name}" downloaded.`);
 }
 
+function loadSelectedDriveWorld() {
+  const name = document.getElementById("driveWorldName").value.trim();
+  if (!name) return alert("Enter a world name to load.");
+
+  fetch(`/drive/load?name=${encodeURIComponent(name)}`)
+    .then(res => res.json())
+    .then(world => {
+      if (!world || !world.name) {
+        alert("World not found in Drive.");
+        return;
+      }
+      currentWorld = world;
+      sessionStorage.setItem("currentWorld", JSON.stringify(world));
+      window.location.href = "/play.html";
+    })
+    .catch(() => alert("Error loading world from Drive."));
+}
+
+
 document.addEventListener("DOMContentLoaded", updateWorldList);
