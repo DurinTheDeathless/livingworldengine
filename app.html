@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Living World Engine - Manage Worlds</title>
+  <link rel="stylesheet" href="landing.css" />
+  <style>
+    .flex { display: flex; gap: 40px; }
+    .half { width: 50%; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Living World Engine</h1>
+    <p class="subtitle">Your worlds, your legacy</p>
+
+    <div class="flex">
+      <!-- LEFT PANEL -->
+      <div class="half">
+        <h3>Your Worlds</h3>
+        <ul id="userWorlds"></ul>
+
+        <h4>Import World from File</h4>
+        <input type="file" id="importFile" accept=".json" />
+        <button onclick="importWorldFromFile()">Import</button>
+
+        <h4>Save to Google Drive</h4>
+        <button id="saveDriveBtn">Save to Drive</button>
+        
+        <h4>Load from Google Drive</h4>
+        <button id="loadDriveBtn">Load from Drive</button>
+        
+        <h4>Delete Selected World</h4>
+        <input type="text" id="deleteFile" placeholder="Enter world filename" />
+        <button onclick="deleteWorldFromList()">Delete</button>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="half">
+        <h4>Create New World</h4>
+        <input type="text" id="newWorldName" placeholder="New World Name" />
+        <button onclick="createNewWorld()">Create</button>
+
+        <h4 style="margin-top:30px;">Load World from File</h4>
+        <input type="file" id="loadFile" accept=".json" />
+        <button onclick="loadWorldFromFile()">Load</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <button onclick="window.location.href='/logout'">Log Out</button>
+    </div>
+  </div>
+
+  <script src="modules/world-manager.js"></script>
+</body>
+</html>

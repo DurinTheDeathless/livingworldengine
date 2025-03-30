@@ -1,0 +1,56 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Georgia', serif;
+  background: radial-gradient(circle at top, #2d2a26, #1e1a16);
+  color: #f2cb05;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.container {
+  max-width: 700px;
+}
+
+h1 {
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #f2cb05;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #d6d1b1;
+}
+
+.buttons button {
+  background-color: #3a2e1e;
+  border: 2px solid #f2cb05;
+  color: #f2cb05;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttons button:hover {
+  background-color: #59472d;
+}
+
+.emblem img {
+  width: 120px;
+  margin-bottom: 20px;
+  animation: forgeGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes forgeGlow {
+  from { filter: drop-shadow(0 0 5px #f2cb05); }
+  to   { filter: drop-shadow(0 0 15px #f2cb05); }
+}

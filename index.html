@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Living World Engine</title>
+  <link rel="stylesheet" href="landing.css">
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #1f140b, #3a2b20); /* darker earthy tone */
+      color: #f4e9d8; /* light text for visibility */
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
+      margin: 0;
+      color: #f0e6d2;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+      color: #e3d6c3;
+    }
+
+    .buttons {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .google-btn {
+      padding: 10px 20px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #222;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 1rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    footer a {
+      color: #ccc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="emblem">
+      <img src="/anvil-emblem-frontpage.png" alt="Forge Emblem" class="logo" />
+    </div>
+    <h1>Living World Engine</h1>
+    <p class="subtitle">Enter the forge of a world that lives and remembers.</p>
+    <div class="buttons">
+      <button onclick="window.location.href='app.html'">Continue Without Login</button>
+      <button class="google-btn" onclick="window.location.href='https://accounts.google.com/Logout?continue=https://www.google.com/accounts/Logout?continue=https://livingworldengine.com/auth/google?prompt=select_account'">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" height="20" />
+        Login with Google
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">Privacy Policy</a>
+      &nbsp;•&nbsp;
+      <a href="mailto:theelderdaysapplications@gmail.com">Contact Support</a>
+    </p>
+  </footer>
+</body>
+</html>
