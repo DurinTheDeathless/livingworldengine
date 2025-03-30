@@ -9,16 +9,18 @@
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: 'Georgia', serif;
+      margin: 0;
       padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 40px;
     }
 
     .title {
+      grid-column: 1 / span 2;
       text-align: center;
-      margin-bottom: 40px;
-      width: 100%;
-      display: block;
-      flex: none;
-      align-self: flex-start;
+      margin-bottom: 20px;
     }
 
     .title h1 {
@@ -34,15 +36,7 @@
       margin: 6px 0 0;
     }
 
-    .container {
-      display: flex;
-      gap: 50px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
     .panel {
-      flex: 1;
       background-color: #3a2c1d;
       padding: 20px;
       border-radius: 10px;
@@ -96,41 +90,51 @@
       display: block;
       font-weight: bold;
     }
+
+    /* Responsive for small screens */
+    @media (max-width: 900px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+
+      .title {
+        grid-column: 1;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ✅ Title Now Properly Above -->
+  <!-- Title -->
   <div class="title">
     <h1>Manage World</h1>
     <p>Shape realms, forge legends.</p>
   </div>
 
-  <div class="container">
-    <!-- Left Panel -->
-    <div class="panel">
-      <h2>Your Worlds</h2>
-      <ul id="userWorlds"></ul>
-      <button onclick="loadSelectedWorld()">Load Selected World</button>
-      <button onclick="deleteSelectedWorld()">Delete Selected World</button>
+  <!-- Left Panel -->
+  <div class="panel">
+    <h2>Your Worlds</h2>
+    <ul id="userWorlds"></ul>
+    <button onclick="loadSelectedWorld()">Load Selected World</button>
+    <button onclick="deleteSelectedWorld()">Delete Selected World</button>
 
-      <label for="importFile">Import World from File:</label>
-      <input type="file" id="importFile" accept=".json" />
-      <button onclick="importWorld()">Import</button>
-      <button onclick="saveImportedWorldToDrive()">Save to Drive</button>
-    </div>
+    <label for="importFile">Import World from File:</label>
+    <input type="file" id="importFile" accept=".json" />
+    <button onclick="importWorld()">Import</button>
+    <button onclick="saveImportedWorldToDrive()">Save to Drive</button>
+  </div>
 
-    <!-- Right Panel -->
-    <div class="panel">
-      <h2>Create New World</h2>
-      <input type="text" id="newWorldName" placeholder="Enter world name..." />
-      <button onclick="createNewWorld()">Create</button>
-      <button onclick="downloadBlankWorld()">Download Blank World</button>
+  <!-- Right Panel -->
+  <div class="panel">
+    <h2>Create New World</h2>
+    <input type="text" id="newWorldName" placeholder="Enter world name..." />
+    <button onclick="createNewWorld()">Create</button>
+    <button onclick="downloadBlankWorld()">Download Blank World</button>
 
-      <h2 style="margin-top: 30px;">Load World from File</h2>
-      <input type="file" id="loadFile" accept=".json" />
-      <button onclick="loadWorldFromFile()">Load</button>
-    </div>
+    <h2 style="margin-top: 30px;">Load World from File</h2>
+    <input type="file" id="loadFile" accept=".json" />
+    <button onclick="loadWorldFromFile()">Load</button>
   </div>
 
   <script src="modules/world-manager.js"></script>
