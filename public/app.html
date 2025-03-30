@@ -2,127 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Living World Engine - Manage Worlds</title>
+  <title>Living World Engine - World Manager</title>
   <link rel="stylesheet" href="landing.css" />
   <style>
     body {
       background-color: #2b1f13;
-      font-family: 'Georgia', serif;
       color: #f4e3c1;
-      margin: 0;
+      font-family: 'Georgia', serif;
       padding: 40px;
     }
 
     .container {
-      max-width: 1100px;
+      display: flex;
+      gap: 50px;
+      max-width: 1200px;
       margin: auto;
     }
 
-    h1 {
-      font-size: 2.8em;
-      margin-bottom: 10px;
+    .panel {
+      flex: 1;
+      background-color: #3a2c1d;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00000055;
     }
 
-    .subtitle {
-      font-style: italic;
-      color: #d6c7ae;
-      margin-bottom: 30px;
+    h2 {
+      color: #ffe8b2;
+      border-bottom: 1px solid #5a4330;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
     }
 
-    .flex {
-      display: flex;
-      gap: 50px;
+    ul#userWorlds {
+      list-style: none;
+      padding: 0;
     }
 
-    .half {
-      width: 50%;
-    }
-
-    label, input, button {
-      display: block;
-      margin: 10px 0;
-      font-size: 1em;
-    }
-
-    input[type="text"],
-    input[type="file"] {
-      width: 100%;
+    ul#userWorlds li {
       padding: 6px;
-      font-family: 'Georgia', serif;
-      background-color: #3b2c1e;
-      color: #f4e3c1;
-      border: 1px solid #7a5c3e;
+      cursor: pointer;
+      border-radius: 5px;
     }
 
-    button {
-      background-color: #6a4b2f;
-      color: #fff3dc;
-      padding: 8px 16px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
+    ul#userWorlds li.selected {
+      background-color: #6f4f2a;
+    }
+
+    input, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 8px;
+      background-color: #4a3826;
+      border: 1px solid #7a5c3e;
+      color: #f4e3c1;
+      font-family: 'Georgia', serif;
+      font-size: 1em;
+      border-radius: 5px;
     }
 
     button:hover {
-      background-color: #8a6644;
+      background-color: #80603e;
+      cursor: pointer;
     }
 
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    ul li {
-      margin-bottom: 8px;
-    }
-
-    .bottom {
-      margin-top: 40px;
+    label {
+      margin-top: 14px;
+      display: block;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Living World Engine</h1>
-    <p class="subtitle">Your worlds, your legacy</p>
+    <!-- Left Panel -->
+    <div class="panel">
+      <h2>Your Worlds</h2>
+      <ul id="userWorlds"></ul>
+      <button onclick="loadSelectedWorld()">Load Selected World</button>
+      <button onclick="deleteSelectedWorld()">Delete Selected World</button>
 
-    <div class="flex">
-      <!-- LEFT PANEL -->
-      <div class="half">
-        <h3>Your Worlds</h3>
-        <ul id="userWorlds"></ul>
-
-        <h4>Import World from File</h4>
-        <input type="file" id="importFile" accept=".json" />
-        <button onclick="importWorldFromFile()">Import</button>
-
-        <h4>Google Drive</h4>
-        <input type="text" id="driveWorldName" placeholder="Enter Drive world name (without .json)" />
-        <button id="saveDriveBtn">Save to Drive</button>
-        <button id="loadDriveBtn">Load from Drive</button>
-        <button onclick="loadSelectedDriveWorld()">Load Selected World</button>
-        
-
-        <h4>Delete Selected World</h4>
-        <input type="text" id="deleteFile" placeholder="Enter world filename" />
-        <button onclick="deleteWorldFromList()">Delete</button>
-      </div>
-
-      <!-- RIGHT PANEL -->
-      <div class="half">
-        <h4>Create New World</h4>
-          <input type="text" id="newWorldName" placeholder="New World Name" />
-          <button onclick="createNewWorld()">Create</button>
-          <button onclick="downloadBlankWorld()">Download Blank World</button>
-
-        <h4 style="margin-top:30px;">Load World from File</h4>
-        <input type="file" id="loadFile" accept=".json" />
-        <button onclick="loadWorldFromFile()">Load</button>
-      </div>
+      <label for="importFile">Import World from File:</label>
+      <input type="file" id="importFile" accept=".json" />
+      <button onclick="importWorld()">Import</button>
+      <button onclick="saveImportedWorldToDrive()">Save to Drive</button>
     </div>
 
-    <div class="bottom">
-      <button onclick="window.location.href='/logout'">Log Out</button>
+    <!-- Right Panel -->
+    <div class="panel">
+      <h2>Create New World</h2>
+      <input type="text" id="newWorldName" placeholder="Enter world name..." />
+      <button onclick="createNewWorld()">Create</button>
+      <button onclick="downloadBlankWorld()">Download Blank World</button>
+
+      <h2 style="margin-top: 30px;">Load World from File</h2>
+      <input type="file" id="loadFile" accept=".json" />
+      <button onclick="loadWorldFromFile()">Load</button>
     </div>
   </div>
 
