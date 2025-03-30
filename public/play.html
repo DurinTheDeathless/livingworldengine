@@ -2,42 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Living World Engine - Play</title>
+  <title>Living World Engine – Dashboard</title>
+  <link rel="stylesheet" href="landing.css" />
   <style>
     body {
       background-color: #2b1f13;
       color: #f4e3c1;
-      font-family: 'Georgia', serif;
-      padding: 40px;
-    }
-    .header {
-      margin-bottom: 20px;
+      font-family: Georgia, serif;
+      text-align: center;
+      padding: 30px;
     }
     h1 {
-      font-size: 2.4em;
-      color: #fceac1;
+      font-size: 3em;
+      color: #ffd700;
+      margin-bottom: 0;
     }
-    .worldName {
+    h2 {
+      font-size: 1.5em;
+      margin-top: 0;
+      color: #e0c097;
+    }
+    #world-name {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #fff3c4;
+    }
+    #dm-inspiration {
       font-style: italic;
-      color: #d6c7ae;
+      color: #d1c7b8;
+      margin-bottom: 30px;
+    }
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .nav-tabs a {
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .nav-tabs a:hover {
+      background-color: #8a5f2e;
+    }
+    .tab-content {
+      border-top: 1px solid #a58e6f;
+      margin-top: 30px;
+      padding-top: 20px;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>World View</h1>
-    <p class="worldName" id="worldName">Loading world...</p>
+  <h1>Living World Engine</h1>
+  <h2>Where realms breathe and stories live</h2>
+  <div id="world-name">[World Name]</div>
+  <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+
+  <div class="nav-tabs">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="journal.html">Journal Entries</a>
+    <a href="countries.html">Countries</a>
+    <a href="towns.html">Towns</a>
+    <a href="npcs.html">NPCs</a>
+    <a href="factions.html">Factions</a>
+    <a href="bbeg.html">BBEG Tracker</a>
+    <a href="events.html">Event Logs</a>
+    <a href="market.html">Market Simulation</a>
+    <a href="lexicon.html">Language / Lexicon</a>
+    <a href="map.html">World Map</a>
+    <a href="quests.html">Quests</a>
+    <a href="players.html">Player Tracker</a>
+    <a href="timeline.html">Timeline</a>
+    <a href="magic.html">Magic / Religion</a>
+    <a href="bestiary.html">Bestiary</a>
   </div>
 
-  <p>WIP – World Display Coming Soon!</p>
-
-  <script>
-    const world = JSON.parse(sessionStorage.getItem("currentWorld"));
-    if (world && world.name) {
-      document.getElementById("worldName").textContent = "World: " + world.name;
-    } else {
-      document.getElementById("worldName").textContent = "No world loaded.";
-    }
-  </script>
+  <div class="tab-content">
+    <p>WIP – Dashboard section is coming soon.</p>
+  </div>
 </body>
 </html>
