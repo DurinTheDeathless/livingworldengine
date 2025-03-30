@@ -2,21 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>World Viewer</title>
+  <title>Living World Engine - Play</title>
   <style>
     body {
-      background: linear-gradient(135deg, #2c2f3a, #1a1b22);
-      color: #ffd700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      font-family: 'Trebuchet MS', sans-serif;
-      font-size: 3em;
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: 'Georgia', serif;
+      padding: 40px;
+    }
+    .header {
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2.4em;
+      color: #fceac1;
+    }
+    .worldName {
+      font-style: italic;
+      color: #d6c7ae;
     }
   </style>
 </head>
 <body>
-  WIP – World Display Coming Soon!
+  <div class="header">
+    <h1>World View</h1>
+    <p class="worldName" id="worldName">Loading world...</p>
+  </div>
+
+  <p>WIP – World Display Coming Soon!</p>
+
+  <script>
+    const world = JSON.parse(sessionStorage.getItem("currentWorld"));
+    if (world && world.name) {
+      document.getElementById("worldName").textContent = "World: " + world.name;
+    } else {
+      document.getElementById("worldName").textContent = "No world loaded.";
+    }
+  </script>
 </body>
 </html>

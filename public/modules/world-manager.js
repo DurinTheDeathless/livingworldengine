@@ -1,112 +1,123 @@
-
 let currentWorld = null;
-let currentFile = null;
+let savedWorlds = JSON.parse(localStorage.getItem("userWorlds") || "[]");
+const userWorldsList = document.getElementById("userWorlds");
 
-function getAccessToken() {
-  const user = window.sessionStorage.getItem('user');
-  if (!user) return null;
-  return JSON.parse(user).accessToken;
-}
-
-function createNewWorld() {
-  const name = document.getElementById('newWorldName').value.trim();
-  if (!name) return alert('Please enter a name');
-  currentFile = name.replace(/\s+/g, '_') + '.json';
-  currentWorld = {
-    worldName: name,
-    countries: [],
-    towns: [],
-    npcs: []
-  };
-  saveToDrive(() => {
-    localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-    window.location.href = '/play.html';
+function updateWorldList() {
+  userWorldsList.innerHTML = "";
+  savedWorlds.forEach(world => {
+    const li = document.createElement("li");
+    li.textContent = world.name;
+    li.style.cursor = "pointer";
+    li.onclick = () => {
+      currentWorld = world;
+      document.getElementById("deleteFile").value = world.name;
+    };
+    userWorldsList.appendChild(li);
   });
 }
 
-function enterWorld(filename) {
-  localStorage.setItem("currentWorld", filename);
+function createNewWorld() {
+  const name = document.getElementById("newWorldName").value.trim();
+  if (!name) return alert("Please enter a world name.");
+
+  const world = {
+    name,
+    created: new Date().toISOString(),
+    data: {}
+  };
+
+  currentWorld = world;
+  savedWorlds.push(world);
+  localStorage.setItem("userWorlds", JSON.stringify(savedWorlds));
+  sessionStorage.setItem("currentWorld", JSON.stringify(world));
   window.location.href = "/play.html";
 }
 
-function saveToDrive(callback) {
-  const accessToken = getAccessToken();
-  if (!accessToken || !currentFile || !currentWorld) return alert("Not ready to save.");
+function loadWorldFromFile() {
+  const fileInput = document.getElementById("loadFile");
+  const file = fileInput.files[0];
+  if (!file) return alert("Please select a file to load.");
 
-  fetch('/drive/save', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      fileName: currentFile,
-      fileContent: currentWorld,
-      accessToken
-    })
-  }).then(res => res.json())
-    .then(data => {
-      if (data.success && callback) callback();
-      else if (!data.success) alert("Failed to save to Drive.");
-    });
-}
-
-function loadFromDrive() {
-  const fileName = prompt("Enter the file name to load (e.g., MyWorld.json):");
-  if (!fileName) return;
-
-  const accessToken = getAccessToken();
-  if (!accessToken) return alert("You must be logged in to load from Drive.");
-
-  fetch('/drive/load', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fileName, accessToken })
-  }).then(res => res.json())
-    .then(data => {
-      currentWorld = data;
-      currentFile = fileName;
-      localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const world = JSON.parse(e.target.result);
+      currentWorld = world;
+      sessionStorage.setItem("currentWorld", JSON.stringify(world));
       window.location.href = "/play.html";
-    }).catch(() => alert("Failed to load from Drive."));
+    } catch (err) {
+      alert("Invalid world file.");
+    }
+  };
+  reader.readAsText(file);
 }
 
 function importWorldFromFile() {
-  const input = document.getElementById('importFile');
-  const file = input.files[0];
-  if (!file) return;
+  const fileInput = document.getElementById("importFile");
+  const file = fileInput.files[0];
+  if (!file) return alert("Select a file to import.");
 
   const reader = new FileReader();
-  reader.onload = (event) => {
+  reader.onload = e => {
     try {
-      const imported = JSON.parse(event.target.result);
-      currentWorld = imported;
-      currentFile = imported.worldName.replace(/\s+/g, '_') + '.json';
-      localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-      alert('World imported. Now use Save to Drive to store it.');
+      const world = JSON.parse(e.target.result);
+      currentWorld = world;
+      savedWorlds.push(world);
+      localStorage.setItem("userWorlds", JSON.stringify(savedWorlds));
+      sessionStorage.setItem("currentWorld", JSON.stringify(world));
+      alert("World imported. Now use Save to Drive to store it.");
     } catch {
-      alert("Invalid world file.");
+      alert("Invalid file format.");
     }
   };
   reader.readAsText(file);
 }
 
-function loadWorldFromFile() {
-  const input = document.getElementById('loadFile');
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    try {
-      currentWorld = JSON.parse(event.target.result);
-      currentFile = null;
-      localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-      window.location.href = '/play.html';
-    } catch {
-      alert("Invalid world file.");
-    }
-  };
-  reader.readAsText(file);
+function saveWorldToDrive() {
+  if (!currentWorld) return alert("Not ready to save.");
+
+  fetch("/drive/save", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(currentWorld)
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert("World saved to Google Drive.");
+      } else {
+        alert("Error saving to Drive.");
+      }
+    });
 }
 
-window.onload = () => {
-  document.getElementById("saveDriveBtn").onclick = () => saveToDrive();
-  document.getElementById("loadDriveBtn").onclick = () => loadFromDrive();
-};
+function loadWorldFromDrive() {
+  const name = prompt("Enter the name of the world to load from Drive:");
+  if (!name) return;
+
+  fetch(`/drive/load?name=${encodeURIComponent(name)}`)
+    .then(res => res.json())
+    .then(world => {
+      if (!world || !world.name) {
+        alert("World not found.");
+        return;
+      }
+      currentWorld = world;
+      sessionStorage.setItem("currentWorld", JSON.stringify(world));
+      window.location.href = "/play.html";
+    })
+    .catch(() => alert("Error loading from Drive."));
+}
+
+function deleteWorldFromList() {
+  const name = document.getElementById("deleteFile").value.trim();
+  if (!name) return alert("Enter a world name to delete.");
+
+  savedWorlds = savedWorlds.filter(w => w.name !== name);
+  localStorage.setItem("userWorlds", JSON.stringify(savedWorlds));
+  updateWorldList();
+}
+
+document.addEventListener("DOMContentLoaded", updateWorldList);
