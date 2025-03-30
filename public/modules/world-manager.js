@@ -120,4 +120,28 @@ function deleteWorldFromList() {
   updateWorldList();
 }
 
+function downloadBlankWorld() {
+  const name = document.getElementById("newWorldName").value.trim();
+  if (!name) return alert("Enter a name before downloading.");
+
+  const blankWorld = {
+    name: name,
+    created: new Date().toISOString(),
+    data: {}
+  };
+
+  const blob = new Blob([JSON.stringify(blankWorld, null, 2)], {
+    type: 'application/json'
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  alert(`Blank world "${name}" downloaded.`);
+}
+
 document.addEventListener("DOMContentLoaded", updateWorldList);
