@@ -49,13 +49,13 @@
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 12px 10px;
+      padding: 6px 10px;
       border-radius: 6px;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 50px;
+      height: 30px;
       min-width: 140px;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
@@ -100,15 +100,9 @@
   </div>
 
   <script>
-    // Attempt to load from localStorage, fallback if needed
-    const selectedWorld = JSON.parse(localStorage.getItem("selectedWorld"));
-    const worldNameElement = document.getElementById("world-name");
-
-    if (selectedWorld && selectedWorld.name) {
-      worldNameElement.textContent = selectedWorld.name;
-    } else {
-      worldNameElement.textContent = "Unnamed World";
-    }
+    const stored = JSON.parse(localStorage.getItem("selectedWorld")) || JSON.parse(localStorage.getItem("currentWorld"));
+    const worldName = stored?.name || "Unnamed World";
+    document.getElementById("world-name").textContent = worldName;
   </script>
 </body>
 </html>
