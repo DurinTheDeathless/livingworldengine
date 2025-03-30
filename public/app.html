@@ -12,6 +12,24 @@
       padding: 40px;
     }
 
+    .title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .title h1 {
+      font-size: 2.5em;
+      color: #ffe8b2;
+      margin: 0;
+    }
+
+    .title p {
+      font-size: 1.1em;
+      color: #d6c7ae;
+      font-style: italic;
+      margin: 6px 0 0;
+    }
+
     .container {
       display: flex;
       gap: 50px;
@@ -49,7 +67,9 @@
       background-color: #6f4f2a;
     }
 
-    input, button {
+    input[type="text"],
+    input[type="file"],
+    button {
       width: 100%;
       margin: 8px 0;
       padding: 8px;
@@ -59,6 +79,7 @@
       font-family: 'Georgia', serif;
       font-size: 1em;
       border-radius: 5px;
+      box-sizing: border-box;
     }
 
     button:hover {
@@ -74,6 +95,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Title Header -->
+  <div class="title">
+    <h1>Manage World</h1>
+    <p>Shape realms, forge legends.</p>
+  </div>
+
+  <!-- World Manager Interface -->
   <div class="container">
     <!-- Left Panel -->
     <div class="panel">
