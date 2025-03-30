@@ -39,20 +39,24 @@
     }
     .nav-tabs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(8, 1fr);
       gap: 10px;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1300px;
       margin-top: 20px;
     }
     .nav-tabs a {
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 10px;
+      padding: 12px 10px;
       border-radius: 6px;
-      display: inline-block;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      min-width: 140px;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
@@ -96,9 +100,14 @@
   </div>
 
   <script>
+    // Attempt to load from localStorage, fallback if needed
     const selectedWorld = JSON.parse(localStorage.getItem("selectedWorld"));
+    const worldNameElement = document.getElementById("world-name");
+
     if (selectedWorld && selectedWorld.name) {
-      document.getElementById("world-name").textContent = selectedWorld.name;
+      worldNameElement.textContent = selectedWorld.name;
+    } else {
+      worldNameElement.textContent = "Unnamed World";
     }
   </script>
 </body>
