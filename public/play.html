@@ -100,13 +100,13 @@
   </div>
 
   <script>
-    const stored = JSON.parse(localStorage.getItem("selectedWorld")) || JSON.parse(localStorage.getItem("currentWorld"));
-    let worldName = stored?.name;
+    const currentWorld = JSON.parse(localStorage.getItem("currentWorld"));
+    let worldName = currentWorld?.name;
 
     if (!worldName) {
-      const filename = localStorage.getItem("worldFilename"); // e.g., "test.json"
-      if (filename && filename.endsWith(".json")) {
-        worldName = filename.replace(".json", "").replace(/[-_]/g, " ");
+      const fileName = localStorage.getItem("worldFilename");
+      if (fileName && fileName.endsWith(".json")) {
+        worldName = fileName.replace(".json", "").replace(/[-_]/g, " ");
         worldName = worldName.charAt(0).toUpperCase() + worldName.slice(1);
       } else {
         worldName = "Unnamed World";
