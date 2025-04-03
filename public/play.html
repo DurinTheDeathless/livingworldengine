@@ -96,24 +96,13 @@
     }
   </style>
   <style>
-    #edit-world-name {
-      display: none;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 0.9em;
-      color: #ccc;
-    }
-  
-    #world-name-container:hover #edit-world-name {
-      display: inline;
-    }
-  
-    .tab-content {
-      margin-top: 10px; /* reduced from 20px */
-      font-size: 1.2em;
-    }
+   #world-name-container:hover #edit-world-name {
+  display: inline;
+}
+#edit-world-name {
+  display: none;
+}
   </style>
-  
  </head>
  <body>
   <h1>
@@ -123,17 +112,18 @@
    Where realms breathe and stories live
   </h2>
   <div id="world-name-container" style="text-align: center; position: relative; margin-top: 20px;">
-    <div style="font-weight: bold; font-size: 1.8em; color: #fff3c4; position: relative; display: inline-block;">
-      <span id="world-name">[World Name]</span>
-      <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
+   <div style="font-weight: bold; font-size: 1.8em; color: #fff3c4; position: relative; display: inline-block;">
+    <div id="world-name" style="font-weight: bold;">
+     [World Name]
     </div>
-    <div id="creation-date" style="font-size: 0.85em; color: #c7b58d; text-align: center; margin-top: 4px;">
-      Created: <span id="created-on">[Loading...]</span>
-    </div>
-    <input id="world-name-input" type="text" style="display:none; margin-top: 5px;"/>
-    <button id="save-world-name" onclick="saveWorldName()" style="display:none; margin-top: 5px;">Save</button>
+   </div>
+   <div id="creation-date" style="font-size: 0.85em; color: #c7b58d; text-align: center; margin-top: 4px;">
+    Created:
+    <span id="created-on">
+     [Loading...]
+    </span>
+   </div>
   </div>
-
   <div id="dm-inspiration">
    "A shadow stirs beneath the mountain, waiting for a name."
   </div>
