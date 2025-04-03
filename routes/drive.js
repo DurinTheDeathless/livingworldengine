@@ -1,10 +1,11 @@
 
 const express = require('express');
-const { google } = require('googleapis');
-const router = express.Router();
-
 const multer = require('multer');
 const upload = multer();
+const { google } = require('googleapis');
+const fs = require('fs');
+const path = require('path');
+const router = express.Router();
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -70,8 +71,6 @@ router.post('/load', async (req, res) => {
     res.status(500).json({ error: 'Failed to load from Drive' });
   }
 });
-const multer = require('multer');
-const upload = multer();
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   const accessToken = req.headers.authorization?.split(' ')[1];
