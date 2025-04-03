@@ -95,6 +95,14 @@
       font-size: 1.2em;
     }
   </style>
+  <style>
+   #world-name-container:hover #edit-world-name {
+  display: inline;
+}
+#edit-world-name {
+  display: none;
+}
+  </style>
  </head>
  <body>
   <h1>
@@ -103,14 +111,8 @@
   <h2>
    Where realms breathe and stories live
   </h2>
-  <div id="world-name-container" style="text-align: center; position: relative; margin-top: 20px; font-size: 28px;">
+  <div id="world-name-container" style="text-align: center; position: relative; margin-top: 20px; font-size: 24px;">
    <div id="world-details" style="font-size: 0.9em; color: #c7b58d; margin-top: -10px;">
-    <div id="creation-date" style="font-size: 0.9em; color: #c7b58d; text-align: center; margin-top: 5px;">
-     Created:
-     <span id="created-on">
-      [Loading...]
-     </span>
-    </div>
    </div>
    <div id="world-name" style="font-weight: bold;">
     [World Name]
@@ -122,6 +124,12 @@
    <button id="save-world-name" onclick="saveWorldName()">
     Save
    </button>
+   <div id="creation-date" style="font-size: 0.85em; color: #c7b58d; text-align: center; margin-top: 4px;">
+    Created:
+    <span id="created-on">
+     [Loading...]
+    </span>
+   </div>
   </div>
   <div id="dm-inspiration">
    "A shadow stirs beneath the mountain, waiting for a name."
@@ -177,11 +185,11 @@
    </a>
   </div>
   <div class="tab-content">
-   <div id="overview-section" style="margin-top: 40px;">
+   <div id="overview-section" style="margin-top: 20px; padding-top: 10px;">
     <h2>
      Overview
     </h2>
-    <div id="date-info" style="margin-bottom: 15px; font-size: 0.95em;">
+    <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
      <div id="world-date">
       Current Date:
       <span id="date-display">
@@ -214,7 +222,6 @@
     </div>
    </div>
    <p>
-    WIP &ndash; Dashboard section is coming soon.
    </p>
   </div>
   <script>
