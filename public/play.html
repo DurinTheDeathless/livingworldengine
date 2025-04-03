@@ -99,6 +99,25 @@
   <h2>Where realms breathe and stories live</h2>
 
   <div id="world-name-container">
+
+<div id="world-details" style="font-size: 0.9em; color: #c7b58d; margin-top: -10px;">
+  <div id="creation-date">Created: <span id="created-on">[Loading...]</span></div>
+</div>
+
+<div id="world-summary-container" style="margin-top: 10px;">
+  <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
+    <span id="summary-text">Click to add a world summary...</span>
+    <span class="edit-btn" style="display: none;" id="summary-edit">✏️</span>
+  </div>
+  <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
+  <button id="save-summary" style="display:none; margin-top: 5px;">Save Summary</button>
+</div>
+
+<div id="date-info" style="margin-top: 15px;">
+  <div id="world-date">Current Date: <span id="date-display">[Loading...]</span></div>
+  <div id="days-since-start">Days Since Campaign Start: <span id="days-elapsed">[Loading...]</span></div>
+</div>
+
     <div id="world-name">[World Name]</div>
     <span class="edit-btn" onclick="enableEdit()">✏️</span>
     <input type="text" id="world-name-input" />
