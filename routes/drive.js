@@ -3,6 +3,9 @@ const express = require('express');
 const { google } = require('googleapis');
 const router = express.Router();
 
+const multer = require('multer');
+const upload = multer();
+
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = process.env.CALLBACK_URL;
@@ -65,6 +68,38 @@ router.post('/load', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to load from Drive' });
+  }
+});
+const multer = require('multer');
+const upload = multer();
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
+  const file = req.file;
+  const fileName = req.body.filename;
+
+  if (!accessToken || !file || !fileName) {
+    return res.status(400).json({ error: 'Missing required data' });
+  }
+
+  try {
+    const drive = getDriveClient(accessToken);
+    const fileMetadata = { name: fileName };
+    const media = {
+      mimeType: 'application/json',
+      body: Buffer.from(file.buffer),
+    };
+
+    const uploaded = await drive.files.create({
+      requestBody: fileMetadata,
+      media,
+      fields: 'id',
+    });
+
+    res.json({ success: true, fileId: uploaded.data.id });
+  } catch (err) {
+    console.error('Error uploading file:', err);
+    res.status(500).json({ error: 'Upload failed' });
   }
 });
 
