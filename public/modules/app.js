@@ -1,21 +1,17 @@
-// app.js  (Play page script)
-
-// Parse world data passed from the manager (via window.name)
 let currentWorld = {};
 let currentFileName = null;
-let source = "local";  // "drive" or "local" source of currentWorld
-if (window.name && window.name.length > 0) {
-  try {
-    const payload = JSON.parse(window.name);
-    currentWorld = payload.world || {};
-    currentFileName = payload.fileName || null;
-    source = payload.source || "local";
-  } catch (e) {
-    console.error("Failed to parse world data from manager.");
+let source = "local";  // or "drive"
+
+try {
+  const worldData = JSON.parse(sessionStorage.getItem("currentWorld"));
+  if (worldData) {
+    currentWorld = worldData;
+    currentFileName = sessionStorage.getItem("currentFileName");
+    source = sessionStorage.getItem("currentWorldSource") || "local";
   }
+} catch (e) {
+  console.error("Failed to load world from sessionStorage.");
 }
-// Clear window.name to avoid reusing stale data
-window.name = "";
 
 // Utility: Capitalize string (used for display names if needed)
 function capitalize(str) {
@@ -131,3 +127,60 @@ window.addEventListener("beforeunload", (e) => {
     // (Optionally, one could set e.returnValue to show a warning prompt instead)
   }
 });
+
+// Create new world and immediately upload it to Google Drive
+async function createNewWorld() {
+  const worldName = document.getElementById("newWorldName").value.trim();
+  if (!worldName) return alert("Please enter a world name.");
+
+  const worldData = {
+    name: worldName,
+    created: new Date().toISOString(),
+    summary: "",
+    countries: [{ name: "Unnamed Country" }],
+    towns: [{ name: "Unnamed Town" }],
+    npcs: [{ name: "Unnamed NPC" }],
+    factions: [{ name: "Unnamed Faction" }],
+    events: [],
+    bbeg: { name: "Unnamed BBEG" },
+    market: {},
+    journal: []
+  };
+
+  const file = new File([JSON.stringify(worldData, null, 2)], `${worldName}.json`, {
+    type: "application/json",
+  });
+
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const accessToken = user?.accessToken;
+
+  if (!accessToken) return alert("You are not logged in!");
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("filename", `${worldName}.json`);
+
+  try {
+    const res = await fetch("/drive/upload", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
+      sessionStorage.setItem("currentFileName", `${worldName}.json`);
+      sessionStorage.setItem("currentWorldSource", "drive");
+      window.location.href = "/play.html";
+    } else {
+      console.error(result);
+      alert("Failed to save new world to Drive.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error uploading new world.");
+  }
+}

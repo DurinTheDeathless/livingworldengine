@@ -18,8 +18,13 @@ function getDriveClient(accessToken) {
   return google.drive({ version: 'v3', auth: oauth2Client });
 }
 
-router.post('/save', async (req, res) => {
-  const { fileName, fileContent, accessToken } = req.body;
+router.post('/load', async (req, res) => {
+  const { fileName, accessToken } = req.body;
+
+  if (!fileName || !accessToken) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
   try {
     const drive = getDriveClient(accessToken);
 
@@ -28,31 +33,20 @@ router.post('/save', async (req, res) => {
       fields: 'files(id, name)',
     });
 
-    const fileMetadata = { name: fileName };
-    const media = {
-      mimeType: 'application/json',
-      body: Buffer.from(JSON.stringify(fileContent)),
-    };
-
-    if (list.data.files.length > 0) {
-      await drive.files.update({
-        fileId: list.data.files[0].id,
-        media,
-      });
-    } else {
-      await drive.files.create({
-        resource: fileMetadata,
-        media,
-        fields: 'id',
-      });
+    if (list.data.files.length === 0) {
+      return res.status(404).json({ error: 'File not found' });
     }
 
-    res.json({ success: true });
+    const fileId = list.data.files[0].id;
+    const response = await drive.files.get({ fileId, alt: 'media' }, { responseType: 'json' });
+
+    res.json({ success: true, data: response.data });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to save to Drive' });
+    console.error('Drive load error:', err);
+    res.status(500).json({ error: 'Failed to load from Drive' });
   }
 });
+
 
 router.post('/load', async (req, res) => {
   const { fileName, accessToken } = req.body;
