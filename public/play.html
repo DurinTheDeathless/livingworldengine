@@ -1,28 +1,14 @@
-<!DOC
-<div id="world-details" style="font-size: 0.9em; color: #c7b58d; margin-top: 5px; text-align: center;">
-  <div id="creation-date">Created: <span id="created-on">[Loading...]</span></div>
-</div>
-
-<div id="world-summary-container" style="margin-top: 10px;">
-  <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
-    <span id="summary-text">Click to add a world summary...</span>
-    <span class="edit-btn" style="display: none;" id="summary-edit">✏️</span>
-  </div>
-  <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
-  <button id="save-summary" style="display:none; margin-top: 5px;">Save Summary</button>
-</div>
-
-<div id="date-info" style="margin-top: 15px;">
-  <div id="world-date">Current Date: <span id="date-display">[Loading...]</span></div>
-TYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Living World Engine – Dashboard</title>
-  <link rel="stylesheet" href="landing.css" />
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Living World Engine &ndash; Dashboard
+  </title>
+  <link href="landing.css" rel="stylesheet"/>
   <style>
-    body {
+   body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
@@ -109,50 +95,130 @@ TYPE html>
       font-size: 1.2em;
     }
   </style>
-</head>
-<body>
-  <h1>Living World Engine</h1>
-  <h2>Where realms breathe and stories live</h2>
-
-  <div id="world-name-container" style="position: relative; display: flex; justify-content: center; align-items: center;">
-
-
-  <div id="days-since-start">Days Since Campaign Start: <span id="days-elapsed">[Loading...]</span></div>
-</div>
-
-    <div id="world-name">[World Name]</div>
-    <span class="edit-btn" onclick="enableEdit()">✏️</span>
-    <input type="text" id="world-name-input" />
-    <button id="save-world-name" onclick="saveWorldName()">Save</button>
+ </head>
+ <body>
+  <h1>
+   Living World Engine
+  </h1>
+  <h2>
+   Where realms breathe and stories live
+  </h2>
+  <div id="world-name-container" style="text-align: center; position: relative; margin-top: 20px; font-size: 28px;">
+   <div id="world-details" style="font-size: 0.9em; color: #c7b58d; margin-top: -10px;">
+    <div id="creation-date" style="font-size: 0.9em; color: #c7b58d; text-align: center; margin-top: 5px;">
+     Created:
+     <span id="created-on">
+      [Loading...]
+     </span>
+    </div>
+   </div>
+   <div id="world-name" style="font-weight: bold;">
+    [World Name]
+   </div>
+   <span class="edit-btn" onclick="enableEdit()">
+    ✏️
+   </span>
+   <input id="world-name-input" type="text"/>
+   <button id="save-world-name" onclick="saveWorldName()">
+    Save
+   </button>
   </div>
-
-  <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
-
+  <div id="dm-inspiration">
+   "A shadow stirs beneath the mountain, waiting for a name."
+  </div>
   <div class="nav-tabs">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="journal.html">Journal Entries</a>
-    <a href="countries.html">Countries</a>
-    <a href="towns.html">Towns</a>
-    <a href="npcs.html">NPCs</a>
-    <a href="factions.html">Factions</a>
-    <a href="bbeg.html">BBEG Tracker</a>
-    <a href="events.html">Event Logs</a>
-    <a href="market.html">Market Simulation</a>
-    <a href="lexicon.html">Language / Lexicon</a>
-    <a href="map.html">World Map</a>
-    <a href="quests.html">Quests</a>
-    <a href="players.html">Player Tracker</a>
-    <a href="timeline.html">Timeline</a>
-    <a href="magic.html">Magic / Religion</a>
-    <a href="bestiary.html">Bestiary</a>
+   <a href="dashboard.html">
+    Dashboard
+   </a>
+   <a href="journal.html">
+    Journal Entries
+   </a>
+   <a href="countries.html">
+    Countries
+   </a>
+   <a href="towns.html">
+    Towns
+   </a>
+   <a href="npcs.html">
+    NPCs
+   </a>
+   <a href="factions.html">
+    Factions
+   </a>
+   <a href="bbeg.html">
+    BBEG Tracker
+   </a>
+   <a href="events.html">
+    Event Logs
+   </a>
+   <a href="market.html">
+    Market Simulation
+   </a>
+   <a href="lexicon.html">
+    Language / Lexicon
+   </a>
+   <a href="map.html">
+    World Map
+   </a>
+   <a href="quests.html">
+    Quests
+   </a>
+   <a href="players.html">
+    Player Tracker
+   </a>
+   <a href="timeline.html">
+    Timeline
+   </a>
+   <a href="magic.html">
+    Magic / Religion
+   </a>
+   <a href="bestiary.html">
+    Bestiary
+   </a>
   </div>
-
   <div class="tab-content">
-    <p>WIP – Dashboard section is coming soon.</p>
+   <div id="overview-section" style="margin-top: 40px;">
+    <h2>
+     Overview
+    </h2>
+    <div id="date-info" style="margin-bottom: 15px; font-size: 0.95em;">
+     <div id="world-date">
+      Current Date:
+      <span id="date-display">
+       [Loading...]
+      </span>
+     </div>
+     <div id="days-since-start">
+      Days Since Campaign Start:
+      <span id="days-elapsed">
+       [Loading...]
+      </span>
+     </div>
+    </div>
+    <h3>
+     World Summary
+    </h3>
+    <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
+     <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
+      <span id="summary-text">
+       Click to add a world summary...
+      </span>
+      <span class="edit-btn" id="summary-edit" style="display: none;">
+       ✏️
+      </span>
+     </div>
+     <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
+     <button id="save-summary" style="display:none; margin-top: 5px;">
+      Save Summary
+     </button>
+    </div>
+   </div>
+   <p>
+    WIP &ndash; Dashboard section is coming soon.
+   </p>
   </div>
-
   <script>
-    let currentWorld = JSON.parse(localStorage.getItem("currentWorld")) || {};
+   let currentWorld = JSON.parse(localStorage.getItem("currentWorld")) || {};
     const fileName = localStorage.getItem("worldFilename");
 
     let worldName = currentWorld.name;
@@ -186,5 +252,5 @@ TYPE html>
       document.getElementById("save-world-name").style.display = "none";
     }
   </script>
-</body>
+ </body>
 </html>
