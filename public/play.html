@@ -27,10 +27,34 @@
       margin: 0;
       color: #e0c097;
     }
+    #world-name-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     #world-name {
       font-size: 1.8em;
       font-weight: bold;
       color: #fff3c4;
+    }
+    .edit-btn {
+      cursor: pointer;
+      color: #ccc;
+      font-size: 1.2em;
+    }
+    .edit-btn:hover {
+      color: #fff;
+    }
+    #world-name-input {
+      font-size: 1.2em;
+      padding: 3px;
+      display: none;
+    }
+    #save-world-name {
+      padding: 5px 10px;
+      font-size: 1em;
+      margin-left: 10px;
+      display: none;
     }
     #dm-inspiration {
       font-style: italic;
@@ -73,7 +97,14 @@
 <body>
   <h1>Living World Engine</h1>
   <h2>Where realms breathe and stories live</h2>
-  <div id="world-name">[World Name]</div>
+
+  <div id="world-name-container">
+    <div id="world-name">[World Name]</div>
+    <span class="edit-btn" onclick="enableEdit()">✏️</span>
+    <input type="text" id="world-name-input" />
+    <button id="save-world-name" onclick="saveWorldName()">Save</button>
+  </div>
+
   <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
 
   <div class="nav-tabs">
@@ -100,20 +131,39 @@
   </div>
 
   <script>
-    const currentWorld = JSON.parse(localStorage.getItem("currentWorld"));
-    let worldName = currentWorld?.name;
+    let currentWorld = JSON.parse(localStorage.getItem("currentWorld")) || {};
+    const fileName = localStorage.getItem("worldFilename");
 
-    if (!worldName) {
-      const fileName = localStorage.getItem("worldFilename");
-      if (fileName && fileName.endsWith(".json")) {
-        worldName = fileName.replace(".json", "").replace(/[-_]/g, " ");
-        worldName = worldName.charAt(0).toUpperCase() + worldName.slice(1);
-      } else {
-        worldName = "Unnamed World";
-      }
+    let worldName = currentWorld.name;
+    if (!worldName && fileName && fileName.endsWith(".json")) {
+      worldName = fileName.replace(".json", "").replace(/[-_]/g, " ");
+      worldName = worldName.charAt(0).toUpperCase() + worldName.slice(1);
     }
+    if (!worldName) worldName = "Unnamed World";
 
     document.getElementById("world-name").textContent = worldName;
+
+    function enableEdit() {
+      document.getElementById("world-name").style.display = "none";
+      document.querySelector(".edit-btn").style.display = "none";
+      document.getElementById("world-name-input").style.display = "inline-block";
+      document.getElementById("world-name-input").value = worldName;
+      document.getElementById("save-world-name").style.display = "inline-block";
+    }
+
+    function saveWorldName() {
+      const newName = document.getElementById("world-name-input").value.trim();
+      if (newName) {
+        currentWorld.name = newName;
+        localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
+        document.getElementById("world-name").textContent = newName;
+        worldName = newName;
+      }
+      document.getElementById("world-name").style.display = "inline-block";
+      document.querySelector(".edit-btn").style.display = "inline-block";
+      document.getElementById("world-name-input").style.display = "none";
+      document.getElementById("save-world-name").style.display = "none";
+    }
   </script>
 </body>
 </html>
