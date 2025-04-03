@@ -9,6 +9,31 @@ const driveRoutes = require('./routes/drive');
 require('dotenv').config();
 require('./config/passport-config');
 
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.PG_CONNECTION_STRING,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+// Test the connection
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error('❌ Error acquiring client', err.stack);
+  }
+  client.query('SELECT NOW()', (err, result) => {
+    release();
+    if (err) {
+      return console.error('❌ Error executing query', err.stack);
+    }
+    console.log("✅ Connected to PostgreSQL:", result.rows);
+  });
+});
+
+module.exports = pool; // Optional: export pool if used in other files
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -18,10 +43,11 @@ app.use(express.json());
 app.use('/drive', driveRoutes);
 
 app.use(session({
-  secret: 'livingworldsecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
