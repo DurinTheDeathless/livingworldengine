@@ -147,32 +147,31 @@ async function createNewWorld() {
     journal: []
   };
 
-  const file = new File([JSON.stringify(worldData, null, 2)], `${worldName}.json`, {
-    type: "application/json",
-  });
+  const fileName = `${worldName.replace(/\s+/g, "_")}.json`;
 
   const user = JSON.parse(sessionStorage.getItem("user"));
   const accessToken = user?.accessToken;
 
   if (!accessToken) return alert("You are not logged in!");
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("filename", `${worldName}.json`);
-
   try {
-    const res = await fetch("/drive/upload", {
+    const res = await fetch("/drive/save", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify({
+        fileName,
+        fileContent: worldData,
+        accessToken
+      }),
     });
 
     const result = await res.json();
-    if (res.ok) {
+
+    if (res.ok && result.success) {
       sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
-      sessionStorage.setItem("currentFileName", `${worldName}.json`);
+      sessionStorage.setItem("currentFileName", fileName);
       sessionStorage.setItem("currentWorldSource", "drive");
       window.location.href = "/play.html";
     } else {
