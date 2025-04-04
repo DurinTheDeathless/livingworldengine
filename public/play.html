@@ -11,7 +11,7 @@
       color: #f4e3c1;
       font-family: Georgia, serif;
       margin: 0;
-      padding: 20px;
+      padding: 10px 20px 20px 20px;
       text-align: center;
     }
 
@@ -117,6 +117,21 @@
         padding: 15px;
       }
     }
+    #title-section {
+  margin-top: 0;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+  #title-section h1 {
+    font-size: 2.2em;
+  }
+  #title-section h2 {
+    font-size: 1.1em;
+  }
+}
+
   </style>
 
   <script>
@@ -147,7 +162,7 @@
 </head>
 
 <body>
-  <div class="section-block">
+  <div class="section-block" id="title-section">
     <h1>Living World Engine</h1>
     <h2 class="subtitle">Where realms breathe and stories live</h2>
   </div>
