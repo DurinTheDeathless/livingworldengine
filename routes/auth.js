@@ -7,7 +7,7 @@ router.get('/google', passport.authenticate('google', {
   scope: [
     'profile',
     'email',
-    'https://www.googleapis.com/auth/drive.file'
+    'https://www.googleapis.com/auth/drive'
   ],
   prompt: 'consent', // ensures Google asks for permissions again
   accessType: 'offline',
