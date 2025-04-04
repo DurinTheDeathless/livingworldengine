@@ -230,18 +230,37 @@
    </p>
   </div>
   <script>
-   let currentWorld = JSON.parse(localStorage.getItem("currentWorld")) || {};
-    const fileName = localStorage.getItem("worldFilename");
-
-    let worldName = currentWorld.name;
-    if (!worldName && fileName && fileName.endsWith(".json")) {
-      worldName = fileName.replace(".json", "").replace(/[-_]/g, " ");
-      worldName = worldName.charAt(0).toUpperCase() + worldName.slice(1);
+    let currentWorld = null;
+  
+    // Load from window.name if available
+    if (window.name) {
+      try {
+        const parsed = JSON.parse(window.name);
+        currentWorld = parsed.world || null;
+  
+        if (currentWorld) {
+          localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
+          localStorage.setItem("worldFilename", parsed.fileName || "");
+          window.name = ""; // clear it so refresh doesn’t reuse it
+        }
+      } catch (e) {
+        console.warn("Could not parse window.name payload:", e);
+      }
     }
-    if (!worldName) worldName = "Unnamed World";
-
+  
+    // Fallback to localStorage if window.name wasn’t used
+    if (!currentWorld) {
+      currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
+    }
+  
+    const worldName = currentWorld.name || "Unnamed World";
+    const created = currentWorld.created || "[Unknown]";
+    const summary = currentWorld.summary || "Click to add a world summary...";
+  
     document.getElementById("world-name").textContent = worldName;
-
+    document.getElementById("created-on").textContent = created;
+    document.getElementById("summary-text").textContent = summary;
+  
     function enableEdit() {
       document.getElementById("world-name").style.display = "none";
       document.querySelector(".edit-btn").style.display = "none";
@@ -249,14 +268,13 @@
       document.getElementById("world-name-input").value = worldName;
       document.getElementById("save-world-name").style.display = "inline-block";
     }
-
+  
     function saveWorldName() {
       const newName = document.getElementById("world-name-input").value.trim();
       if (newName) {
         currentWorld.name = newName;
         localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
         document.getElementById("world-name").textContent = newName;
-        worldName = newName;
       }
       document.getElementById("world-name").style.display = "inline-block";
       document.querySelector(".edit-btn").style.display = "inline-block";
@@ -264,5 +282,6 @@
       document.getElementById("save-world-name").style.display = "none";
     }
   </script>
+  
  </body>
 </html>

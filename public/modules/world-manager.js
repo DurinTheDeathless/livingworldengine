@@ -46,6 +46,7 @@ function createNewWorld() {
   const newWorld = {
     name: name,
     created: new Date().toISOString(),
+    summary: ""
     countries: [{ name: "Unnamed Country" }],
     towns:    [{ name: "Unnamed Town" }],
     npcs:     [{ name: "Unnamed NPC" }],
