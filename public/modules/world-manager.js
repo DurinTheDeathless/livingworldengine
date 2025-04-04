@@ -295,9 +295,12 @@ async function listWorldsFromDrive() {
   try {
     const res = await fetch("/drive/list", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accessToken: token })
-    });
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({}) // backend expects an empty JSON object
+    });    
     if (res.ok) {
       const driveFiles = await res.json();
       // Assume driveFiles is an array of { name: "... .json", id: ... }
