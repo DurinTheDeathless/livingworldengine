@@ -139,6 +139,9 @@
   <div id="dm-inspiration">
    "A shadow stirs beneath the mountain, waiting for a name."
   </div>
+
+// Buttons
+
   <div class="nav-tabs">
    <a href="dashboard.html">
     Dashboard
@@ -189,7 +192,11 @@
     Bestiary
    </a>
   </div>
-  <div class="tab-content" style="margin-top: -10px;">
+  // Buttons
+  
+  
+  
+  <div class="tab-content" style="margin-top: -40px;">
     <div id="overview-section" style="margin-top: 0; padding-top: 10px;">
       <h2 style="margin-top: 10px;">
         Overview
@@ -212,14 +219,13 @@
      World Summary
     </h3>
     <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
-     <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
-      <span id="summary-text">
-       Click to add a world summary...
-      </span>
-      <span class="edit-btn" id="summary-edit" style="display: none;">
-       ✏️
-      </span>
-     </div>
+      <div id="world-summary" onclick="enableSummaryEdit()" style="border: 1px solid #c7b58d; border-radius: 6px; padding: 10px; background-color: #3a2d1e; cursor: pointer;">
+        <div id="summary-text" style="white-space: pre-line;"></div>
+      </div>
+      <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px; height: 100px; background-color: #2b1f13; color: #f4e3c1; border: 1px solid #ccc; padding: 8px; border-radius: 6px;"></textarea>
+      <button id="save-summary" onclick="saveSummary()" style="display:none; margin-top: 5px;">
+        Save Summary
+      </button>
      <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
      <button id="save-summary" style="display:none; margin-top: 5px;">
       Save Summary
@@ -282,12 +288,27 @@
     const worldName = currentWorld.name || "Unnamed World";
     const created = currentWorld.created || "[Unknown]";
     const summary = currentWorld.summary || "Click to add a world summary...";
-  
-  
+    
     document.getElementById("world-name").textContent = worldName;
     document.getElementById("created-on").textContent = formatDate(created);
-    document.getElementById("summary-text").textContent = summary;
+    document.getElementById("summary-text").textContent = summary || "Click to add a world summary...";
   
+    function calculateDaysSince(dateString) {
+  const createdDate = new Date(dateString);
+  const today = new Date();
+
+  // Set both to midnight to avoid partial day differences
+  createdDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const diffTime = today - createdDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+document.getElementById("days-elapsed").textContent = calculateDaysSince(created);
+
+
     function enableEdit() {
       document.getElementById("world-name").style.display = "none";
       document.querySelector(".edit-btn").style.display = "none";
@@ -309,6 +330,24 @@
       document.getElementById("save-world-name").style.display = "none";
     }
   </script>
-  
+  <script>
+    function enableSummaryEdit() {
+      document.getElementById("summary-text").style.display = "none";
+      document.getElementById("summary-input").style.display = "block";
+      document.getElementById("save-summary").style.display = "inline-block";
+      document.getElementById("summary-input").value = currentWorld.summary || "";
+    }
+    
+    function saveSummary() {
+      const newSummary = document.getElementById("summary-input").value.trim();
+      currentWorld.summary = newSummary;
+      localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
+      document.getElementById("summary-text").textContent = newSummary || "Click to add a world summary...";
+      document.getElementById("summary-text").style.display = "block";
+      document.getElementById("summary-input").style.display = "none";
+      document.getElementById("save-summary").style.display = "none";
+    }
+    </script>
+    
  </body>
 </html>
