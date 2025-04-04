@@ -6,33 +6,66 @@
   <title>Living World Engine – Dashboard</title>
   <link href="landing.css" rel="stylesheet" />
   <style>
+    /* Basic page styling */
     body {
-  background-color: #2b1f13;
-  color: #f4e3c1;
-  font-family: Georgia, serif;
-  margin: 0;
-  padding: 450px 20px 20px 20px;
-  text-align: center;
-}
-
-h1 {
-      font-size: 2.8em;
-      color: #ffd700;
-      margin-bottom: 0;
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      margin: 0;
+      /* No large top padding needed now that sections aren't pinned */
+      padding: 20px;
+      text-align: center;
     }
 
-    h2.subtitle {
-      font-size: 1.3em;
-      margin-top: 0;
-      color: #e0c097;
+    /* Title Section */
+    #title-section {
+      /* Removed position:fixed and other pinned properties */
+      background-color: #2b1f13;
+      margin: 0;
+      padding: 5px 0;
+      text-align: center;
+    }
+    /* Remove default margins on h1/h2 for tighter spacing */
+    #title-section h1, #title-section h2 {
+      margin: 0;
+      line-height: 1.2;
+    }
+    /* Example sizes for smaller screens */
+    @media (max-width: 768px) {
+      #title-section h1 {
+        font-size: 2.2em;
+      }
+      #title-section h2 {
+        font-size: 1.1em;
+      }
     }
 
+    /* World Info Section */
+    #info-section {
+      /* Also no pinning here */
+      background-color: #2b1f13;
+      margin: 0;
+      padding: 5px 0;
+      text-align: center;
+    }
+
+    /* Navigation Section */
+    #nav-section {
+      /* Also not pinned */
+      background-color: #2b1f13;
+      margin: 0;
+      padding: 5px 0;
+      text-align: center;
+    }
+
+    /* Common .section-block styling, for consistent max width and centering */
     .section-block {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 5px 5px;
+      padding: 5px;
     }
 
+    /* The horizontal divider (hr) styling */
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
@@ -40,18 +73,18 @@ h1 {
       max-width: 90%;
     }
 
+    /* World name and small text styling */
     #world-name {
       font-size: 1.8em;
       font-weight: bold;
       color: #fff3c4;
+      margin: 0; /* remove extra space if desired */
     }
-
     #creation-date {
       font-size: 0.9em;
       color: #c7b58d;
       margin-top: 5px;
     }
-
     #dm-inspiration {
       font-style: italic;
       color: #d1c7ae;
@@ -59,14 +92,14 @@ h1 {
       margin-bottom: 10px;
     }
 
+    /* Nav Tabs styling (grid with wrap) */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
       max-width: 1200px;
-      margin: 5px auto 0;
+      margin: 5px auto;
     }
-
     .nav-tabs a {
       background-color: #5c3e1a;
       color: #f4e3c1;
@@ -78,16 +111,16 @@ h1 {
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
     .nav-tabs a:hover {
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
 
+    /* The main "Overview" area */
     #overview-section {
       text-align: left;
       max-width: 1000px;
-      margin: 0 auto;
+      margin: 20px auto; /* give it some vertical space from the nav */
       background-color: #3a2d1e;
       border-radius: 8px;
       padding: 20px;
@@ -95,159 +128,65 @@ h1 {
     }
 
     @media (max-width: 768px) {
+      /* Adjust title size if needed */
       h1 {
         font-size: 2em;
       }
-
       .nav-tabs {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       }
-
       #overview-section {
         padding: 15px;
       }
     }
-
-    #title-section {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
-  height: 140px;
-  background-color: #2b1f13;
-  margin: 0;
-  padding: 5px 0;
-  text-align: center;
-}
-
-#info-section {
-  position: fixed;
-  top: 150px;
-  left: 0;
-  width: 100%;
-  z-index: 9998;
-  height: 110px; 
-  background-color: #2b1f13;
-  margin: 0;
-  padding: 5px 0;
-  text-align: center;
-}
-
-#info-section .section-block {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 5px;
-}
-
-#nav-section {
-  position: fixed;
-  top: 270px;
-  left: 0;
-  width: 100%;
-  z-index: 9997;
-  background-color: #2b1f13;
-  margin: 0;
-  padding: 5px 0;
-  text-align: center;
-}
-
-#nav-section .section-block {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 5px;
-}
-
-/* This applies to all screen sizes */
-#title-section h1,
-#title-section h2 {
-  margin: 5px;
-  padding: 5px;
-  line-height: 1.2;
-}
-
-/* Keep your existing media query for smaller screens */
-@media (max-width: 768px) {
-  #title-section h1 {
-    font-size: 2.2em;
-  }
-  #title-section h2 {
-    font-size: 1.1em;
-  }
-}
-
-
   </style>
-
-  <script>
-    function formatDate(isoDate) {
-      const date = new Date(isoDate);
-      const day = date.getDate();
-      const daySuffix = (d => {
-        if (d > 3 && d < 21) return 'th';
-        switch (d % 10) {
-          case 1: return 'st';
-          case 2: return 'nd';
-          case 3: return 'rd';
-          default: return 'th';
-        }
-      })(day);
-
-      const options = { weekday: 'long', month: 'long', year: 'numeric' };
-      const formatter = new Intl.DateTimeFormat('en-GB', options);
-      const parts = formatter.formatToParts(date);
-
-      const weekday = parts.find(p => p.type === 'weekday')?.value;
-      const month = parts.find(p => p.type === 'month')?.value;
-      const year = parts.find(p => p.type === 'year')?.value;
-
-      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
-    }
-  </script>
 </head>
 
 <body>
-<div id="title-section">
-  <h1>Living World Engine</h1>
-  <h2 class="subtitle">Where realms breathe and stories live</h2>
-  <hr class="divider" />
-</div>
-
-<div id="info-section">
-  <div class="section-block">
-    <div id="world-name-container">
-      <span id="world-name">[World Name]</span>
-    </div>
-    <div id="creation-date">
-      Created: <span id="created-on">[Loading...]</span>
-    </div>
-    <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+  <!-- Title Section (scrolls normally) -->
+  <div id="title-section">
+    <h1>Living World Engine</h1>
+    <h2 class="subtitle">Where realms breathe and stories live</h2>
     <hr class="divider" />
   </div>
-</div>
 
-<div id="nav-section">
-  <div class="section-block nav-tabs">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="journal.html">Journal Entries</a>
-    <a href="countries.html">Countries</a>
-    <a href="towns.html">Towns</a>
-    <a href="npcs.html">NPCs</a>
-    <a href="factions.html">Factions</a>
-    <a href="bbeg.html">BBEG Tracker</a>
-    <a href="events.html">Event Logs</a>
-    <a href="market.html">Market Simulation</a>
-    <a href="lexicon.html">Language / Lexicon</a>
-    <a href="map.html">World Map</a>
-    <a href="quests.html">Quests</a>
-    <a href="players.html">Player Tracker</a>
-    <a href="timeline.html">Timeline</a>
-    <a href="magic.html">Magic / Religion</a>
-    <a href="bestiary.html">Bestiary</a>
-    <hr class="divider" />
+  <!-- World Info Section (scrolls normally) -->
+  <div id="info-section">
+    <div class="section-block">
+      <div id="world-name-container">
+        <span id="world-name">[World Name]</span>
+      </div>
+      <div id="creation-date">
+        Created: <span id="created-on">[Loading...]</span>
+      </div>
+      <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+      <hr class="divider" />
+    </div>
   </div>
-</div>
 
+  <!-- Navigation Section (scrolls normally) -->
+  <div id="nav-section">
+    <div class="section-block nav-tabs">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="journal.html">Journal Entries</a>
+      <a href="countries.html">Countries</a>
+      <a href="towns.html">Towns</a>
+      <a href="npcs.html">NPCs</a>
+      <a href="factions.html">Factions</a>
+      <a href="bbeg.html">BBEG Tracker</a>
+      <a href="events.html">Event Logs</a>
+      <a href="market.html">Market Simulation</a>
+      <a href="lexicon.html">Language / Lexicon</a>
+      <a href="map.html">World Map</a>
+      <a href="quests.html">Quests</a>
+      <a href="players.html">Player Tracker</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="magic.html">Magic / Religion</a>
+      <a href="bestiary.html">Bestiary</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
   <div class="section-block" id="overview-section">
     <h2>Overview</h2>
     <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
@@ -264,21 +203,39 @@ h1 {
     <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
       <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
         <span id="summary-text">Click to add a world summary...</span>
-        <span class="edit-btn" id="summary-edit" style="display: none;">✏️</span>
+        <!-- The edit elements were removed previously, so no pencil icon here. -->
       </div>
-      <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
-      <button id="save-summary" style="display:none; margin-top: 5px;">Save Summary</button>
     </div>
   </div>
 
   <script>
-    let currentWorld = null;
+    /* JavaScript for dynamic data loading */
+    function formatDate(isoDate) {
+      const date = new Date(isoDate);
+      const day = date.getDate();
+      const daySuffix = (d => {
+        if (d > 3 && d < 21) return 'th';
+        switch (d % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      })(day);
+      const options = { weekday: 'long', month: 'long', year: 'numeric' };
+      const formatter = new Intl.DateTimeFormat('en-GB', options);
+      const parts = formatter.formatToParts(date);
+      const weekday = parts.find(p => p.type === 'weekday')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const year = parts.find(p => p.type === 'year')?.value;
+      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+    }
 
+    let currentWorld = null;
     if (window.name) {
       try {
         const parsed = JSON.parse(window.name);
         currentWorld = parsed.world || null;
-
         if (currentWorld) {
           localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
           localStorage.setItem("worldFilename", parsed.fileName || "");
@@ -288,7 +245,6 @@ h1 {
         console.warn("Could not parse window.name payload:", e);
       }
     }
-
     if (!currentWorld) {
       currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
     }
@@ -300,7 +256,6 @@ h1 {
     document.getElementById("world-name").textContent = worldName;
     document.getElementById("created-on").textContent = formatDate(created);
     document.getElementById("summary-text").textContent = summary;
-
   </script>
 </body>
 </html>
