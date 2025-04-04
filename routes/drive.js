@@ -55,8 +55,9 @@ async function ensureIndexFile(drive, folderId) {
   }
 
   const content = JSON.stringify({ worlds: [] }, null, 2);
-  const buffer = Buffer.from(content);
-
+  const { Readable } = require('stream');
+  const bufferStream = Readable.from([content]);
+  
   const file = await drive.files.create({
     resource: {
       name: 'index.json',
@@ -64,10 +65,11 @@ async function ensureIndexFile(drive, folderId) {
     },
     media: {
       mimeType: 'application/json',
-      body: buffer,
+      body: bufferStream,
     },
     fields: 'id',
   });
+  
 
   return file.data.id;
 }
