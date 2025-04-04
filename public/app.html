@@ -117,8 +117,11 @@
     <div class="panel">
       <h2>Create New World</h2>
       <input type="text" id="newWorldName" placeholder="Enter world name..." />
-      <button onclick="createNewWorld()">Create</button>
-      <button onclick="downloadBlankWorld()">Download Blank World</button>
+      <div style="display: flex; gap: 10px;">
+        <button onclick="createWorldInDrive()">Create in Drive</button>
+        <button onclick="createWorldLocally()">Create Locally</button>
+      </div>
+      
 
       <h3 style="margin-top: 30px;">Load World from File</h3>
       <input type="file" id="loadFile" accept=".json" />

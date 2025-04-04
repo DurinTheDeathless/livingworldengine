@@ -194,3 +194,87 @@ async function createNewWorld() {
     console.error("❌ Error uploading world:", err);
     alert("Upload error. Check console.");
   }}
+
+  async function createWorldInDrive() {
+    const name = document.getElementById("newWorldName").value.trim();
+    if (!name) return alert("Enter a world name.");
+  
+    const worldData = {
+      name,
+      created: new Date().toISOString(),
+      summary: "",
+      countries: [],
+      towns: [],
+      npcs: [],
+      factions: [],
+      events: [],
+      bbeg: {},
+      market: {},
+      journal: []
+    };
+  
+    const file = new File([JSON.stringify(worldData, null, 2)], `${name}.json`, {
+      type: "application/json"
+    });
+  
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const accessToken = user?.accessToken;
+    if (!accessToken) return alert("You are not logged in!");
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("filename", `${name}.json`);
+  
+    try {
+      const res = await fetch("/drive/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+  
+      const result = await res.json();
+      if (res.ok) {
+        alert("World created and saved to Google Drive!");
+        window.location.href = "/play.html?file=" + encodeURIComponent(`${name}.json`);
+      } else {
+        console.error(result);
+        alert("Failed to save to Drive.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error uploading world to Drive.");
+    }
+  }
+  
+  function createWorldLocally() {
+    const name = document.getElementById("newWorldName").value.trim() || "unnamed";
+    const worldData = {
+      name,
+      created: new Date().toISOString(),
+      summary: "",
+      countries: [],
+      towns: [],
+      npcs: [],
+      factions: [],
+      events: [],
+      bbeg: {},
+      market: {},
+      journal: []
+    };
+  
+    const blob = new Blob([JSON.stringify(worldData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${name}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  
+    // Redirect using this downloaded file
+    sessionStorage.setItem("localWorldData", JSON.stringify(worldData));
+    window.location.href = "/play.html";
+  }
+  
