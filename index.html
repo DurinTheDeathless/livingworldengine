@@ -3,43 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>Living World Engine</title>
-  <!-- Keep the UnifrakturCook font for the main title -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Basic page reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
-    /* Body styling to match play.html’s colors/font approach */
     body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
-      text-align: left; /* default left alignment */
-      padding: 20px;    /* some space around */
+      text-align: left;
+      padding: 20px;
     }
-
-    /* A .section-block class similar to play.html for layout */
     .section-block {
       max-width: 1200px;
-      margin: 0 auto 20px auto; /* center horizontally, space at bottom */
+      margin: 0 auto 20px auto;
       padding: 10px;
-      background-color: #3a2d1e; 
+      background-color: #3a2d1e;
       border: 1px solid #c7b58d;
       border-radius: 6px;
     }
-
-    /* Title area (use the same concept as #title-section from play.html).
-       Preserving the UnifrakturCook font. */
     .title-area h1 {
-      font-family: 'UnifrakturCook', cursive; /* preserve special font */
-      font-size: 3rem; 
-      color: #ffd700;  /* a gold-ish color, as in play.html (#ffd700) */
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
+      color: #ffd700;
       margin-bottom: 0.3em;
-      text-align: center; /* center the heading text */
+      text-align: center;
     }
     .title-area p.subtitle {
       font-size: 1.2rem;
@@ -47,30 +38,23 @@
       margin-bottom: 0.5em;
       text-align: center;
     }
-
-    /* The emblem image styling */
     .emblem {
       text-align: center;
       margin-bottom: 10px;
     }
     .emblem img {
-      width: 80px;
+      width: 240px;
       height: auto;
     }
-
-    /* Divider styling consistent with play.html */
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
       margin: 10px 0;
     }
-
-    /* Buttons container */
     .buttons-block {
       text-align: center;
       margin-top: 20px;
     }
-    /* Reusable button styling consistent with the style in play.html’s nav tabs */
     button,
     .google-btn {
       background-color: #5c3e1a;
@@ -86,6 +70,7 @@
       transition: background-color 0.3s ease, transform 0.2s ease;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       margin: 5px;
     }
@@ -94,23 +79,15 @@
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
-
-    /* The Google button specifically uses a lighter background,
-       but let's keep it consistent with the play.html approach */
     .google-btn {
       background-color: #fff;
       color: #222;
       border: 1px solid #ccc;
-      font-family: Georgia, serif;
     }
     .google-btn:hover {
-      background-color: #ddd; 
+      background-color: #ddd;
       transform: scale(1.03);
     }
-
-    /* Footer styling to place at bottom, but without forced absolute positioning. 
-       If you DO want it absolutely at the bottom, you'd do position: absolute; bottom: 1rem; etc.
-       For a simpler approach, let it just follow the content. */
     footer {
       text-align: center;
       font-size: 0.9rem;
@@ -125,8 +102,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Title Section Block -->
   <div class="section-block title-area">
     <div class="emblem">
       <img src="/anvil-emblem-frontpage.png" alt="Forge Emblem" />
@@ -136,7 +111,6 @@
     <hr class="divider" />
   </div>
 
-  <!-- Buttons Block -->
   <div class="section-block">
     <div class="buttons-block">
       <button onclick="window.location.href='app.html'">Continue Without Login</button>
@@ -147,7 +121,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <p>
       <a href="/privacy.html">Privacy Policy</a>
@@ -155,6 +128,5 @@
       <a href="mailto:theelderdaysapplications@gmail.com">Contact Support</a>
     </p>
   </footer>
-
 </body>
 </html>
