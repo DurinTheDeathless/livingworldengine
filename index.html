@@ -73,6 +73,8 @@
       justify-content: center;
       gap: 6px;
       margin: 5px;
+      /* Ensure both buttons share the same vertical size. */
+      min-height: 44px;
     }
     button:hover,
     .google-btn:hover {
@@ -83,6 +85,11 @@
       background-color: #fff;
       color: #222;
       border: 1px solid #ccc;
+    }
+    /* Slight tweak for the Google logo alignment */
+    .google-btn img {
+      display: inline-block;
+      vertical-align: middle;
     }
     .google-btn:hover {
       background-color: #ddd;
