@@ -37,10 +37,10 @@ module.exports = pool; // Optional: export pool if used in other files
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/drive', driveRoutes);
+app.use('/drive', require('./routes/drive'));
 
 const pgSession = require('connect-pg-simple')(session);
 
