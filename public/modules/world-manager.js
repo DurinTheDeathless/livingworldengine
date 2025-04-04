@@ -302,9 +302,9 @@ async function listWorldsFromDrive() {
     });
     
     if (res.ok) {
-      const driveFiles = await res.json();
-      // Assume driveFiles is an array of { name: "... .json", id: ... }
-      driveFiles.forEach(file => {
+      const { files } = await res.json();
+      worldsList = []; // Clear old entries before loading fresh from Drive
+      files.forEach(file => {
         if (file.name && file.name.endsWith(".json")) {
           const worldName = file.name.replace(".json", "").replace(/_/g, " ");
           // Avoid duplicates (e.g., if already in list by import)
