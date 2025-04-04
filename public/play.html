@@ -117,6 +117,7 @@ h1 {
         padding: 15px;
       }
     }
+
     #title-section {
   position: fixed;
   top: 0;
@@ -129,6 +130,34 @@ h1 {
   text-align: center;
 }
 
+#info-section {
+  position: fixed;
+  top: 100px; /* or however tall the #title-section is */
+  left: 0;
+  width: 100%;
+  z-index: 9998; /* slightly lower or equal to #title-section z-index */
+  background-color: #2b1f13;
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+}
+
+#info-section .section-block {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+body {
+  background-color: #2b1f13;
+  color: #f4e3c1;
+  font-family: Georgia, serif;
+  margin: 0;
+  /* Increase top padding so the normal content starts 
+     below your two stacked headers. Tweak to taste! */
+  padding: 220px 20px 20px 20px; 
+  text-align: center;
+}
 
 @media (max-width: 768px) {
   #title-section h1 {
@@ -173,9 +202,9 @@ h1 {
   <h1>Living World Engine</h1>
   <h2 class="subtitle">Where realms breathe and stories live</h2>
   <hr class="divider" />
-
 </div>
 
+<div id="info-section">
   <div class="section-block">
     <div id="world-name-container">
       <span id="world-name">[World Name]</span>
@@ -185,7 +214,9 @@ h1 {
       Created: <span id="created-on">[Loading...]</span>
     </div>
     <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+    <hr class="divider" />
   </div>
+</div>
 
   <hr class="divider" />
 
