@@ -181,4 +181,4 @@ async function createNewWorld() {
   } catch (err) {
     console.error("❌ Error uploading world:", err);
     alert("Upload error. Check console.");
-  }
+  }}
