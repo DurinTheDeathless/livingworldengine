@@ -1,313 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Living World Engine &ndash; Dashboard
-  </title>
-  <link href="landing.css" rel="stylesheet"/>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Living World Engine – Dashboard</title>
+  <link href="landing.css" rel="stylesheet" />
   <style>
-   body {
+    body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
-      display: grid;
-      grid-template-rows: auto auto auto auto auto 1fr;
-      row-gap: 20px;
-      padding: 30px;
-      justify-items: center;
+      margin: 0;
+      padding: 20px;
       text-align: center;
     }
-    h1 {
-      font-size: 3em;
-      color: #ffd700;
-      margin: 0;
+
+    hr {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 20px 0 10px 0;
     }
-    h2 {
-      font-size: 1.5em;
-      margin: 0;
+
+    h1 {
+      font-size: 2.8em;
+      color: #ffd700;
+      margin-bottom: 0;
+    }
+
+    h2.subtitle {
+      font-size: 1.3em;
+      margin-top: 0;
       color: #e0c097;
     }
+
     #world-name-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-top: 10px;
     }
+
     #world-name {
       font-size: 1.8em;
       font-weight: bold;
       color: #fff3c4;
     }
+
     .edit-btn {
       cursor: pointer;
       color: #ccc;
       font-size: 1.2em;
     }
+
     .edit-btn:hover {
       color: #fff;
     }
-    #world-name-input {
-      font-size: 1.2em;
-      padding: 3px;
-      display: none;
+
+    #creation-date {
+      font-size: 0.9em;
+      color: #c7b58d;
+      margin-top: 5px;
     }
-    #save-world-name {
-      padding: 5px 10px;
-      font-size: 1em;
-      margin-left: 10px;
-      display: none;
-    }
+
     #dm-inspiration {
       font-style: italic;
       color: #d1c7ae;
-      max-width: 80%;
+      margin-top: 8px;
+      margin-bottom: 10px;
     }
+
     .nav-tabs {
       display: grid;
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
+      margin: 10px auto 0;
+      max-width: 1200px;
       width: 100%;
-      max-width: 1300px;
-      margin-top: 20px;
     }
+
     .nav-tabs a {
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 6px 10px;
+      padding: 8px;
       border-radius: 6px;
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 30px;
-      min-width: 140px;
+      display: block;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
+
     .nav-tabs a:hover {
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
-    .tab-content {
-      margin-top: 20px;
-      font-size: 1.2em;
+
+    #overview-section {
+      text-align: left;
+      max-width: 1000px;
+      margin: 20px auto 0 auto;
+      background-color: #3a2d1e;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #c7b58d;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+      #overview-section {
+        padding: 15px;
+      }
     }
   </style>
-  <style>
-    #edit-world-name {
-      display: none;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 0.9em;
-      color: #ccc;
-    }
-  
-    #world-name-container:hover #edit-world-name {
-      display: inline;
-    }
-  
-    .tab-content {
-      margin-top: 10px; /* reduced from 20px */
-      font-size: 1.2em;
-    }
-  </style>
-  
- </head>
- <body>
-  <h1>
-   Living World Engine
-  </h1>
-  <h2>
-   Where realms breathe and stories live
-  </h2>
-  <div id="world-name-container" style="text-align: center; position: relative; margin-top: 20px;">
-    <div style="display: inline-block; text-align: center;">
-      <div style="font-weight: bold; font-size: 1.8em; color: #fff3c4; position: relative;">
-        <span id="world-name">[World Name]</span>
-        <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
-      </div>
-      <div id="creation-date" style="font-size: 0.85em; color: #c7b58d; margin-top: 4px;">
-        Created: <span id="created-on">[Loading...]</span>
-      </div>
-    </div>
-    <input id="world-name-input" type="text" style="display:none; margin-top: 5px;"/>
-    <button id="save-world-name" onclick="saveWorldName()" style="display:none; margin-top: 5px;">Save</button>
-  </div>
 
-  <div id="dm-inspiration">
-   "A shadow stirs beneath the mountain, waiting for a name."
-  </div>
+  <script>
+    function formatDate(isoDate) {
+      const date = new Date(isoDate);
+      const day = date.getDate();
+      const daySuffix = (d => {
+        if (d > 3 && d < 21) return 'th';
+        switch (d % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      })(day);
 
-// Buttons
+      const options = { weekday: 'long', month: 'long', year: 'numeric' };
+      const formatter = new Intl.DateTimeFormat('en-GB', options);
+      const parts = formatter.formatToParts(date);
+
+      const weekday = parts.find(p => p.type === 'weekday')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const year = parts.find(p => p.type === 'year')?.value;
+
+      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Living World Engine</h1>
+  <h2 class="subtitle">Where realms breathe and stories live</h2>
+
+  <hr>
+
+  <div id="world-name-container">
+    <span id="world-name">[World Name]</span>
+    <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
+  </div>
+  <div id="creation-date">
+    Created: <span id="created-on">[Loading...]</span>
+  </div>
+  <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+
+  <hr>
 
   <div class="nav-tabs">
-   <a href="dashboard.html">
-    Dashboard
-   </a>
-   <a href="journal.html">
-    Journal Entries
-   </a>
-   <a href="countries.html">
-    Countries
-   </a>
-   <a href="towns.html">
-    Towns
-   </a>
-   <a href="npcs.html">
-    NPCs
-   </a>
-   <a href="factions.html">
-    Factions
-   </a>
-   <a href="bbeg.html">
-    BBEG Tracker
-   </a>
-   <a href="events.html">
-    Event Logs
-   </a>
-   <a href="market.html">
-    Market Simulation
-   </a>
-   <a href="lexicon.html">
-    Language / Lexicon
-   </a>
-   <a href="map.html">
-    World Map
-   </a>
-   <a href="quests.html">
-    Quests
-   </a>
-   <a href="players.html">
-    Player Tracker
-   </a>
-   <a href="timeline.html">
-    Timeline
-   </a>
-   <a href="magic.html">
-    Magic / Religion
-   </a>
-   <a href="bestiary.html">
-    Bestiary
-   </a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="journal.html">Journal Entries</a>
+    <a href="countries.html">Countries</a>
+    <a href="towns.html">Towns</a>
+    <a href="npcs.html">NPCs</a>
+    <a href="factions.html">Factions</a>
+    <a href="bbeg.html">BBEG Tracker</a>
+    <a href="events.html">Event Logs</a>
+    <a href="market.html">Market Simulation</a>
+    <a href="lexicon.html">Language / Lexicon</a>
+    <a href="map.html">World Map</a>
+    <a href="quests.html">Quests</a>
+    <a href="players.html">Player Tracker</a>
+    <a href="timeline.html">Timeline</a>
+    <a href="magic.html">Magic / Religion</a>
+    <a href="bestiary.html">Bestiary</a>
   </div>
-  // Buttons
-  
-  
-  
-  <div class="tab-content" style="margin-top: -40px;">
-    <div id="overview-section" style="margin-top: 0; padding-top: 10px;">
-      <h2 style="margin-top: 10px;">
-        Overview
-      </h2>  
+
+  <hr>
+
+  <div id="overview-section">
+    <h2>Overview</h2>
     <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
-     <div id="world-date">
-      Current Date:
-      <span id="date-display">
-       [Loading...]
-      </span>
-     </div>
-     <div id="days-since-start">
-      Days Since Campaign Start:
-      <span id="days-elapsed">
-       [Loading...]
-      </span>
-     </div>
-    </div>
-    <h3>
-     World Summary
-    </h3>
-    <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
-      <div id="world-summary" onclick="enableSummaryEdit()" style="border: 1px solid #c7b58d; border-radius: 6px; padding: 10px; background-color: #3a2d1e; cursor: pointer;">
-        <div id="summary-text" style="white-space: pre-line;"></div>
+      <div id="world-date">
+        Current Date:
+        <span id="date-display">[Loading...]</span>
       </div>
-      <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px; height: 100px; background-color: #2b1f13; color: #f4e3c1; border: 1px solid #ccc; padding: 8px; border-radius: 6px;"></textarea>
-      <button id="save-summary" onclick="saveSummary()" style="display:none; margin-top: 5px;">
-        Save Summary
-      </button>
-     <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
-     <button id="save-summary" style="display:none; margin-top: 5px;">
-      Save Summary
-     </button>
+      <div id="days-since-start">
+        Days Since Campaign Start:
+        <span id="days-elapsed">[Loading...]</span>
+      </div>
     </div>
-   </div>
-   <p>
-   </p>
+    <h3>World Summary</h3>
+    <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
+      <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
+        <span id="summary-text">Click to add a world summary...</span>
+        <span class="edit-btn" id="summary-edit" style="display: none;">✏️</span>
+      </div>
+      <textarea id="summary-input" style="display:none; width: 100%; max-width: 700px;"></textarea>
+      <button id="save-summary" style="display:none; margin-top: 5px;">Save Summary</button>
+    </div>
   </div>
-  <script>
-  function formatDate(isoDate) {
-  const date = new Date(isoDate);
-  const day = date.getDate();
-  const daySuffix = (d => {
-    if (d > 3 && d < 21) return 'th';
-    switch (d % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
-    }
-  })(day);
 
-  const options = { weekday: 'long', month: 'long', year: 'numeric' };
-  const formatter = new Intl.DateTimeFormat('en-GB', options);
-  const parts = formatter.formatToParts(date);
-
-  const weekday = parts.find(p => p.type === 'weekday')?.value;
-  const month = parts.find(p => p.type === 'month')?.value;
-  const year = parts.find(p => p.type === 'year')?.value;
-
-  return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
-}
-
-  </script>
   <script>
     let currentWorld = null;
-  
-    // Load from window.name if available
+
     if (window.name) {
       try {
         const parsed = JSON.parse(window.name);
         currentWorld = parsed.world || null;
-  
+
         if (currentWorld) {
           localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
           localStorage.setItem("worldFilename", parsed.fileName || "");
-          window.name = ""; // clear it so refresh doesn’t reuse it
+          window.name = "";
         }
       } catch (e) {
         console.warn("Could not parse window.name payload:", e);
       }
     }
-  
-    // Fallback to localStorage if window.name wasn’t used
+
     if (!currentWorld) {
       currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
     }
-  
+
     const worldName = currentWorld.name || "Unnamed World";
     const created = currentWorld.created || "[Unknown]";
     const summary = currentWorld.summary || "Click to add a world summary...";
-    
+
     document.getElementById("world-name").textContent = worldName;
     document.getElementById("created-on").textContent = formatDate(created);
-    document.getElementById("summary-text").textContent = summary || "Click to add a world summary...";
-  
-    function calculateDaysSince(dateString) {
-  const createdDate = new Date(dateString);
-  const today = new Date();
-
-  // Set both to midnight to avoid partial day differences
-  createdDate.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-
-  const diffTime = today - createdDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
-}
-
-document.getElementById("days-elapsed").textContent = calculateDaysSince(created);
-
+    document.getElementById("summary-text").textContent = summary;
 
     function enableEdit() {
       document.getElementById("world-name").style.display = "none";
@@ -316,7 +237,7 @@ document.getElementById("days-elapsed").textContent = calculateDaysSince(created
       document.getElementById("world-name-input").value = worldName;
       document.getElementById("save-world-name").style.display = "inline-block";
     }
-  
+
     function saveWorldName() {
       const newName = document.getElementById("world-name-input").value.trim();
       if (newName) {
@@ -330,24 +251,5 @@ document.getElementById("days-elapsed").textContent = calculateDaysSince(created
       document.getElementById("save-world-name").style.display = "none";
     }
   </script>
-  <script>
-    function enableSummaryEdit() {
-      document.getElementById("summary-text").style.display = "none";
-      document.getElementById("summary-input").style.display = "block";
-      document.getElementById("save-summary").style.display = "inline-block";
-      document.getElementById("summary-input").value = currentWorld.summary || "";
-    }
-    
-    function saveSummary() {
-      const newSummary = document.getElementById("summary-input").value.trim();
-      currentWorld.summary = newSummary;
-      localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-      document.getElementById("summary-text").textContent = newSummary || "Click to add a world summary...";
-      document.getElementById("summary-text").style.display = "block";
-      document.getElementById("summary-input").style.display = "none";
-      document.getElementById("save-summary").style.display = "none";
-    }
-    </script>
-    
- </body>
+</body>
 </html>
