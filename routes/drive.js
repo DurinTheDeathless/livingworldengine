@@ -77,10 +77,13 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const drive = getDriveClient(accessToken);
     const fileMetadata = { name: fileName };
+    const { Readable } = require('stream');
+
     const media = {
       mimeType: 'application/json',
-      body: Buffer.from(file.buffer),
+      body: Readable.from(file.buffer)
     };
+    
 
     const uploaded = await drive.files.create({
       requestBody: fileMetadata,
