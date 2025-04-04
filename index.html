@@ -3,91 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <title>Living World Engine</title>
-  <link rel="stylesheet" href="landing.css">
+  <!-- Keep the UnifrakturCook font for the main title -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-
   <style>
-    body {
+    /* Basic page reset */
+    * {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #1f140b, #3a2b20); /* darker earthy tone */
-      color: #f4e9d8; /* light text for visibility */
+      box-sizing: border-box;
     }
 
-    .container {
+    /* Body styling to match play.html’s colors/font approach */
+    body {
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      text-align: left; /* default left alignment */
+      padding: 20px;    /* some space around */
+    }
+
+    /* A .section-block class similar to play.html for layout */
+    .section-block {
+      max-width: 1200px;
+      margin: 0 auto 20px auto; /* center horizontally, space at bottom */
+      padding: 10px;
+      background-color: #3a2d1e; 
+      border: 1px solid #c7b58d;
+      border-radius: 6px;
+    }
+
+    /* Title area (use the same concept as #title-section from play.html).
+       Preserving the UnifrakturCook font. */
+    .title-area h1 {
+      font-family: 'UnifrakturCook', cursive; /* preserve special font */
+      font-size: 3rem; 
+      color: #ffd700;  /* a gold-ish color, as in play.html (#ffd700) */
+      margin-bottom: 0.3em;
+      text-align: center; /* center the heading text */
+    }
+    .title-area p.subtitle {
+      font-size: 1.2rem;
+      color: #e0c097;
+      margin-bottom: 0.5em;
       text-align: center;
     }
 
-    .logo {
-      width: 80px;
-      height: auto;
+    /* The emblem image styling */
+    .emblem {
+      text-align: center;
       margin-bottom: 10px;
     }
-
-    h1 {
-      font-family: 'UnifrakturCook', cursive;
-      font-size: 3rem;
-      margin: 0;
-      color: #f0e6d2;
+    .emblem img {
+      width: 80px;
+      height: auto;
     }
 
-    .subtitle {
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
-      color: #e3d6c3;
+    /* Divider styling consistent with play.html */
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 10px 0;
     }
 
-    .buttons {
-      margin-top: 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+    /* Buttons container */
+    .buttons-block {
+      text-align: center;
+      margin-top: 20px;
     }
-
+    /* Reusable button styling consistent with the style in play.html’s nav tabs */
+    button,
     .google-btn {
-      padding: 10px 20px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: inherit;
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      text-decoration: none;
+      padding: 10px 16px;
+      border: 1px solid #7a5c3e;
+      border-radius: 6px;
+      font-family: Georgia, serif;
       font-size: 1rem;
       cursor: pointer;
-      color: #222;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 5px;
+    }
+    button:hover,
+    .google-btn:hover {
+      background-color: #8a5f2e;
+      transform: scale(1.03);
     }
 
+    /* The Google button specifically uses a lighter background,
+       but let's keep it consistent with the play.html approach */
+    .google-btn {
+      background-color: #fff;
+      color: #222;
+      border: 1px solid #ccc;
+      font-family: Georgia, serif;
+    }
+    .google-btn:hover {
+      background-color: #ddd; 
+      transform: scale(1.03);
+    }
+
+    /* Footer styling to place at bottom, but without forced absolute positioning. 
+       If you DO want it absolutely at the bottom, you'd do position: absolute; bottom: 1rem; etc.
+       For a simpler approach, let it just follow the content. */
     footer {
-      position: absolute;
-      bottom: 1rem;
-      width: 100%;
       text-align: center;
       font-size: 0.9rem;
-      color: #ccc;
+      color: #c7b58d;
+      margin-top: 20px;
     }
-
     footer a {
-      color: #ccc;
+      color: #c7b58d;
       text-decoration: none;
+      margin: 0 5px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+
+  <!-- Title Section Block -->
+  <div class="section-block title-area">
     <div class="emblem">
-      <img src="/anvil-emblem-frontpage.png" alt="Forge Emblem" class="logo" />
+      <img src="/anvil-emblem-frontpage.png" alt="Forge Emblem" />
     </div>
     <h1>Living World Engine</h1>
     <p class="subtitle">Enter the forge of a world that lives and remembers.</p>
-    <div class="buttons">
+    <hr class="divider" />
+  </div>
+
+  <!-- Buttons Block -->
+  <div class="section-block">
+    <div class="buttons-block">
       <button onclick="window.location.href='app.html'">Continue Without Login</button>
       <button class="google-btn" onclick="window.location.href='/auth/google?prompt=select_account'">
         <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" height="20" />
@@ -96,12 +147,14 @@
     </div>
   </div>
 
+  <!-- Footer -->
   <footer>
     <p>
       <a href="/privacy.html">Privacy Policy</a>
-      &nbsp;•&nbsp;
+      •
       <a href="mailto:theelderdaysapplications@gmail.com">Contact Support</a>
     </p>
   </footer>
+
 </body>
 </html>
