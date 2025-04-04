@@ -141,14 +141,12 @@ router.post('/list', async (req, res) => {
   }
 });
 
-
-  
-
 router.post('/upload', upload.single('file'), async (req, res) => {
   console.log("🧪 Headers:", req.headers);
   console.log("🧪 Body:", req.body);
   console.log("🧪 File:", req.file);
-    const accessToken = req.headers.authorization?.split(' ')[1];
+
+  const accessToken = req.headers.authorization?.split(' ')[1];
   const file = req.file;
   const fileName = req.body.filename;
 
@@ -158,17 +156,26 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
   try {
     const drive = getDriveClient(accessToken);
-    const fileMetadata = { name: fileName };
+
+    // ✅ Ensure folder exists (or create it)
+    const folderId = await ensureAppFolder(drive);
+
+    // ✅ Prepare file upload
     const { Readable } = require('stream');
+    const bufferStream = Readable.from(file.buffer);
+
+    const fileMetadata = {
+      name: fileName,
+      parents: [folderId] // 🔥 assign to folder
+    };
 
     const media = {
       mimeType: 'application/json',
-      body: Readable.from(file.buffer)
+      body: bufferStream
     };
-    
 
     const uploaded = await drive.files.create({
-      requestBody: fileMetadata,
+      resource: fileMetadata,
       media,
       fields: 'id',
     });
@@ -179,5 +186,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'Upload failed' });
   }
 });
+
 
 module.exports = router;
