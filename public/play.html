@@ -15,12 +15,6 @@
       text-align: center;
     }
 
-    hr {
-      border: none;
-      border-top: 1px solid #c7b58d;
-      margin: 20px 0 10px 0;
-    }
-
     h1 {
       font-size: 2.8em;
       color: #ffd700;
@@ -33,8 +27,17 @@
       color: #e0c097;
     }
 
-    #world-name-container {
-      margin-top: 10px;
+    .section-block {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 25px auto 15px;
+      max-width: 90%;
     }
 
     #world-name {
@@ -70,9 +73,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
-      margin: 10px auto 0;
       max-width: 1200px;
-      width: 100%;
+      margin: 10px auto 0;
     }
 
     .nav-tabs a {
@@ -95,7 +97,7 @@
     #overview-section {
       text-align: left;
       max-width: 1000px;
-      margin: 20px auto 0 auto;
+      margin: 0 auto;
       background-color: #3a2d1e;
       border-radius: 8px;
       padding: 20px;
@@ -106,6 +108,11 @@
       h1 {
         font-size: 2em;
       }
+
+      .nav-tabs {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+
       #overview-section {
         padding: 15px;
       }
@@ -140,23 +147,27 @@
 </head>
 
 <body>
-  <h1>Living World Engine</h1>
-  <h2 class="subtitle">Where realms breathe and stories live</h2>
-
-  <hr>
-
-  <div id="world-name-container">
-    <span id="world-name">[World Name]</span>
-    <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
+  <div class="section-block">
+    <h1>Living World Engine</h1>
+    <h2 class="subtitle">Where realms breathe and stories live</h2>
   </div>
-  <div id="creation-date">
-    Created: <span id="created-on">[Loading...]</span>
+
+  <hr class="divider" />
+
+  <div class="section-block">
+    <div id="world-name-container">
+      <span id="world-name">[World Name]</span>
+      <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
+    </div>
+    <div id="creation-date">
+      Created: <span id="created-on">[Loading...]</span>
+    </div>
+    <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
   </div>
-  <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
 
-  <hr>
+  <hr class="divider" />
 
-  <div class="nav-tabs">
+  <div class="section-block nav-tabs">
     <a href="dashboard.html">Dashboard</a>
     <a href="journal.html">Journal Entries</a>
     <a href="countries.html">Countries</a>
@@ -175,9 +186,9 @@
     <a href="bestiary.html">Bestiary</a>
   </div>
 
-  <hr>
+  <hr class="divider" />
 
-  <div id="overview-section">
+  <div class="section-block" id="overview-section">
     <h2>Overview</h2>
     <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
       <div id="world-date">
