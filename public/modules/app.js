@@ -155,14 +155,26 @@ async function createNewWorld() {
   if (!accessToken) return alert("You are not logged in!");
 
   try {
+    console.log("✅ Access Token:", accessToken);
+
+    const fileBlob = new Blob([JSON.stringify(worldData, null, 2)], { type: "application/json" });
+    const file = new File([fileBlob], fileName, { type: "application/json" });
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("filename", fileName);
+    
+    console.log("📦 Uploading File:", file);
+    
     const res = await fetch("/drive/upload", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        // Do NOT set Content-Type manually!
+        // Don't set Content-Type manually — FormData does it automatically.
       },
       body: formData,
     });
+    
   
     try {
       const result = await res.json();
