@@ -1,6 +1,4 @@
-# .gitignore
 .env
 node_modules/
-*.log
+.log
 .DS_Store
-.env
