@@ -4,11 +4,15 @@ const passport = require('passport');
 const router = express.Router();
 
 router.get('/google', passport.authenticate('google', {
-  scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
-  prompt: 'select_account', // <-- force account picker every time
+  scope: [
+    'profile',
+    'email',
+    'https://www.googleapis.com/auth/drive.file'
+  ],
+  prompt: 'consent', // ensures Google asks for permissions again
   accessType: 'offline',
-  responseType: 'code',
-  include_granted_scopes: false
+  responseType: 'code'
+
 }));
 
 router.get('/google/callback',
