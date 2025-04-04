@@ -155,31 +155,30 @@ async function createNewWorld() {
   if (!accessToken) return alert("You are not logged in!");
 
   try {
-    const res = await fetch("/drive/save", {
+    const res = await fetch("/drive/upload", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        // Do NOT set Content-Type manually!
       },
-      body: JSON.stringify({
-        fileName,
-        fileContent: worldData,
-        accessToken
-      }),
+      body: formData,
     });
-
-    const result = await res.json();
-
-    if (res.ok && result.success) {
-      sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
-      sessionStorage.setItem("currentFileName", fileName);
-      sessionStorage.setItem("currentWorldSource", "drive");
-      window.location.href = "/play.html";
-    } else {
-      console.error(result);
-      alert("Failed to save new world to Drive.");
+  
+    try {
+      const result = await res.json();
+      if (res.ok) {
+        alert("New world created and saved to Google Drive!");
+        window.location.href = "/play.html?file=" + encodeURIComponent(`${worldName}.json`);
+      } else {
+        console.error("Drive upload failed:", result);
+        alert("Failed to save new world to Drive.");
+      }
+    } catch (jsonError) {
+      const fallbackText = await res.text();
+      console.error("❌ Response was not JSON:", fallbackText);
+      alert("Unexpected response from server.");
     }
   } catch (err) {
-    console.error(err);
-    alert("Error uploading new world.");
+    console.error("❌ Error uploading world:", err);
+    alert("Upload error. Check console.");
   }
-}

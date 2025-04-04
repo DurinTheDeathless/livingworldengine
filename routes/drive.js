@@ -42,6 +42,7 @@ router.post('/load', async (req, res) => {
 });
 
 router.post('/upload', upload.single('file'), async (req, res) => {
+  console.log("🔄 /drive/upload called");
   const accessToken = req.headers.authorization?.split(' ')[1];
   const file = req.file;
   const fileName = req.body.filename;
