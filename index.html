@@ -60,7 +60,6 @@
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 10px 16px;
       border: 1px solid #7a5c3e;
       border-radius: 6px;
       font-family: Georgia, serif;
@@ -68,13 +67,21 @@
       cursor: pointer;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
+
+      /* Ensure consistent sizing and alignment: */
       display: inline-flex;
-      align-items: center;
+      align-items: center;   /* vertically center text & icon */
       justify-content: center;
       gap: 6px;
       margin: 5px;
-      /* Ensure both buttons share the same vertical size. */
-      min-height: 44px;
+
+      /* Force same height, no wrapping */
+      height: 44px;          
+      line-height: normal;   
+      white-space: nowrap;   
+
+      /* Horizontal padding to your preference */
+      padding: 0 16px;
     }
     button:hover,
     .google-btn:hover {
@@ -86,14 +93,15 @@
       color: #222;
       border: 1px solid #ccc;
     }
-    /* Slight tweak for the Google logo alignment */
-    .google-btn img {
-      display: inline-block;
-      vertical-align: middle;
-    }
     .google-btn:hover {
       background-color: #ddd;
       transform: scale(1.03);
+    }
+    .google-btn img {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
     }
     footer {
       text-align: center;
@@ -122,7 +130,7 @@
     <div class="buttons-block">
       <button onclick="window.location.href='app.html'">Continue Without Login</button>
       <button class="google-btn" onclick="window.location.href='/auth/google?prompt=select_account'">
-        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" height="20" />
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
         Login with Google
       </button>
     </div>
