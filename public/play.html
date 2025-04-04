@@ -11,7 +11,7 @@
   color: #f4e3c1;
   font-family: Georgia, serif;
   margin: 0;
-  padding: 20px 20px 20px 20px;
+  padding: 380px 20px 20px 20px;
   text-align: center;
 }
 
@@ -46,16 +46,6 @@ h1 {
       color: #fff3c4;
     }
 
-    .edit-btn {
-      cursor: pointer;
-      color: #ccc;
-      font-size: 1.2em;
-    }
-
-    .edit-btn:hover {
-      color: #fff;
-    }
-
     #creation-date {
       font-size: 0.9em;
       color: #c7b58d;
@@ -74,7 +64,7 @@ h1 {
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
       max-width: 1200px;
-      margin: 10px auto 0;
+      margin: 5px auto 0;
     }
 
     .nav-tabs a {
@@ -139,15 +129,34 @@ h1 {
   z-index: 9998; /* slightly lower or equal to #title-section z-index */
   background-color: #2b1f13;
   margin: 0;
-  padding: 10px 0;
+  padding: 5px 0;
   text-align: center;
 }
 
 #info-section .section-block {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 5px;
 }
+
+#nav-section {
+  position: fixed;
+  top: 280px;
+  left: 0;
+  width: 100%;
+  z-index: 9997;
+  background-color: #2b1f13;
+  margin: 0;
+  padding: 5px 0;
+  text-align: center;
+}
+
+#nav-section .section-block {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5px;
+}
+
 
 body {
   background-color: #2b1f13;
@@ -209,7 +218,6 @@ body {
   <div class="section-block">
     <div id="world-name-container">
       <span id="world-name">[World Name]</span>
-      <span class="edit-btn" id="edit-world-name" onclick="enableEdit()">✏️</span>
     </div>
     <div id="creation-date">
       Created: <span id="created-on">[Loading...]</span>
@@ -219,8 +227,7 @@ body {
   </div>
 </div>
 
-  <hr class="divider" />
-
+<div id="nav-section">
   <div class="section-block nav-tabs">
     <a href="dashboard.html">Dashboard</a>
     <a href="journal.html">Journal Entries</a>
@@ -238,8 +245,10 @@ body {
     <a href="timeline.html">Timeline</a>
     <a href="magic.html">Magic / Religion</a>
     <a href="bestiary.html">Bestiary</a>
-  </div>
 
+    <hr class="divider" />
+  </div>
+</div>
   <hr class="divider" />
 
   <div class="section-block" id="overview-section">
@@ -295,26 +304,6 @@ body {
     document.getElementById("created-on").textContent = formatDate(created);
     document.getElementById("summary-text").textContent = summary;
 
-    function enableEdit() {
-      document.getElementById("world-name").style.display = "none";
-      document.querySelector(".edit-btn").style.display = "none";
-      document.getElementById("world-name-input").style.display = "inline-block";
-      document.getElementById("world-name-input").value = worldName;
-      document.getElementById("save-world-name").style.display = "inline-block";
-    }
-
-    function saveWorldName() {
-      const newName = document.getElementById("world-name-input").value.trim();
-      if (newName) {
-        currentWorld.name = newName;
-        localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-        document.getElementById("world-name").textContent = newName;
-      }
-      document.getElementById("world-name").style.display = "inline-block";
-      document.querySelector(".edit-btn").style.display = "inline-block";
-      document.getElementById("world-name-input").style.display = "none";
-      document.getElementById("save-world-name").style.display = "none";
-    }
   </script>
 </body>
 </html>
