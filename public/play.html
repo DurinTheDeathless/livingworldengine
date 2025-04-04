@@ -230,21 +230,30 @@
    </p>
   </div>
   <script>
-    function formatPrettyDate(dateString) {
-      const date = new Date(dateString);
-      const day = date.getDate();
-  
-      // Determine suffix
-      const suffix =
-        day % 10 === 1 && day !== 11 ? "st" :
-        day % 10 === 2 && day !== 12 ? "nd" :
-        day % 10 === 3 && day !== 13 ? "rd" : "th";
-  
-      const options = { weekday: 'long', month: 'long', year: 'numeric' };
-      const parts = date.toLocaleDateString(undefined, options).split(' ');
-  
-      return `${parts[0]} ${day}${suffix} of ${parts[1]} ${parts[2]}`;
+  function formatDate(isoDate) {
+  const date = new Date(isoDate);
+  const day = date.getDate();
+  const daySuffix = (d => {
+    if (d > 3 && d < 21) return 'th';
+    switch (d % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
     }
+  })(day);
+
+  const options = { weekday: 'long', month: 'long', year: 'numeric' };
+  const formatter = new Intl.DateTimeFormat('en-GB', options);
+  const parts = formatter.formatToParts(date);
+
+  const weekday = parts.find(p => p.type === 'weekday')?.value;
+  const month = parts.find(p => p.type === 'month')?.value;
+  const year = parts.find(p => p.type === 'year')?.value;
+
+  return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+}
+
   </script>
   <script>
     let currentWorld = null;
@@ -276,7 +285,7 @@
   
   
     document.getElementById("world-name").textContent = worldName;
-    document.getElementById("created-on").textContent = formatPrettyDate(created);
+    document.getElementById("created-on").textContent = formatDate(created);
     document.getElementById("summary-text").textContent = summary;
   
     function enableEdit() {
