@@ -230,6 +230,23 @@
    </p>
   </div>
   <script>
+    function formatPrettyDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate();
+  
+      // Determine suffix
+      const suffix =
+        day % 10 === 1 && day !== 11 ? "st" :
+        day % 10 === 2 && day !== 12 ? "nd" :
+        day % 10 === 3 && day !== 13 ? "rd" : "th";
+  
+      const options = { weekday: 'long', month: 'long', year: 'numeric' };
+      const parts = date.toLocaleDateString(undefined, options).split(' ');
+  
+      return `${parts[0]} ${day}${suffix} of ${parts[1]} ${parts[2]}`;
+    }
+  </script>
+  <script>
     let currentWorld = null;
   
     // Load from window.name if available
@@ -257,8 +274,9 @@
     const created = currentWorld.created || "[Unknown]";
     const summary = currentWorld.summary || "Click to add a world summary...";
   
+  
     document.getElementById("world-name").textContent = worldName;
-    document.getElementById("created-on").textContent = created;
+    document.getElementById("created-on").textContent = formatPrettyDate(created);
     document.getElementById("summary-text").textContent = summary;
   
     function enableEdit() {
