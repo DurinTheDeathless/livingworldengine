@@ -41,26 +41,29 @@ router.post('/load', async (req, res) => {
   }
 });
 
-router.post('/list', async (req, res) => {
-  const { accessToken } = req.body;
-
-  if (!accessToken) {
-    return res.status(400).json({ error: 'Missing access token' });
-  }
-
-  try {
-    const drive = getDriveClient(accessToken);
-    const result = await drive.files.list({
-      q: "mimeType='application/json' and trashed=false",
-      fields: 'files(id, name, createdTime)',
-    });
-
-    res.json({ success: true, files: result.data.files });
-  } catch (err) {
-    console.error("Drive list error:", err);
-    res.status(500).json({ error: 'Failed to list files from Drive' });
-  }
-});
+  router.post('/list', async (req, res) => {
+    const accessToken = req.headers.authorization?.split(' ')[1];
+  
+    if (!accessToken) {
+      return res.status(400).json({ error: 'Missing access token' });
+    }
+  
+    try {
+      const drive = getDriveClient(accessToken);
+      const response = await drive.files.list({
+        q: "mimeType='application/json' and trashed=false",
+        fields: 'files(id, name, createdTime)',
+      });
+  
+      const files = response.data.files || [];
+  
+      res.json({ success: true, files });
+    } catch (err) {
+      console.error("Drive list error:", err);
+      res.status(500).json({ error: 'Drive listing failed' });
+    }
+  });
+  
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   console.log("🧪 Headers:", req.headers);
