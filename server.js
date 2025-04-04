@@ -42,11 +42,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/drive', driveRoutes);
 
+const pgSession = require('connect-pg-simple')(session);
+
 app.use(session({
+  store: new pgSession({
+    pool: pool, // the same Pool you already defined
+    tableName: 'session'
+  }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    secure: false // set to true if using HTTPS
+  }
 }));
+
 
 
 app.use(passport.initialize());
