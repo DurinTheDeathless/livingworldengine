@@ -21,6 +21,87 @@ function getDriveClient(accessToken) {
   return google.drive({ version: 'v3', auth: oauth2Client });
 }
 
+async function ensureAppFolder(drive) {
+  const folderName = "LivingWorldEngine";
+
+  const folderList = await drive.files.list({
+    q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+    fields: 'files(id, name)',
+  });
+
+  if (folderList.data.files.length > 0) {
+    return folderList.data.files[0].id;
+  }
+
+  const createdFolder = await drive.files.create({
+    resource: {
+      name: folderName,
+      mimeType: 'application/vnd.google-apps.folder',
+    },
+    fields: 'id',
+  });
+
+  return createdFolder.data.id;
+}
+
+async function ensureIndexFile(drive, folderId) {
+  const result = await drive.files.list({
+    q: `'${folderId}' in parents and name='index.json' and trashed=false`,
+    fields: 'files(id, name)',
+  });
+
+  if (result.data.files.length > 0) {
+    return result.data.files[0].id;
+  }
+
+  const content = JSON.stringify({ worlds: [] }, null, 2);
+  const buffer = Buffer.from(content);
+
+  const file = await drive.files.create({
+    resource: {
+      name: 'index.json',
+      parents: [folderId],
+    },
+    media: {
+      mimeType: 'application/json',
+      body: buffer,
+    },
+    fields: 'id',
+  });
+
+  return file.data.id;
+}
+
+async function listWorldFiles(drive, folderId) {
+  const res = await drive.files.list({
+    q: `'${folderId}' in parents and mimeType='application/json' and trashed=false and name != 'index.json'`,
+    fields: 'files(id, name, createdTime)',
+  });
+
+  return res.data.files;
+}
+
+async function uploadWorld(drive, folderId, worldData) {
+  const fileMetadata = {
+    name: worldData.name + ".json",
+    parents: [folderId],
+  };
+
+  const media = {
+    mimeType: 'application/json',
+    body: Buffer.from(JSON.stringify(worldData, null, 2)),
+  };
+
+  const file = await drive.files.create({
+    resource: fileMetadata,
+    media,
+    fields: 'id',
+  });
+
+  return file.data.id;
+}
+
+
 router.post('/load', async (req, res) => {
   const { fileName, accessToken } = req.body;
   try {
@@ -47,19 +128,17 @@ router.post('/list', async (req, res) => {
 
   try {
     const drive = getDriveClient(accessToken);
+    const folderId = await ensureAppFolder(drive);
+    await ensureIndexFile(drive, folderId); // make sure index.json exists
 
-    const response = await drive.files.list({
-      q: "mimeType='application/json' and trashed=false",
-      fields: 'files(id, name, createdTime)',
-    });
-
-    const files = response.data.files || [];
+    const files = await listWorldFiles(drive, folderId);
     res.json({ success: true, files });
   } catch (err) {
     console.error("Drive list error:", err);
     res.status(500).json({ error: 'Drive listing failed' });
   }
 });
+
 
   
 
