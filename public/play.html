@@ -4,81 +4,50 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Living World Engine – Dashboard</title>
+  <!-- Optional external CSS -->
   <link href="landing.css" rel="stylesheet" />
   <style>
-    /* Basic page styling */
+    /* 1) Basic page styling */
     body {
+      margin: 0;
+      padding: 20px;
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
-      margin: 0;
-      /* No large top padding needed now that sections aren't pinned */
-      padding: 20px;
-      text-align: center;
+      /* We’re not centering everything; normal flow from top to bottom. */
     }
 
-    /* Title Section */
-    #title-section {
-      /* Removed position:fixed and other pinned properties */
-      background-color: #2b1f13;
-      margin: 0;
-      padding: 5px 0;
-      text-align: center;
+    /* 2) A general "section-block" class for max-width centering */
+    .section-block {
+      max-width: 1200px;
+      margin: 0 auto;   /* center horizontally if screen is wider than 1200px */
+      padding: 10px;    
     }
-    /* Remove default margins on h1/h2 for tighter spacing */
+
+    /* 3) Title section (displays on top, scrolls normally) */
+    #title-section {
+      /* No pinned positioning; normal block. */
+      background-color: #2b1f13;
+      margin-bottom: 20px; /* add a gap before the next section */
+      text-align: center;   /* headings are center-aligned if you like */
+    }
+    /* Remove default h1/h2 margins for tighter spacing */
     #title-section h1, #title-section h2 {
       margin: 0;
       line-height: 1.2;
     }
-    /* Example sizes for smaller screens */
-    @media (max-width: 768px) {
-      #title-section h1 {
-        font-size: 2.2em;
-      }
-      #title-section h2 {
-        font-size: 1.1em;
-      }
-    }
 
-    /* World Info Section */
+    /* 4) World info (again, normal block) */
     #info-section {
-      /* Also no pinning here */
       background-color: #2b1f13;
-      margin: 0;
-      padding: 5px 0;
+      margin-bottom: 20px;
       text-align: center;
     }
-
-    /* Navigation Section */
-    #nav-section {
-      /* Also not pinned */
-      background-color: #2b1f13;
-      margin: 0;
-      padding: 5px 0;
-      text-align: center;
-    }
-
-    /* Common .section-block styling, for consistent max width and centering */
-    .section-block {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 5px;
-    }
-
-    /* The horizontal divider (hr) styling */
-    .divider {
-      border: none;
-      border-top: 1px solid #c7b58d;
-      margin: 15px auto 5px;
-      max-width: 90%;
-    }
-
-    /* World name and small text styling */
     #world-name {
       font-size: 1.8em;
       font-weight: bold;
       color: #fff3c4;
-      margin: 0; /* remove extra space if desired */
+      margin: 0; /* minimal margin to keep it tight */
     }
     #creation-date {
       font-size: 0.9em;
@@ -92,13 +61,19 @@
       margin-bottom: 10px;
     }
 
-    /* Nav Tabs styling (grid with wrap) */
+    /* 5) Navigation section */
+    #nav-section {
+      background-color: #2b1f13;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    /* The nav-tabs container uses grid for the buttons themselves */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
       max-width: 1200px;
-      margin: 5px auto;
+      margin: 0 auto; /* center within the page width */
     }
     .nav-tabs a {
       background-color: #5c3e1a;
@@ -116,24 +91,32 @@
       transform: scale(1.03);
     }
 
-    /* The main "Overview" area */
-    #overview-section {
-      text-align: left;
-      max-width: 1000px;
-      margin: 20px auto; /* give it some vertical space from the nav */
-      background-color: #3a2d1e;
-      border-radius: 8px;
-      padding: 20px;
-      border: 1px solid #c7b58d;
+    /* 6) Common divider styling */
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 15px auto 5px;
+      max-width: 90%;
     }
 
+    /* 7) Main "Overview" content section at the bottom (normal block) */
+    #overview-section {
+      background-color: #3a2d1e;
+      border-radius: 8px;
+      border: 1px solid #c7b58d;
+      text-align: left;    /* content is left-aligned inside */
+      margin-bottom: 20px; /* space at bottom if desired */
+    }
+    #overview-section h2 {
+      margin-top: 0;
+    }
+    /* For smaller screens, tweak heading or layout as needed */
     @media (max-width: 768px) {
-      /* Adjust title size if needed */
-      h1 {
+      #title-section h1 {
         font-size: 2em;
       }
-      .nav-tabs {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      #title-section h2 {
+        font-size: 1.1em;
       }
       #overview-section {
         padding: 15px;
@@ -143,30 +126,31 @@
 </head>
 
 <body>
-  <!-- Title Section (scrolls normally) -->
-  <div id="title-section">
+
+  <!-- Title Section -->
+  <div id="title-section" class="section-block">
     <h1>Living World Engine</h1>
     <h2 class="subtitle">Where realms breathe and stories live</h2>
     <hr class="divider" />
   </div>
 
-  <!-- World Info Section (scrolls normally) -->
-  <div id="info-section">
-    <div class="section-block">
-      <div id="world-name-container">
-        <span id="world-name">[World Name]</span>
-      </div>
-      <div id="creation-date">
-        Created: <span id="created-on">[Loading...]</span>
-      </div>
-      <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
-      <hr class="divider" />
+  <!-- Info Section -->
+  <div id="info-section" class="section-block">
+    <div id="world-name-container">
+      <span id="world-name">[World Name]</span>
     </div>
+    <div id="creation-date">
+      Created: <span id="created-on">[Loading...]</span>
+    </div>
+    <div id="dm-inspiration">
+      "A shadow stirs beneath the mountain, waiting for a name."
+    </div>
+    <hr class="divider" />
   </div>
 
-  <!-- Navigation Section (scrolls normally) -->
-  <div id="nav-section">
-    <div class="section-block nav-tabs">
+  <!-- Nav Section -->
+  <div id="nav-section" class="section-block">
+    <div class="nav-tabs">
       <a href="dashboard.html">Dashboard</a>
       <a href="journal.html">Journal Entries</a>
       <a href="countries.html">Countries</a>
@@ -186,8 +170,8 @@
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="section-block" id="overview-section">
+  <!-- Overview Section (main content at bottom) -->
+  <div id="overview-section" class="section-block">
     <h2>Overview</h2>
     <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
       <div id="world-date">
@@ -203,13 +187,12 @@
     <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
       <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
         <span id="summary-text">Click to add a world summary...</span>
-        <!-- The edit elements were removed previously, so no pencil icon here. -->
       </div>
     </div>
   </div>
 
+  <!-- JavaScript for dynamic data -->
   <script>
-    /* JavaScript for dynamic data loading */
     function formatDate(isoDate) {
       const date = new Date(isoDate);
       const day = date.getDate();
@@ -222,12 +205,14 @@
           default: return 'th';
         }
       })(day);
+
       const options = { weekday: 'long', month: 'long', year: 'numeric' };
       const formatter = new Intl.DateTimeFormat('en-GB', options);
       const parts = formatter.formatToParts(date);
       const weekday = parts.find(p => p.type === 'weekday')?.value;
       const month = parts.find(p => p.type === 'month')?.value;
       const year = parts.find(p => p.type === 'year')?.value;
+
       return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
     }
 
