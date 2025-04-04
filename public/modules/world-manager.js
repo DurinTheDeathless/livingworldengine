@@ -298,7 +298,7 @@ async function listWorldsFromDrive() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ accessToken: token }) // pass token correctly
+      body: JSON.stringify({ accessToken: token })  // <-- this is what your backend expects
     });
     
     if (res.ok) {
