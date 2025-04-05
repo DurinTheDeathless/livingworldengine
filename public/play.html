@@ -22,25 +22,26 @@
       max-width: 1200px;
       margin: 0 auto 20px auto;
       padding: 10px;
-      background-color: #3a2d1e; 
+      background-color: #3a2d1e;
       border: 1px solid #c7b58d;
       border-radius: 6px;
     }
-    /* Title Section */
+    /* Title Section styles */
     #title-section h1 {
       font-family: 'UnifrakturCook', cursive;
       font-size: 3rem;
       color: #ffd700;
-      margin-bottom: 0.3em;
       text-align: center;
+      margin-bottom: 0.3em;
     }
     #title-section h2 {
-      font-family: Georgia, serif; 
       font-size: 1.2rem;
       color: #e0c097;
-      margin-bottom: 0.5em;
       text-align: center;
+      margin-bottom: 0.5em;
+      font-style: italic;
     }
+    /* Divider line */
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
@@ -67,7 +68,7 @@
       color: #d1c7ae;
       margin-bottom: 0.5em;
     }
-    /* Nav tabs */
+    /* Navigation tabs */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -94,18 +95,134 @@
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
-    /* Center the Overview Section content */
-    #overview-section {
-      text-align: center;
+    /* Input, textarea, and button styling */
+    input, textarea {
+      background-color: #4a3826;
+      border: 1px solid #7a5c3e;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      font-size: 1em;
+      border-radius: 4px;
+      padding: 5px;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #c7b58d;
+      font-style: italic;
+    }
+    button {
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      border: 1px solid #7a5c3e;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 8px 12px;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #8a5f2e;
+      transform: scale(1.03);
+    }
+    /* Style for range sliders (progress bars, etc.) */
+    input[type=range] {
+      cursor: pointer;
+      width: 150px;
+      margin: 0 5px;
+      background-color: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      background-color: #7a5c3e;
+      height: 4px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #ffd700;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid #c7b58d;
+      margin-top: -4px;
+    }
+    input[type=range]::-moz-range-track {
+      background-color: #7a5c3e;
+      height: 4px;
+    }
+    input[type=range]::-moz-range-thumb {
+      background-color: #ffd700;
+      width: 12px;
+      height: 12px;
+      border: 1px solid #c7b58d;
+      border-radius: 50%;
+    }
+    /* Progress bar styling for reputation chart */
+    progress {
+      vertical-align: middle;
+      margin: 0 5px;
+      width: 100px;
+      height: 10px;
+    }
+    progress::-webkit-progress-bar {
+      background-color: #7a5c3e;
+      border-radius: 4px;
+    }
+    progress::-webkit-progress-value {
+      background-color: #ffd700;
+      border-radius: 4px;
+    }
+    progress::-moz-progress-bar {
+      background-color: #ffd700;
+      border-radius: 4px;
+    }
+    /* List style adjustments */
+    #activity-feed {
+      list-style: none;
+      padding-left: 0;
+    }
+    #activity-feed li {
+      margin-bottom: 5px;
+    }
+    #pins-list {
+      list-style: none;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+    #pins-list li::before {
+      content: "📌 ";
+      font-size: 1.1em;
+      vertical-align: text-bottom;
+      margin-right: 4px;
+    }
+    /* Minor spacing tweaks */
+    .party-days {
+      margin: 10px 0;
+    }
+    .faction-rep {
+      margin: 4px 0;
+    }
+    .quick-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .add-feed-item {
+      margin-top: 10px;
     }
   </style>
 </head>
-
 <body>
   <!-- Title Section -->
   <div id="title-section" class="section-block">
     <h1>Living World Engine</h1>
     <h2>Where realms breathe and stories live</h2>
+    <!-- Save buttons -->
+    <div style="text-align: right; margin-top: -30px;">
+      <button id="saveDriveBtn">Save to Drive</button>
+      <button id="saveFileBtn">Save to File</button>
+    </div>
     <hr class="divider" />
   </div>
 
@@ -139,93 +256,469 @@
     </div>
   </div>
 
-  <!-- Overview Section (centered) -->
-  <div id="overview-section" class="section-block">
+  <!-- Overview Section -->
+  <div id="overview-section" class="section-block" style="text-align: center;">
     <h2>Overview</h2>
-    <div style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
-      <div id="current-date">Current Date: [Loading...]</div>
+    <div style="margin: 10px 0 20px 0; font-size: 0.95em;">
+      <div id="current-date">In-World Date: <span id="inworld-date" contenteditable="true">[Set Date]</span></div>
       <div id="days-since-start">Days Since Campaign Start: <span id="days-elapsed">[Loading...]</span></div>
     </div>
     <h3>World Summary</h3>
-    <p style="font-style: italic; margin-top: 5px;">
+    <div id="world-summary" contenteditable="true" style="font-style: italic; margin-top: 5px;">
       Click to add a world summary...
-    </p>
+    </div>
   </div>
 
+  <!-- Party Tracker Section -->
+  <div id="party-section" class="section-block">
+    <h2>Party Tracker</h2>
+    <div><strong>Current Location:</strong> <span id="party-location" contenteditable="true">Unknown Location</span></div>
+    <div><strong>Current Quest:</strong> <span id="current-quest" contenteditable="true">None</span></div>
+    <div class="party-days">
+      <div><strong>Days since last long rest:</strong> <input type="number" id="days-since-rest" value="0" min="0" style="width:50px;"></div>
+      <div><strong>Days on journey:</strong> <input type="number" id="days-on-journey" value="0" min="0" style="width:50px;"></div>
+    </div>
+    <h3>Reputation</h3>
+    <div id="reputation-chart">
+      <!-- Faction renown bars will be inserted here by script -->
+    </div>
+    <div style="margin-top: 10px;"><strong>Recent NPCs:</strong> <span id="recent-npcs" contenteditable="true">None</span></div>
+    <div style="font-size: 0.85em; color: #c7b58d; margin-top: 8px;">
+      <em>Note:</em> Reputation levels are approximate; adjust manually if needed.
+    </div>
+  </div>
+
+  <!-- Active Events & Warnings Section -->
+  <div id="events-section" class="section-block">
+    <h2>Active Events &amp; Warnings</h2>
+    <div><strong>Regional Turmoil:</strong> <span id="turmoil-status" contenteditable="true">Low</span></div>
+    <h3>Threats &amp; Conflicts</h3>
+    <ul id="warnings-list" contenteditable="true">
+      <li>Goblin raiders spotted near the Eastern Forest.</li>
+      <li>Rising tensions between neighboring kingdoms.</li>
+    </ul>
+    <h3>Deadlines</h3>
+    <ul id="deadlines-list" contenteditable="true">
+      <li>Baronial summit in 2 weeks.</li>
+    </ul>
+    <h3>World Events</h3>
+    <ul id="world-events-list" contenteditable="true">
+      <li>An ancient dragon was seen flying over the northern mountains.</li>
+    </ul>
+    <h3>DM Notes</h3>
+    <textarea id="dm-notes" rows="4" placeholder="Your notes..."></textarea>
+  </div>
+
+  <!-- Market Snapshot Section -->
+  <div id="market-section" class="section-block">
+    <h2>Market Snapshot</h2>
+    <div><strong>Resource Trends:</strong></div>
+    <ul id="market-trends" contenteditable="true">
+      <li>Iron demand rising (price +5%).</li>
+      <li>Grain surplus in the south (price -2%).</li>
+    </ul>
+    <div><strong>Trade Conditions:</strong> <span id="trade-conditions" contenteditable="true">Steady in major cities, unstable in border regions.</span></div>
+    <div><strong>Travel Costs:</strong> <span id="travel-costs" contenteditable="true">High (due to increased bandit activity)</span></div>
+    <div style="margin-top: 10px;"><strong>Hints for Players:</strong></div>
+    <ul id="hints-list" contenteditable="true">
+      <li>Travelers whisper that something stirs beneath the old well.</li>
+    </ul>
+  </div>
+
+  <!-- DM Quick Tools Section -->
+  <div id="tools-section" class="section-block">
+    <h2>DM Quick Tools</h2>
+    <div class="quick-tools">
+      <button id="encounter-btn">Roll Encounter</button>
+      <button id="logs-btn">Open Session Logs</button>
+      <button id="hook-btn">Generate Plot Hook</button>
+    </div>
+    <div id="hook-suggestion" style="margin-top: 8px; font-style: italic;"></div>
+  </div>
+
+  <!-- Recent Activity Feed Section -->
+  <div id="activity-section" class="section-block">
+    <h2>Recent Activity Feed</h2>
+    <ul id="activity-feed">
+      <li>Day 28: Party defeated the bandit leader in Everpine Forest.</li>
+    </ul>
+    <div class="add-feed-item">
+      <input type="text" id="new-event" placeholder="New event..." style="width: 70%;">
+      <button id="add-event">Add Event</button>
+    </div>
+  </div>
+
+  <!-- Add-Ons Section -->
+  <div id="addons-section" class="section-block">
+    <h2>Add-Ons</h2>
+    <div><strong>Quick Notes:</strong></div>
+    <div style="margin: 5px 0;">
+      <input type="text" id="new-pin" placeholder="Type a note..." style="width: 70%;">
+      <button id="add-pin">Add Note</button>
+    </div>
+    <ul id="pins-list">
+      <li>Need to revisit the haunted chapel.</li>
+    </ul>
+    <div style="margin-top: 15px;">
+      <span id="instability-label" contenteditable="true"><strong>Magic Instability</strong></span>:
+      <input type="range" id="instability-meter" min="0" max="100" value="20">
+      <span id="instability-value">20</span>
+    </div>
+    <div style="margin-top: 10px;">
+      <span id="favor-label" contenteditable="true"><strong>Divine Favor</strong></span> <span style="font-size: 1.2em;">👁️</span>:
+      <input type="range" id="favor-meter" min="0" max="100" value="50">
+      <span id="favor-value">50</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/modules/app.js"></script>
   <script>
-    /* 
-       Example logic to format the creation date 
-       and calculate days since campaign start 
-    */
+    // Load current world data from window.name or localStorage
+    let currentWorld = null;
+    let currentFileName = null;
+    let source = null;
+    if (window.name && window.name.startsWith("{")) {
+      try {
+        const payload = JSON.parse(window.name);
+        currentWorld = payload.world || null;
+        currentFileName = payload.fileName || null;
+        source = payload.source || null;
+      } catch (e) {
+        console.warn("Could not parse window.name payload:", e);
+      }
+      window.name = ""; // clear the payload to avoid reuse
+    }
+    if (!currentWorld) {
+      try {
+        currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
+        currentFileName = localStorage.getItem("worldFilename") || null;
+      } catch (e) {
+        console.warn("No world data in localStorage.", e);
+        currentWorld = {};
+      }
+    }
+
+    // Helper to format ISO date to a fancy string
     function formatDate(isoDate) {
       if (!isoDate) return "[Unknown]";
       const date = new Date(isoDate);
       if (isNaN(date)) return "[Unknown]";
       const day = date.getDate();
-      const daySuffix = (d => {
-        if (d > 3 && d < 21) return 'th';
-        switch (d % 10) {
-          case 1: return 'st';
-          case 2: return 'nd';
-          case 3: return 'rd';
-          default: return 'th';
-        }
-      })(day);
-      const options = { weekday: 'long', month: 'long', year: 'numeric' };
-      const formatter = new Intl.DateTimeFormat('en-GB', options);
-      const parts = formatter.formatToParts(date);
-      const weekday = parts.find(p => p.type === 'weekday')?.value;
-      const month = parts.find(p => p.type === 'month')?.value;
-      const year = parts.find(p => p.type === 'year')?.value;
-      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+      const suffix = (day > 3 && day < 21) ? 'th' : ((day % 10) === 1 ? 'st' : ((day % 10) === 2 ? 'nd' : ((day % 10) === 3 ? 'rd' : 'th')));
+      const month = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      return `${day}${suffix} of ${month} ${year}`;
     }
-
-    /*
-      Calculate the number of days since the campaign start date.
-      This sample uses a 'campaignStart' field from currentWorld.
-      If you store it differently, adjust accordingly.
-    */
-    function calculateDaysSinceStart(campaignStart) {
-      if (!campaignStart) return "[Loading]";
-      const start = new Date(campaignStart);
+    // Helper to calculate days difference from a start date to now
+    function calculateDaysSince(startIso) {
+      if (!startIso) return "[Loading...]";
+      const start = new Date(startIso);
       if (isNaN(start)) return "[Unknown]";
       const now = new Date();
-      // difference in ms, then convert to days
-      const diff = now - start;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      return days >= 0 ? days.toString() : "[Unknown]";
+      const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 ? diffDays.toString() : "[Unknown]";
     }
 
-    // Example code to load currentWorld from localStorage or your existing approach
-    let currentWorld = null;
-    try {
-      const stored = localStorage.getItem("currentWorld");
-      if (stored) {
-        currentWorld = JSON.parse(stored);
-      }
-    } catch (e) {
-      console.warn("Could not parse currentWorld from localStorage:", e);
-    }
-
-    // Update the DOM elements
-    const worldNameElem = document.getElementById("world-name");
-    const createdOnElem = document.getElementById("created-on");
-    const daysElapsedElem = document.getElementById("days-elapsed");
-
+    // Populate UI fields from currentWorld data
     if (currentWorld) {
-      // If your object keys differ, adapt accordingly
-      const { name, created, campaignStart } = currentWorld;
-
-      if (name) {
-        worldNameElem.textContent = name;
+      document.getElementById("world-name").textContent = currentWorld.name || "Unnamed World";
+      if (currentWorld.created) {
+        document.getElementById("created-on").textContent = formatDate(currentWorld.created);
       }
-      if (created) {
-        createdOnElem.textContent = formatDate(created);
+      if (currentWorld.campaignStart) {
+        document.getElementById("days-elapsed").textContent = calculateDaysSince(currentWorld.campaignStart);
+      } else if (currentWorld.created) {
+        // If no explicit campaign start, use world creation date
+        document.getElementById("days-elapsed").textContent = calculateDaysSince(currentWorld.created);
       }
-      if (campaignStart) {
-        daysElapsedElem.textContent = calculateDaysSinceStart(campaignStart);
+      if (currentWorld.inWorldDate) {
+        document.getElementById("inworld-date").textContent = currentWorld.inWorldDate;
+      }
+      if (currentWorld.summary) {
+        document.getElementById("world-summary").textContent = currentWorld.summary;
+      }
+      if (currentWorld.currentLocation) {
+        document.getElementById("party-location").textContent = currentWorld.currentLocation;
+      }
+      if (currentWorld.currentQuest) {
+        document.getElementById("current-quest").textContent = currentWorld.currentQuest;
+      }
+      if (typeof currentWorld.daysSinceRest !== "undefined") {
+        document.getElementById("days-since-rest").value = currentWorld.daysSinceRest;
+      }
+      if (typeof currentWorld.daysOnJourney !== "undefined") {
+        document.getElementById("days-on-journey").value = currentWorld.daysOnJourney;
+      }
+      if (currentWorld.recentNPCs) {
+        const npcText = Array.isArray(currentWorld.recentNPCs) ? currentWorld.recentNPCs.join(", ") : currentWorld.recentNPCs;
+        document.getElementById("recent-npcs").textContent = npcText;
+      }
+      if (currentWorld.turmoil) {
+        document.getElementById("turmoil-status").textContent = currentWorld.turmoil;
+      }
+      if (currentWorld.tradeConditions) {
+        document.getElementById("trade-conditions").textContent = currentWorld.tradeConditions;
+      }
+      if (currentWorld.travelCosts) {
+        document.getElementById("travel-costs").textContent = currentWorld.travelCosts;
+      }
+      if (currentWorld.dmNotes) {
+        document.getElementById("dm-notes").value = currentWorld.dmNotes;
+      }
+      if (currentWorld.factions && currentWorld.factions.length > 0) {
+        const repContainer = document.getElementById("reputation-chart");
+        repContainer.innerHTML = "";
+        currentWorld.factions.forEach((faction, index) => {
+          const name = faction.name || `Faction ${index+1}`;
+          const renown = (typeof faction.renown !== 'undefined') ? faction.renown : 0;
+          const factionDiv = document.createElement("div");
+          factionDiv.className = "faction-rep";
+          factionDiv.innerHTML = `${name}: <progress max="100" value="${renown}"></progress> <input type="number" min="0" max="100" value="${renown}" data-index="${index}" style="width:40px;">`;
+          repContainer.appendChild(factionDiv);
+        });
+      }
+      if (currentWorld.threats && currentWorld.threats.length > 0) {
+        const listElem = document.getElementById("warnings-list");
+        listElem.innerHTML = "";
+        currentWorld.threats.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          listElem.appendChild(li);
+        });
+      }
+      if (currentWorld.deadlines && currentWorld.deadlines.length > 0) {
+        const listElem = document.getElementById("deadlines-list");
+        listElem.innerHTML = "";
+        currentWorld.deadlines.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          listElem.appendChild(li);
+        });
+      }
+      if (currentWorld.worldEvents && currentWorld.worldEvents.length > 0) {
+        const listElem = document.getElementById("world-events-list");
+        listElem.innerHTML = "";
+        currentWorld.worldEvents.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          listElem.appendChild(li);
+        });
+      }
+      if (currentWorld.marketTrends && currentWorld.marketTrends.length > 0) {
+        const listElem = document.getElementById("market-trends");
+        listElem.innerHTML = "";
+        currentWorld.marketTrends.forEach(trend => {
+          const li = document.createElement("li");
+          li.textContent = trend;
+          listElem.appendChild(li);
+        });
+      }
+      if (currentWorld.hints && currentWorld.hints.length > 0) {
+        const listElem = document.getElementById("hints-list");
+        listElem.innerHTML = "";
+        currentWorld.hints.forEach(hint => {
+          const li = document.createElement("li");
+          li.textContent = hint;
+          listElem.appendChild(li);
+        });
+      }
+      if (currentWorld.pins && currentWorld.pins.length > 0) {
+        const pinsList = document.getElementById("pins-list");
+        pinsList.innerHTML = "";
+        currentWorld.pins.forEach(note => {
+          const li = document.createElement("li");
+          li.textContent = note;
+          pinsList.appendChild(li);
+        });
+      }
+      if (currentWorld.instabilityLabel) {
+        document.getElementById("instability-label").textContent = currentWorld.instabilityLabel;
+      }
+      if (typeof currentWorld.instabilityMeter !== "undefined") {
+        document.getElementById("instability-meter").value = currentWorld.instabilityMeter;
+        document.getElementById("instability-value").textContent = currentWorld.instabilityMeter;
+      }
+      if (currentWorld.favorLabel) {
+        document.getElementById("favor-label").textContent = currentWorld.favorLabel;
+      }
+      if (typeof currentWorld.favorMeter !== "undefined") {
+        document.getElementById("favor-meter").value = currentWorld.favorMeter;
+        document.getElementById("favor-value").textContent = currentWorld.favorMeter;
+      }
+      if (currentWorld.events && currentWorld.events.length > 0) {
+        const feedList = document.getElementById("activity-feed");
+        feedList.innerHTML = "";
+        const recentEvents = currentWorld.events.slice(-5);  // show last 5 events
+        recentEvents.forEach(evt => {
+          const li = document.createElement("li");
+          li.textContent = evt;
+          feedList.appendChild(li);
+        });
       }
     }
+
+    // Attach event handlers to mark data changes
+    const inDateElem = document.getElementById("inworld-date");
+    const summaryElem = document.getElementById("world-summary");
+    const locElem = document.getElementById("party-location");
+    const questElem = document.getElementById("current-quest");
+    const restInput = document.getElementById("days-since-rest");
+    const journeyInput = document.getElementById("days-on-journey");
+    const recentNpcsElem = document.getElementById("recent-npcs");
+    const turmoilElem = document.getElementById("turmoil-status");
+    const tradeElem = document.getElementById("trade-conditions");
+    const travelElem = document.getElementById("travel-costs");
+    const notesElem = document.getElementById("dm-notes");
+    const instabilityLabelElem = document.getElementById("instability-label");
+    const instabilityMeterElem = document.getElementById("instability-meter");
+    const instabilityValElem = document.getElementById("instability-value");
+    const favorLabelElem = document.getElementById("favor-label");
+    const favorMeterElem = document.getElementById("favor-meter");
+    const favorValElem = document.getElementById("favor-value");
+
+    inDateElem.addEventListener("input", () => { currentWorld.inWorldDate = inDateElem.textContent; markDirty(); });
+    summaryElem.addEventListener("input", () => { currentWorld.summary = summaryElem.textContent; markDirty(); });
+    locElem.addEventListener("input", () => { currentWorld.currentLocation = locElem.textContent; markDirty(); });
+    questElem.addEventListener("input", () => { currentWorld.currentQuest = questElem.textContent; markDirty(); });
+    restInput.addEventListener("input", () => { currentWorld.daysSinceRest = parseInt(restInput.value) || 0; markDirty(); });
+    journeyInput.addEventListener("input", () => { currentWorld.daysOnJourney = parseInt(journeyInput.value) || 0; markDirty(); });
+    recentNpcsElem.addEventListener("input", () => { currentWorld.recentNPCs = recentNpcsElem.textContent; markDirty(); });
+    turmoilElem.addEventListener("input", () => { currentWorld.turmoil = turmoilElem.textContent; markDirty(); });
+    tradeElem.addEventListener("input", () => { currentWorld.tradeConditions = tradeElem.textContent; markDirty(); });
+    travelElem.addEventListener("input", () => { currentWorld.travelCosts = travelElem.textContent; markDirty(); });
+    notesElem.addEventListener("input", () => { currentWorld.dmNotes = notesElem.value; markDirty(); });
+    instabilityLabelElem.addEventListener("input", () => { currentWorld.instabilityLabel = instabilityLabelElem.textContent; markDirty(); });
+    instabilityMeterElem.addEventListener("input", () => {
+      instabilityValElem.textContent = instabilityMeterElem.value;
+      currentWorld.instabilityMeter = parseInt(instabilityMeterElem.value) || 0;
+      markDirty();
+    });
+    favorLabelElem.addEventListener("input", () => { currentWorld.favorLabel = favorLabelElem.textContent; markDirty(); });
+    favorMeterElem.addEventListener("input", () => {
+      favorValElem.textContent = favorMeterElem.value;
+      currentWorld.favorMeter = parseInt(favorMeterElem.value) || 0;
+      markDirty();
+    });
+
+    // Update reputation chart values dynamically
+    document.getElementById("reputation-chart").addEventListener("input", e => {
+      if (e.target.matches("input[type=number][data-index]")) {
+        const idx = Number(e.target.dataset.index);
+        const newVal = parseInt(e.target.value) || 0;
+        const prog = e.target.previousElementSibling;
+        if (prog && prog.tagName.toLowerCase() === "progress") {
+          prog.value = newVal;
+        }
+        if (!currentWorld.factions) currentWorld.factions = [];
+        if (!currentWorld.factions[idx]) currentWorld.factions[idx] = { name: `Faction ${idx+1}` };
+        currentWorld.factions[idx].renown = newVal;
+        markDirty();
+      }
+    });
+
+    // Contenteditable lists (threats, deadlines, world events, market trends, hints) update
+    document.getElementById("warnings-list").addEventListener("input", () => {
+      currentWorld.threats = Array.from(document.querySelectorAll("#warnings-list li")).map(li => li.textContent);
+      markDirty();
+    });
+    document.getElementById("deadlines-list").addEventListener("input", () => {
+      currentWorld.deadlines = Array.from(document.querySelectorAll("#deadlines-list li")).map(li => li.textContent);
+      markDirty();
+    });
+    document.getElementById("world-events-list").addEventListener("input", () => {
+      currentWorld.worldEvents = Array.from(document.querySelectorAll("#world-events-list li")).map(li => li.textContent);
+      markDirty();
+    });
+    document.getElementById("market-trends").addEventListener("input", () => {
+      currentWorld.marketTrends = Array.from(document.querySelectorAll("#market-trends li")).map(li => li.textContent);
+      markDirty();
+    });
+    document.getElementById("hints-list").addEventListener("input", () => {
+      currentWorld.hints = Array.from(document.querySelectorAll("#hints-list li")).map(li => li.textContent);
+      markDirty();
+    });
+
+    // Quick Notes (Pins) add button
+    document.getElementById("add-pin").addEventListener("click", () => {
+      const input = document.getElementById("new-pin");
+      const text = input.value.trim();
+      if (!text) return;
+      const pinsList = document.getElementById("pins-list");
+      const li = document.createElement("li");
+      li.textContent = text;
+      pinsList.appendChild(li);
+      if (!currentWorld.pins) currentWorld.pins = [];
+      currentWorld.pins.push(text);
+      markDirty();
+      input.value = "";
+    });
+
+    // Add Event to activity feed
+    document.getElementById("add-event").addEventListener("click", () => {
+      const input = document.getElementById("new-event");
+      const desc = input.value.trim();
+      if (!desc) return;
+      const feedList = document.getElementById("activity-feed");
+      const li = document.createElement("li");
+      li.textContent = desc;
+      feedList.appendChild(li);
+      if (!currentWorld.events) currentWorld.events = [];
+      currentWorld.events.push(desc);
+      markDirty();
+      input.value = "";
+    });
+
+    // DM Quick Tools actions
+    document.getElementById("encounter-btn").addEventListener("click", () => {
+      // Example encounter generator
+      const encounters = [
+        "A band of goblins ambushes the party!",
+        "A traveling merchant crosses paths with the party.",
+        "The party stumbles upon a hidden treasure cache.",
+        "A sudden storm forces the group to seek shelter."
+      ];
+      const result = encounters[Math.floor(Math.random() * encounters.length)];
+      // Display encounter result in the activity feed
+      const feedList = document.getElementById("activity-feed");
+      const li = document.createElement("li");
+      li.textContent = "Encounter: " + result;
+      feedList.appendChild(li);
+      if (!currentWorld.events) currentWorld.events = [];
+      currentWorld.events.push("Encounter: " + result);
+      markDirty();
+    });
+    document.getElementById("logs-btn").addEventListener("click", () => {
+      window.location.href = "events.html";
+    });
+    document.getElementById("hook-btn").addEventListener("click", () => {
+      // Example plot hook generator
+      const hooks = [
+        "A mysterious map leading to a forgotten city appears in the party's belongings.",
+        "An old ally reveals a shocking betrayal at the next full moon.",
+        "A magical storm alters the properties of enchanted items across the realm.",
+        "A deity's avatar delivers a cryptic warning to the party."
+      ];
+      const idea = hooks[Math.floor(Math.random() * hooks.length)];
+      const suggestionDiv = document.getElementById("hook-suggestion");
+      suggestionDiv.textContent = "Plot Hook Idea: " + idea;
+    });
+
+    // Save buttons (using existing save logic if available)
+    document.getElementById("saveDriveBtn").addEventListener("click", () => {
+      if (typeof saveToDrive === "function") {
+        saveToDrive();
+      } else {
+        console.warn("Google Drive save function not available.");
+      }
+    });
+    document.getElementById("saveFileBtn").addEventListener("click", () => {
+      if (typeof saveToFile === "function") {
+        saveToFile();
+      } else {
+        console.warn("Local save function not available.");
+      }
+    });
   </script>
 </body>
 </html>
