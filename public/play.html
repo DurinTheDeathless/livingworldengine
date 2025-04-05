@@ -6,7 +6,6 @@
   <!-- Import UnifrakturCook for headings -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Basic page reset */
     * {
       margin: 0;
       padding: 0;
@@ -20,7 +19,7 @@
       padding: 20px;
     }
     .section-block {
-      max-width: 1200px; 
+      max-width: 1200px;
       margin: 0 auto 20px auto;
       padding: 10px;
       background-color: #3a2d1e; 
@@ -47,9 +46,9 @@
       border-top: 1px solid #c7b58d;
       margin: 10px 0;
     }
-    /* World Info Section centered */
+    /* World Info Section */
     #info-section {
-      text-align: center;  /* centers child text + elements */
+      text-align: center;
     }
     #world-name {
       font-family: 'UnifrakturCook', cursive;
@@ -57,12 +56,11 @@
       color: #ffd700;
       margin-bottom: 0.5em;
     }
-    /* Creation date uses a span (#created-on) so we can dynamically set it */
     #creation-label {
       font-size: 0.9em;
       color: #c7b58d;
       margin-bottom: 0.5em;
-      display: inline-block; /* ensures margin spacing in center */
+      display: inline-block;
     }
     #dm-inspiration {
       font-style: italic;
@@ -96,6 +94,10 @@
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
+    /* Center the Overview Section content */
+    #overview-section {
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -111,9 +113,7 @@
   <div id="info-section" class="section-block">
     <div id="world-name">[World Name]</div>
     <div id="creation-label">Created: <span id="created-on">[Loading...]</span></div>
-    <div id="dm-inspiration">
-      "A shadow stirs beneath the mountain, waiting for a name."
-    </div>
+    <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
     <hr class="divider" />
   </div>
 
@@ -139,12 +139,12 @@
     </div>
   </div>
 
-  <!-- Overview Section -->
+  <!-- Overview Section (centered) -->
   <div id="overview-section" class="section-block">
     <h2>Overview</h2>
     <div style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
-      <div>Current Date: [Loading...]</div>
-      <div>Days Since Campaign Start: [Loading...]</div>
+      <div id="current-date">Current Date: [Loading...]</div>
+      <div id="days-since-start">Days Since Campaign Start: <span id="days-elapsed">[Loading...]</span></div>
     </div>
     <h3>World Summary</h3>
     <p style="font-style: italic; margin-top: 5px;">
@@ -152,10 +152,11 @@
     </p>
   </div>
 
-  <!-- Dynamic Code: Restores the data loading for world name & created date -->
   <script>
-    // Example: reintroduce the dynamic code that sets #world-name and #created-on
-    // Adjust or expand as needed if you had more logic before.
+    /* 
+       Example logic to format the creation date 
+       and calculate days since campaign start 
+    */
     function formatDate(isoDate) {
       if (!isoDate) return "[Unknown]";
       const date = new Date(isoDate);
@@ -179,7 +180,23 @@
       return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
     }
 
-    // Simulate the code that loads a "currentWorld" object from e.g. localStorage or window.name
+    /*
+      Calculate the number of days since the campaign start date.
+      This sample uses a 'campaignStart' field from currentWorld.
+      If you store it differently, adjust accordingly.
+    */
+    function calculateDaysSinceStart(campaignStart) {
+      if (!campaignStart) return "[Loading]";
+      const start = new Date(campaignStart);
+      if (isNaN(start)) return "[Unknown]";
+      const now = new Date();
+      // difference in ms, then convert to days
+      const diff = now - start;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      return days >= 0 ? days.toString() : "[Unknown]";
+    }
+
+    // Example code to load currentWorld from localStorage or your existing approach
     let currentWorld = null;
     try {
       const stored = localStorage.getItem("currentWorld");
@@ -190,17 +207,23 @@
       console.warn("Could not parse currentWorld from localStorage:", e);
     }
 
-    // If you had a real 'currentWorld' with 'name' and 'created' fields:
+    // Update the DOM elements
     const worldNameElem = document.getElementById("world-name");
     const createdOnElem = document.getElementById("created-on");
+    const daysElapsedElem = document.getElementById("days-elapsed");
 
     if (currentWorld) {
-      const { name, created } = currentWorld;
+      // If your object keys differ, adapt accordingly
+      const { name, created, campaignStart } = currentWorld;
+
       if (name) {
         worldNameElem.textContent = name;
       }
       if (created) {
         createdOnElem.textContent = formatDate(created);
+      }
+      if (campaignStart) {
+        daysElapsedElem.textContent = calculateDaysSinceStart(campaignStart);
       }
     }
   </script>
