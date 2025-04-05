@@ -51,10 +51,25 @@
       border-top: 1px solid #c7b58d;
       margin: 10px 0;
     }
+    /* 
+       1) Use flex for .buttons-block 
+       2) align-items: center ensures both buttons share the same baseline
+       3) gap for space between them
+    */
     .buttons-block {
-      text-align: center;
+      display: flex;
+      align-items: center; 
+      justify-content: center;
+      gap: 10px; 
       margin-top: 20px;
     }
+    /* 
+       Common button styling 
+       - Same fixed height 
+       - No line wraps 
+       - Display: inline-flex replaced by the parent's flex
+         but we'll keep display: flex for the internal alignment 
+    */
     button,
     .google-btn {
       background-color: #5c3e1a;
@@ -68,19 +83,16 @@
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
 
-      /* Ensure consistent sizing and alignment: */
-      display: inline-flex;
-      align-items: center;   /* vertically center text & icon */
+      display: flex;        /* ensures internal icon + text are aligned */
+      align-items: center;
       justify-content: center;
       gap: 6px;
-      margin: 5px;
+      margin: 0;            /* no margin needed here, parent flex sets gap */
+      
+      height: 44px;         
+      line-height: normal; 
+      white-space: nowrap;  
 
-      /* Force same height, no wrapping */
-      height: 44px;          
-      line-height: normal;   
-      white-space: nowrap;   
-
-      /* Horizontal padding to your preference */
       padding: 0 16px;
     }
     button:hover,
