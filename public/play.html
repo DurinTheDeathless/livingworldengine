@@ -1,3 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Living World Engine – Dashboard</title>
+  <!-- Import UnifrakturCook for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      text-align: left;
+      padding: 20px;
+    }
+    .section-block {
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
+      padding: 10px;
+      background-color: #3a2d1e;
+      border: 1px solid #c7b58d;
+      border-radius: 6px;
+    }
+    /* Title Section styles */
+    #title-section h1 {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
+      color: #ffd700;
+      text-align: center;
+      margin-bottom: 0.3em;
+    }
+    #title-section h2 {
+      font-size: 1.2rem;
+      color: #e0c097;
+      text-align: center;
+      margin-bottom: 0.5em;
+      font-style: italic;
+    }
+    /* Divider line */
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 10px 0;
+    }
+    /* World Info Section */
+    #info-section {
+      text-align: center;
+    }
+    #world-name {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 0.5em;
+    }
+    #creation-label {
+      font-size: 0.9em;
+      color: #c7b58d;
+      margin-bottom: 0.5em;
+      display: inline-block;
+    }
+    #dm-inspiration {
+      font-style: italic;
+      color: #d1c7ae;
+      margin-bottom: 0.5em;
+    }
+    /* Navigation tabs */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .nav-tabs a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 10px;
+      height: 44px;
+      line-height: normal;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .nav-tabs a:hover {
+      background-color: #8a5f2e;
+      transform: scale(1.03);
+    }
+    /* Input, textarea, and button styling */
+    input, textarea {
+      background-color: #4a3826;
+      border: 1px solid #7a5c3e;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      font-size: 1em;
+      border-radius: 4px;
+      padding: 5px;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #c7b58d;
+      font-style: italic;
+    }
+    button {
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      border: 1px solid #7a5c3e;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 8px 12px;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #8a5f2e;
+      transform: scale(1.03);
+    }
+    /* Style for range sliders (progress bars, etc.) */
+    input[type=range] {
+      cursor: pointer;
+      width: 150px;
+      margin: 0 5px;
+      background-color: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      background-color: #7a5c3e;
+      height: 4px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #ffd700;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid #c7b58d;
+      margin-top: -4px;
+    }
+    input[type=range]::-moz-range-track {
+      background-color: #7a5c3e;
+      height: 4px;
+    }
+    input[type=range]::-moz-range-thumb {
+      background-color: #ffd700;
+      width: 12px;
+      height: 12px;
+      border: 1px solid #c7b58d;
+      border-radius: 50%;
+    }
+    /* Progress bar styling for reputation chart */
+    progress {
+      vertical-align: middle;
+      margin: 0 5px;
+      width: 100px;
+      height: 10px;
+    }
+    progress::-webkit-progress-bar {
+      background-color: #7a5c3e;
+      border-radius: 4px;
+    }
+    progress::-webkit-progress-value {
+      background-color: #ffd700;
+      border-radius: 4px;
+    }
+    progress::-moz-progress-bar {
+      background-color: #ffd700;
+      border-radius: 4px;
+    }
+    /* List style adjustments */
+    #activity-feed {
+      list-style: none;
+      padding-left: 0;
+    }
+    #activity-feed li {
+      margin-bottom: 5px;
+    }
+    #pins-list {
+      list-style: none;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+    #pins-list li::before {
+      content: "📌 ";
+      font-size: 1.1em;
+      vertical-align: text-bottom;
+      margin-right: 4px;
+    }
+    /* Minor spacing tweaks */
+    .party-days {
+      margin: 10px 0;
+    }
+    .faction-rep {
+      margin: 4px 0;
+    }
+    .quick-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .add-feed-item {
+      margin-top: 10px;
+    }
+  </style>
+</head>
 <body>
   <!-- Title Section -->
   <div id="title-section" class="section-block">
@@ -52,17 +267,6 @@
     <div id="world-summary" contenteditable="true" style="font-style: italic; margin-top: 5px;">
       Click to add a world summary...
     </div>
-  </div>
-
-  <!-- Quick Notes Section -->
-  <div id="pins-section" class="section-block">
-    <h2>Quick Notes</h2>
-    <div style="margin: 5px 0;">
-      <input type="text" id="new-pin" placeholder="Type a note..." style="width: 70%;">
-      <button id="add-pin">Add Note</button>
-    </div>
-    <ul id="pins-list">
-    </ul>
   </div>
 
   <!-- Party Tracker Section -->
@@ -136,6 +340,7 @@
   <div id="activity-section" class="section-block">
     <h2>Recent Activity Feed</h2>
     <ul id="activity-feed">
+      <li>Day 28: Party defeated the bandit leader in Everpine Forest.</li>
     </ul>
     <div class="add-feed-item">
       <input type="text" id="new-event" placeholder="New event..." style="width: 70%;">
@@ -146,15 +351,23 @@
   <!-- Add-Ons Section -->
   <div id="addons-section" class="section-block">
     <h2>Add-Ons</h2>
+    <div><strong>Quick Notes:</strong></div>
+    <div style="margin: 5px 0;">
+      <input type="text" id="new-pin" placeholder="Type a note..." style="width: 70%;">
+      <button id="add-pin">Add Note</button>
+    </div>
+    <ul id="pins-list">
+      <li>Need to revisit the haunted chapel.</li>
+    </ul>
     <div style="margin-top: 15px;">
       <span id="instability-label" contenteditable="true"><strong>Magic Instability</strong></span>:
-      <input type="range" id="instability-meter" min="-100" max="100" value="0">
-      <span id="instability-value">0</span>
+      <input type="range" id="instability-meter" min="0" max="100" value="20">
+      <span id="instability-value">20</span>
     </div>
     <div style="margin-top: 10px;">
       <span id="favor-label" contenteditable="true"><strong>Divine Favor</strong></span> <span style="font-size: 1.2em;">👁️</span>:
-      <input type="range" id="favor-meter" min="-100" max="100" value="0">
-      <span id="favor-value">0</span>
+      <input type="range" id="favor-meter" min="0" max="100" value="50">
+      <span id="favor-value">50</span>
     </div>
   </div>
 
@@ -195,8 +408,7 @@
       const suffix = (day > 3 && day < 21) ? 'th' : ((day % 10) === 1 ? 'st' : ((day % 10) === 2 ? 'nd' : ((day % 10) === 3 ? 'rd' : 'th')));
       const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
-      const weekday = date.toLocaleString('default', { weekday: 'long' });
-      return `${weekday}, ${day}${suffix} of ${month} ${year}`;
+      return `${day}${suffix} of ${month} ${year}`;
     }
     // Helper to calculate days difference from a start date to now
     function calculateDaysSince(startIso) {
@@ -317,17 +529,6 @@
         currentWorld.pins.forEach(note => {
           const li = document.createElement("li");
           li.textContent = note;
-          const delSpan = document.createElement("span");
-          delSpan.textContent = " ✖";
-          delSpan.style.cursor = "pointer";
-          delSpan.style.color = "red";
-          delSpan.addEventListener("click", () => {
-            const idx = Array.from(pinsList.children).indexOf(li);
-            if (idx > -1) currentWorld.pins.splice(idx, 1);
-            pinsList.removeChild(li);
-            markDirty();
-          });
-          li.appendChild(delSpan);
           pinsList.appendChild(li);
         });
       }
@@ -446,17 +647,6 @@
       const pinsList = document.getElementById("pins-list");
       const li = document.createElement("li");
       li.textContent = text;
-      const delSpan = document.createElement("span");
-      delSpan.textContent = " ✖";
-      delSpan.style.cursor = "pointer";
-      delSpan.style.color = "red";
-      delSpan.addEventListener("click", () => {
-        const idx = Array.from(pinsList.children).indexOf(li);
-        if (idx > -1) currentWorld.pins.splice(idx, 1);
-        pinsList.removeChild(li);
-        markDirty();
-      });
-      li.appendChild(delSpan);
       pinsList.appendChild(li);
       if (!currentWorld.pins) currentWorld.pins = [];
       currentWorld.pins.push(text);
