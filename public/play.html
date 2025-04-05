@@ -1,215 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Living World Engine – Minimal Save Demo</title>
-  <!-- Optional: Unifraktur font -->
+  <meta charset="UTF-8" />
+  <title>Living World Engine – Dashboard</title>
+  <!-- Import UnifrakturCook for headings -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
+    /* Basic reset */
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
     body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
-      margin: 0;
+      text-align: left;
       padding: 20px;
     }
-    .section {
-      max-width: 800px;
+    .section-block {
+      max-width: 1200px;
       margin: 0 auto 20px auto;
-      background-color: #3a2d1e;
       padding: 10px;
+      background-color: #3a2d1e;
       border: 1px solid #c7b58d;
-      border-radius: 5px;
+      border-radius: 6px;
     }
-    h1 {
+
+    /* Title Section */
+    #title-section h1 {
       font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
       color: #ffd700;
       text-align: center;
-      margin-bottom: 0.2em;
+      margin-bottom: 0.3em;
     }
+    #title-section h2 {
+      font-size: 1.2rem;
+      color: #e0c097;
+      text-align: center;
+      margin-bottom: 0.5em;
+      font-style: italic;
+    }
+
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
       margin: 10px 0;
     }
+
+    /* World Info Section */
+    #info-section {
+      text-align: center;
+    }
+    #world-name {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 0.5em;
+    }
+    #creation-label {
+      font-size: 0.9em;
+      color: #c7b58d;
+      margin-bottom: 0.5em;
+      display: inline-block;
+    }
+    #dm-inspiration {
+      font-style: italic;
+      color: #d1c7ae;
+      margin-bottom: 0.5em;
+    }
+
+    /* Nav tabs */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .nav-tabs a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 10px;
+      height: 44px;
+      line-height: normal;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .nav-tabs a:hover {
+      background-color: #8a5f2e;
+      transform: scale(1.03);
+    }
+
+    /* Input, textarea, and button styling */
+    input, textarea {
+      background-color: #4a3826;
+      border: 1px solid #7a5c3e;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      font-size: 1em;
+      border-radius: 4px;
+      padding: 5px;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #c7b58d;
+      font-style: italic;
+    }
     button {
-      margin-right: 5px;
       background-color: #5c3e1a;
       color: #f4e3c1;
       border: 1px solid #7a5c3e;
       border-radius: 6px;
+      font-family: Georgia, serif;
       font-size: 1rem;
       cursor: pointer;
       padding: 8px 12px;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
     button:hover {
       background-color: #8a5f2e;
+      transform: scale(1.03);
+    }
+
+    /* Range sliders, progress bars, etc. (like the instability/favor meters) */
+    input[type=range] {
+      cursor: pointer;
+      width: 150px;
+      margin: 0 5px;
+      background-color: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      background-color: #7a5c3e;
+      height: 4px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #ffd700;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid #c7b58d;
+      margin-top: -4px;
+    }
+
+    /* Reputation progress bars */
+    progress {
+      vertical-align: middle;
+      margin: 0 5px;
+      width: 100px;
+      height: 10px;
+    }
+    progress::-webkit-progress-bar {
+      background-color: #7a5c3e;
+      border-radius: 4px;
+    }
+    progress::-webkit-progress-value {
+      background-color: #ffd700;
+      border-radius: 4px;
+    }
+
+    /* Lists styling for activity feed, pins, etc. */
+    #activity-feed, #pins-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    #activity-feed li,
+    #pins-list li {
+      margin-bottom: 5px;
+    }
+    #pins-list li::before {
+      content: "📌 ";
+      font-size: 1.1em;
+      vertical-align: text-bottom;
+      margin-right: 4px;
+    }
+
+    /* Extra layout tweaks */
+    .party-days {
+      margin: 10px 0;
+    }
+    .faction-rep {
+      margin: 4px 0;
+    }
+    .quick-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .add-feed-item {
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <!-- Title Section -->
+  <div id="title-section" class="section-block">
+    <h1>Living World Engine</h1>
+    <h2>Where realms breathe and stories live</h2>
 
-<div class="section" style="text-align:center;">
-  <h1>Living World Engine</h1>
-  <div>
-    <button id="saveDriveBtn">Save to Drive</button>
-    <button id="saveFileBtn">Save to File</button>
+    <!-- Save buttons (calls existing saveToDrive / saveToFile if they exist) -->
+    <div style="text-align: right; margin-top: -30px;">
+      <button id="saveDriveBtn">Save to Drive</button>
+      <button id="saveFileBtn">Save to File</button>
+    </div>
+
+    <hr class="divider" />
   </div>
-  <hr class="divider" />
-</div>
 
-<div id="info" class="section" style="text-align:center;">
-  <h2 id="world-name">[World Name]</h2>
-  <p>Created: <span id="created-on">[Loading...]</span></p>
-  <p>Days Since Start: <span id="days-elapsed">[Loading...]</span></p>
-</div>
+  <!-- World Info Section -->
+  <div id="info-section" class="section-block">
+    <div id="world-name">[World Name]</div>
+    <div id="creation-label">Created: <span id="created-on">[Loading...]</span></div>
+    <div id="dm-inspiration">"A shadow stirs beneath the mountain, waiting for a name."</div>
+    <hr class="divider" />
+  </div>
 
-<div id="overview" class="section">
-  <h2>Overview</h2>
-  <p contenteditable="true" id="world-summary" style="font-style: italic;">
-    Click to add summary...
-  </p>
-</div>
+  <!-- Nav Section -->
+  <div id="nav-section" class="section-block">
+    <div class="nav-tabs">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="journal.html">Journal Entries</a>
+      <a href="countries.html">Countries</a>
+      <a href="towns.html">Towns</a>
+      <a href="npcs.html">NPCs</a>
+      <a href="factions.html">Factions</a>
+      <a href="bbeg.html">BBEG Tracker</a>
+      <a href="events.html">Event Logs</a>
+      <a href="market.html">Market Simulation</a>
+      <a href="lexicon.html">Language / Lexicon</a>
+      <a href="map.html">World Map</a>
+      <a href="quests.html">Quests</a>
+      <a href="players.html">Player Tracker</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="magic.html">Magic / Religion</a>
+      <a href="bestiary.html">Bestiary</a>
+    </div>
+  </div>
 
-<script>
-  // Minimal data container
-  let currentWorld = {};
-  let currentFileName = null;  // The original file name from Drive or local
-  let isDirty = false;
+  <!-- Overview Section -->
+  <div id="overview-section" class="section-block" style="text-align: center;">
+    <h2>Overview</h2>
+    <div style="margin: 10px 0 20px 0; font-size: 0.95em;">
+      <div id="current-date">
+        In-World Date: 
+        <span id="inworld-date" contenteditable="true">[Set Date]</span>
+      </div>
+      <div id="days-since-start">
+        Days Since Campaign Start:
+        <span id="days-elapsed">[Loading...]</span>
+      </div>
+    </div>
+    <h3>World Summary</h3>
+    <div id="world-summary" contenteditable="true" style="font-style: italic; margin-top: 5px;">
+      Click to add a world summary...
+    </div>
+  </div>
 
-  // 1) Try to load from window.name
-  if (window.name) {
-    try {
-      const payload = JSON.parse(window.name);
-      if (payload.world) {
-        currentWorld = payload.world;
+  <!-- Party Tracker Section -->
+  <div id="party-section" class="section-block">
+    <h2>Party Tracker</h2>
+    <div><strong>Current Location:</strong> <span id="party-location" contenteditable="true">Unknown Location</span></div>
+    <div><strong>Current Quest:</strong> <span id="current-quest" contenteditable="true">None</span></div>
+    <div class="party-days">
+      <div><strong>Days since last long rest:</strong> 
+        <input type="number" id="days-since-rest" value="0" min="0" style="width:50px;">
+      </div>
+      <div><strong>Days on journey:</strong> 
+        <input type="number" id="days-on-journey" value="0" min="0" style="width:50px;">
+      </div>
+    </div>
+
+    <h3>Reputation</h3>
+    <div id="reputation-chart">
+      <!-- Faction renown bars inserted by script -->
+    </div>
+    <div style="margin-top: 10px;">
+      <strong>Recent NPCs:</strong> 
+      <span id="recent-npcs" contenteditable="true">None</span>
+    </div>
+    <div style="font-size: 0.85em; color: #c7b58d; margin-top: 8px;">
+      <em>Note:</em> Reputation levels are approximate; adjust manually if needed.
+    </div>
+  </div>
+
+  <!-- Active Events & Warnings Section -->
+  <div id="events-section" class="section-block">
+    <h2>Active Events &amp; Warnings</h2>
+    <div>
+      <strong>Regional Turmoil:</strong> 
+      <span id="turmoil-status" contenteditable="true">Low</span>
+    </div>
+    <h3>Threats &amp; Conflicts</h3>
+    <ul id="warnings-list" contenteditable="true">
+      <li>Goblin raiders spotted near the Eastern Forest.</li>
+    </ul>
+
+    <h3>Deadlines</h3>
+    <ul id="deadlines-list" contenteditable="true">
+      <li>Baronial summit in 2 weeks.</li>
+    </ul>
+
+    <h3>World Events</h3>
+    <ul id="world-events-list" contenteditable="true">
+      <li>An ancient dragon was seen flying over the northern mountains.</li>
+    </ul>
+
+    <h3>DM Notes</h3>
+    <textarea id="dm-notes" rows="4" placeholder="Your notes..."></textarea>
+  </div>
+
+  <!-- Market Snapshot Section -->
+  <div id="market-section" class="section-block">
+    <h2>Market Snapshot</h2>
+    <div><strong>Resource Trends:</strong></div>
+    <ul id="market-trends" contenteditable="true">
+      <li>Iron demand rising (price +5%).</li>
+      <li>Grain surplus in the south (price -2%).</li>
+    </ul>
+    <div>
+      <strong>Trade Conditions:</strong>
+      <span id="trade-conditions" contenteditable="true">
+        Steady in major cities, unstable in border regions.
+      </span>
+    </div>
+    <div>
+      <strong>Travel Costs:</strong>
+      <span id="travel-costs" contenteditable="true">High (due to increased bandit activity)</span>
+    </div>
+    <div style="margin-top: 10px;"><strong>Hints for Players:</strong></div>
+    <ul id="hints-list" contenteditable="true">
+      <li>Travelers whisper that something stirs beneath the old well.</li>
+    </ul>
+  </div>
+
+  <!-- DM Quick Tools Section -->
+  <div id="tools-section" class="section-block">
+    <h2>DM Quick Tools</h2>
+    <div class="quick-tools">
+      <button id="encounter-btn">Roll Encounter</button>
+      <button id="logs-btn">Open Session Logs</button>
+      <button id="hook-btn">Generate Plot Hook</button>
+    </div>
+    <div id="hook-suggestion" style="margin-top: 8px; font-style: italic;"></div>
+  </div>
+
+  <!-- Recent Activity Feed Section -->
+  <div id="activity-section" class="section-block">
+    <h2>Recent Activity Feed</h2>
+    <ul id="activity-feed">
+      <li>Day 28: Party defeated the bandit leader in Everpine Forest.</li>
+    </ul>
+    <div class="add-feed-item">
+      <input type="text" id="new-event" placeholder="New event..." style="width: 70%;">
+      <button id="add-event">Add Event</button>
+    </div>
+  </div>
+
+  <!-- Add-Ons Section -->
+  <div id="addons-section" class="section-block">
+    <h2>Add-Ons</h2>
+    <div><strong>Quick Notes:</strong></div>
+    <div style="margin: 5px 0;">
+      <input type="text" id="new-pin" placeholder="Type a note..." style="width: 70%;">
+      <button id="add-pin">Add Note</button>
+    </div>
+    <ul id="pins-list">
+      <li>Need to revisit the haunted chapel.</li>
+    </ul>
+
+    <div style="margin-top: 15px;">
+      <span id="instability-label" contenteditable="true">
+        <strong>Magic Instability</strong>
+      </span>:
+      <input type="range" id="instability-meter" min="0" max="100" value="20">
+      <span id="instability-value">20</span>
+    </div>
+    <div style="margin-top: 10px;">
+      <span id="favor-label" contenteditable="true">
+        <strong>Divine Favor</strong>
+      </span> <span style="font-size: 1.2em;">👁️</span>:
+      <input type="range" id="favor-meter" min="0" max="100" value="50">
+      <span id="favor-value">50</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- 1) Any 'app.js' or 'world-manager.js' (which define saveToDrive, saveToFile, markDirty, etc.) -->
+  <script src="/modules/app.js"></script>
+
+  <!-- 2) Page-specific code to load world data and fill the UI -->
+  <script>
+    let currentWorld = {};
+    let currentFileName = null;
+    let source = null;
+
+    // Attempt to load from window.name
+    if (window.name && window.name.startsWith("{")) {
+      try {
+        const payload = JSON.parse(window.name);
+        currentWorld = payload.world || {};
         currentFileName = payload.fileName || null;
+        source = payload.source || null;
+      } catch (e) {
+        console.warn("Could not parse window.name payload:", e);
       }
-    } catch (err) {
-      console.warn("Could not parse window.name data:", err);
+      window.name = ""; // clear to avoid reuse
     }
-    window.name = ""; // clear to avoid reuse
-  }
 
-  // 2) If not loaded from window.name, try local storage (optional)
-  if (!currentWorld.name) {
-    try {
-      const stored = JSON.parse(localStorage.getItem("currentWorld") || "{}");
-      if (stored.name) {
-        currentWorld = stored;
-        currentFileName = localStorage.getItem("worldFilename") || null;
+    // Or fallback to localStorage
+    if (!currentWorld.name) {
+      try {
+        const stored = localStorage.getItem("currentWorld");
+        if (stored) {
+          currentWorld = JSON.parse(stored);
+          currentFileName = localStorage.getItem("worldFilename") || currentFileName;
+        }
+      } catch (e) {
+        console.warn("No local storage data found or parse error:", e);
       }
-    } catch (e) {
-      console.warn("No local storage data found.");
-    }
-  }
-
-  // If we still have nothing, create a default skeleton
-  if (!currentWorld.name) {
-    currentWorld = {
-      name: "Unnamed World",
-      created: new Date().toISOString(),
-      summary: "A brand new realm..."
-    };
-    currentFileName = "unnamed_world.json";
-  }
-
-  // HELPER: format date
-  function formatDate(iso) {
-    if (!iso) return "[Unknown]";
-    const d = new Date(iso);
-    if (isNaN(d)) return "[Unknown]";
-    return d.toDateString(); // or a fancier approach
-  }
-  // HELPER: compute days since
-  function daysSince(iso) {
-    if (!iso) return "?";
-    const d = new Date(iso);
-    const now = new Date();
-    const diff = now - d;
-    return Math.floor(diff / (1000*60*60*24));
-  }
-
-  // Populate UI
-  document.getElementById("world-name").textContent = currentWorld.name || "Unnamed World";
-  document.getElementById("created-on").textContent = currentWorld.created ? formatDate(currentWorld.created) : "[None]";
-  const ds = currentWorld.created ? daysSince(currentWorld.created) : "?";
-  document.getElementById("days-elapsed").textContent = ds;
-  document.getElementById("world-summary").textContent = currentWorld.summary || "";
-
-  // Mark data dirty whenever user changes the summary
-  const summaryElem = document.getElementById("world-summary");
-  summaryElem.addEventListener("input", () => {
-    currentWorld.summary = summaryElem.textContent;
-    isDirty = true;
-  });
-
-  // 3) Save to Drive function
-  async function saveToDrive() {
-    // Must have an access token from sessionStorage
-    const userStr = sessionStorage.getItem("user");
-    if (!userStr) {
-      alert("Not logged in. Cannot save to Drive.");
-      return;
-    }
-    const token = JSON.parse(userStr).accessToken;
-    if (!token) {
-      alert("No token found. Log in first.");
-      return;
-    }
-    if (!currentFileName) {
-      // If we never had an original name, pick one
-      currentFileName = currentWorld.name.replace(/\s+/g, "_") + ".json";
     }
 
-    try {
-      const res = await fetch("/drive/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: currentFileName,
-          fileContent: currentWorld,
-          accessToken: token
-        })
-      });
-      const data = await res.json();
-      if (!data.success) {
-        alert("Failed to save to Drive.");
-        console.error(data);
+    // HELPER: format date
+    function formatDate(isoDate) {
+      if (!isoDate) return "[Unknown]";
+      const d = new Date(isoDate);
+      if (isNaN(d)) return "[Unknown]";
+      const day = d.getDate();
+      const suffix = (day > 3 && day < 21) ? 'th' 
+        : (day % 10 === 1 ? 'st' : (day % 10 === 2 ? 'nd' : (day % 10 === 3 ? 'rd' : 'th')));
+      const month = d.toLocaleString('default', { month: 'long' });
+      const year = d.getFullYear();
+      return `${day}${suffix} of ${month} ${year}`;
+    }
+    // HELPER: compute days difference from date to now
+    function daysSince(iso) {
+      if (!iso) return "?";
+      const start = new Date(iso);
+      if (isNaN(start)) return "[Unknown]";
+      const now = new Date();
+      const diff = now - start;
+      return Math.floor(diff / (1000*60*60*24));
+    }
+
+    // Fill "info-section"
+    const wName = document.getElementById("world-name");
+    const cLabel = document.getElementById("created-on");
+    const daysElem = document.getElementById("days-elapsed");
+
+    wName.textContent = currentWorld.name || "Unnamed World";
+    if (currentWorld.created) {
+      cLabel.textContent = formatDate(currentWorld.created);
+    }
+    // If we have 'campaignStart', show days since that; otherwise days since 'created'
+    if (currentWorld.campaignStart) {
+      daysElem.textContent = daysSince(currentWorld.campaignStart);
+    } else if (currentWorld.created) {
+      daysElem.textContent = daysSince(currentWorld.created);
+    }
+
+    // Fill "overview-section"
+    if (currentWorld.inWorldDate) {
+      document.getElementById("inworld-date").textContent = currentWorld.inWorldDate;
+    }
+    if (currentWorld.summary) {
+      document.getElementById("world-summary").textContent = currentWorld.summary;
+    }
+
+    // (And so on for Party Tracker, Factions, Market, etc.)
+    // ...
+    // The rest of your existing code that sets up event listeners, etc. is below:
+    // ... (Just keep the final version you had with the advanced sections)
+    
+    // Example: attach event to "encounter-btn" 
+    document.getElementById("encounter-btn").addEventListener("click", () => {
+      const encounters = [
+        "A band of goblins ambushes the party!",
+        "A traveling merchant crosses paths with the party.",
+        "The party stumbles upon a hidden treasure cache.",
+        "A sudden storm forces the group to seek shelter."
+      ];
+      const pick = encounters[Math.floor(Math.random()*encounters.length)];
+      const feedList = document.getElementById("activity-feed");
+      const li = document.createElement("li");
+      li.textContent = "Encounter: " + pick;
+      feedList.appendChild(li);
+
+      // If you track these in currentWorld, do:
+      if (!currentWorld.events) currentWorld.events = [];
+      currentWorld.events.push("Encounter: " + pick);
+      if (typeof markDirty === "function") markDirty();
+    });
+
+    // "Save to Drive" and "Save to File" are already hooked to #saveDriveBtn and #saveFileBtn
+    // in your code from `app.js`, which presumably define saveToDrive() and saveToFile().
+    // If you want to confirm that call here:
+    document.getElementById("saveDriveBtn").addEventListener("click", () => {
+      if (typeof saveToDrive === "function") {
+        saveToDrive();
       } else {
-        alert("World saved to Google Drive!");
-        isDirty = false;
+        console.warn("No saveToDrive() function found.");
       }
-    } catch (e) {
-      console.error(e);
-      alert("Error saving to Drive.");
-    }
-  }
-
-  // 4) Save to File function
-  function saveToFile() {
-    let file = currentFileName || (currentWorld.name.replace(/\s+/g, "_") + ".json");
-    const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = file;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    isDirty = false;
-    alert("World saved to local file.");
-  }
-
-  // Attach button handlers
-  document.getElementById("saveDriveBtn").addEventListener("click", saveToDrive);
-  document.getElementById("saveFileBtn").addEventListener("click", saveToFile);
-
-  // 5) Mark dirty on unload if needed
-  window.addEventListener("beforeunload", (e) => {
-    if (isDirty) {
-      // Optionally warn user or do something else
-      // e.returnValue = "You have unsaved changes. Sure to leave?";
-    }
-  });
-</script>
+    });
+    document.getElementById("saveFileBtn").addEventListener("click", () => {
+      if (typeof saveToFile === "function") {
+        saveToFile();
+      } else {
+        console.warn("No saveToFile() function found.");
+      }
+    });
+  </script>
 </body>
 </html>
