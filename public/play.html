@@ -1,147 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
   <title>Living World Engine – Dashboard</title>
-  <!-- Optional external CSS -->
-  <link href="landing.css" rel="stylesheet" />
+  <!-- Import UnifrakturCook for main headings -->
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* 1) Basic page styling */
-    body {
+    /* Reset and basic setup */
+    * {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
       background-color: #2b1f13;
       color: #f4e3c1;
       font-family: Georgia, serif;
-      /* We’re not centering everything; normal flow from top to bottom. */
+      text-align: left;
+      padding: 20px;
     }
-
-    /* 2) A general "section-block" class for max-width centering */
     .section-block {
-      max-width: 1200px;
-      margin: 0 auto;   /* center horizontally if screen is wider than 1200px */
-      padding: 10px;    
+      max-width: 1200px; 
+      margin: 0 auto 20px auto;
+      padding: 10px;
+      background-color: #3a2d1e; 
+      border: 1px solid #c7b58d;
+      border-radius: 6px;
     }
 
-    /* 3) Title section (displays on top, scrolls normally) */
-    #title-section {
-      /* No pinned positioning; normal block. */
-      background-color: #2b1f13;
-      margin-bottom: 20px; /* add a gap before the next section */
-      text-align: center;   /* headings are center-aligned if you like */
-    }
-    /* Remove default h1/h2 margins for tighter spacing */
-    #title-section h1, #title-section h2 {
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    /* 4) World info (again, normal block) */
-    #info-section {
-      background-color: #2b1f13;
-      margin-bottom: 20px;
+    /* Title Section */
+    #title-section h1 {
+      /* UnifrakturCook for the main title */
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
+      color: #ffd700;
+      margin-bottom: 0.3em;
       text-align: center;
     }
+    /* Optional smaller subtitle under the main heading */
+    #title-section h2 {
+      font-family: Georgia, serif; 
+      font-size: 1.2rem;
+      color: #e0c097;
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 10px 0;
+    }
+
+    /* World Info Section */
     #world-name {
-      font-size: 1.8em;
-      font-weight: bold;
-      color: #fff3c4;
-      margin: 0; /* minimal margin to keep it tight */
+      /* Also use UnifrakturCook for the “world name” */
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 0.5em;
     }
     #creation-date {
       font-size: 0.9em;
       color: #c7b58d;
-      margin-top: 5px;
+      margin-bottom: 0.5em;
     }
     #dm-inspiration {
       font-style: italic;
       color: #d1c7ae;
-      margin-top: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 0.5em;
     }
 
-    /* 5) Navigation section */
-    #nav-section {
-      background-color: #2b1f13;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    /* The nav-tabs container uses grid for the buttons themselves */
+    /* Nav tabs – treat each link like a “button” that’s centered
+       both horizontally and vertically using flex. */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
-      max-width: 1200px;
-      margin: 0 auto; /* center within the page width */
     }
     .nav-tabs a {
+      /* Button-like styling for each link */
+      display: inline-flex;           /* flex container for text alignment */
+      align-items: center;           /* center text vertically */
+      justify-content: center;       /* center text horizontally */
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
-      padding: 8px;
       border-radius: 6px;
       font-weight: bold;
-      display: block;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
+
+      /* Spacing inside each link: */
+      padding: 10px;
+      height: 44px;            /* optionally fix a height so they match */
+      line-height: normal;
+      white-space: nowrap;     /* prevent text from wrapping to a second line */
+      text-align: center;      /* fallback text alignment if needed */
     }
     .nav-tabs a:hover {
       background-color: #8a5f2e;
       transform: scale(1.03);
     }
-
-    /* 6) Common divider styling */
-    .divider {
-      border: none;
-      border-top: 1px solid #c7b58d;
-      margin: 15px auto 5px;
-      max-width: 90%;
-    }
-
-    /* 7) Main "Overview" content section at the bottom (normal block) */
-    #overview-section {
-      background-color: #3a2d1e;
-      border-radius: 8px;
-      border: 1px solid #c7b58d;
-      text-align: left;    /* content is left-aligned inside */
-      margin-bottom: 20px; /* space at bottom if desired */
-    }
-    #overview-section h2 {
-      margin-top: 0;
-    }
-    /* For smaller screens, tweak heading or layout as needed */
-    @media (max-width: 768px) {
-      #title-section h1 {
-        font-size: 2em;
-      }
-      #title-section h2 {
-        font-size: 1.1em;
-      }
-      #overview-section {
-        padding: 15px;
-      }
-    }
   </style>
 </head>
 
 <body>
-
   <!-- Title Section -->
   <div id="title-section" class="section-block">
     <h1>Living World Engine</h1>
-    <h2 class="subtitle">Where realms breathe and stories live</h2>
+    <h2>Where realms breathe and stories live</h2>
     <hr class="divider" />
   </div>
 
-  <!-- Info Section -->
+  <!-- World Info Section -->
   <div id="info-section" class="section-block">
-    <div id="world-name-container">
-      <span id="world-name">[World Name]</span>
-    </div>
-    <div id="creation-date">
-      Created: <span id="created-on">[Loading...]</span>
-    </div>
+    <div id="world-name">[World Name]</div>
+    <div id="creation-date">Created: [Loading...]</div>
     <div id="dm-inspiration">
       "A shadow stirs beneath the mountain, waiting for a name."
     </div>
@@ -170,77 +145,17 @@
     </div>
   </div>
 
-  <!-- Overview Section (main content at bottom) -->
+  <!-- Overview Section -->
   <div id="overview-section" class="section-block">
     <h2>Overview</h2>
-    <div id="date-info" style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
-      <div id="world-date">
-        Current Date:
-        <span id="date-display">[Loading...]</span>
-      </div>
-      <div id="days-since-start">
-        Days Since Campaign Start:
-        <span id="days-elapsed">[Loading...]</span>
-      </div>
+    <div style="margin-bottom: 20px; margin-top: 10px; font-size: 0.95em;">
+      <div>Current Date: [Loading...]</div>
+      <div>Days Since Campaign Start: [Loading...]</div>
     </div>
     <h3>World Summary</h3>
-    <div id="world-summary-container" style="margin-top: 5px; max-width: 700px; margin-left: auto; margin-right: auto;">
-      <div id="world-summary" style="font-style: italic; max-width: 700px; margin: auto;">
-        <span id="summary-text">Click to add a world summary...</span>
-      </div>
-    </div>
+    <p style="font-style: italic; margin-top: 5px;">
+      Click to add a world summary...
+    </p>
   </div>
-
-  <!-- JavaScript for dynamic data -->
-  <script>
-    function formatDate(isoDate) {
-      const date = new Date(isoDate);
-      const day = date.getDate();
-      const daySuffix = (d => {
-        if (d > 3 && d < 21) return 'th';
-        switch (d % 10) {
-          case 1: return 'st';
-          case 2: return 'nd';
-          case 3: return 'rd';
-          default: return 'th';
-        }
-      })(day);
-
-      const options = { weekday: 'long', month: 'long', year: 'numeric' };
-      const formatter = new Intl.DateTimeFormat('en-GB', options);
-      const parts = formatter.formatToParts(date);
-      const weekday = parts.find(p => p.type === 'weekday')?.value;
-      const month = parts.find(p => p.type === 'month')?.value;
-      const year = parts.find(p => p.type === 'year')?.value;
-
-      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
-    }
-
-    let currentWorld = null;
-    if (window.name) {
-      try {
-        const parsed = JSON.parse(window.name);
-        currentWorld = parsed.world || null;
-        if (currentWorld) {
-          localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-          localStorage.setItem("worldFilename", parsed.fileName || "");
-          window.name = "";
-        }
-      } catch (e) {
-        console.warn("Could not parse window.name payload:", e);
-      }
-    }
-    if (!currentWorld) {
-      currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
-    }
-
-    const worldName = currentWorld.name || "Unnamed World";
-    const created = currentWorld.created || "[Unknown]";
-    const summary = currentWorld.summary || "Click to add a world summary...";
-
-    document.getElementById("world-name").textContent = worldName;
-    document.getElementById("created-on").textContent = formatDate(created);
-    document.getElementById("summary-text").textContent = summary;
-  </script>
 </body>
 </html>
