@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Living World Engine – Dashboard</title>
-  <!-- Import UnifrakturCook for main headings -->
+  <!-- Import UnifrakturCook for headings -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Reset and basic setup */
+    /* Basic page reset */
     * {
       margin: 0;
       padding: 0;
@@ -27,17 +27,14 @@
       border: 1px solid #c7b58d;
       border-radius: 6px;
     }
-
     /* Title Section */
     #title-section h1 {
-      /* UnifrakturCook for the main title */
       font-family: 'UnifrakturCook', cursive;
       font-size: 3rem;
       color: #ffd700;
       margin-bottom: 0.3em;
       text-align: center;
     }
-    /* Optional smaller subtitle under the main heading */
     #title-section h2 {
       font-family: Georgia, serif; 
       font-size: 1.2rem;
@@ -45,44 +42,43 @@
       margin-bottom: 0.5em;
       text-align: center;
     }
-
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
       margin: 10px 0;
     }
-
-    /* World Info Section */
+    /* World Info Section centered */
+    #info-section {
+      text-align: center;  /* centers child text + elements */
+    }
     #world-name {
-      /* Also use UnifrakturCook for the “world name” */
       font-family: 'UnifrakturCook', cursive;
       font-size: 2rem;
       color: #ffd700;
       margin-bottom: 0.5em;
     }
-    #creation-date {
+    /* Creation date uses a span (#created-on) so we can dynamically set it */
+    #creation-label {
       font-size: 0.9em;
       color: #c7b58d;
       margin-bottom: 0.5em;
+      display: inline-block; /* ensures margin spacing in center */
     }
     #dm-inspiration {
       font-style: italic;
       color: #d1c7ae;
       margin-bottom: 0.5em;
     }
-
-    /* Nav tabs – treat each link like a “button” that’s centered
-       both horizontally and vertically using flex. */
+    /* Nav tabs */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
     }
     .nav-tabs a {
-      /* Button-like styling for each link */
-      display: inline-flex;           /* flex container for text alignment */
-      align-items: center;           /* center text vertically */
-      justify-content: center;       /* center text horizontally */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background-color: #5c3e1a;
       color: #f4e3c1;
       text-decoration: none;
@@ -90,13 +86,11 @@
       font-weight: bold;
       box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.3s ease, transform 0.2s ease;
-
-      /* Spacing inside each link: */
       padding: 10px;
-      height: 44px;            /* optionally fix a height so they match */
+      height: 44px;
       line-height: normal;
-      white-space: nowrap;     /* prevent text from wrapping to a second line */
-      text-align: center;      /* fallback text alignment if needed */
+      white-space: nowrap;
+      text-align: center;
     }
     .nav-tabs a:hover {
       background-color: #8a5f2e;
@@ -116,7 +110,7 @@
   <!-- World Info Section -->
   <div id="info-section" class="section-block">
     <div id="world-name">[World Name]</div>
-    <div id="creation-date">Created: [Loading...]</div>
+    <div id="creation-label">Created: <span id="created-on">[Loading...]</span></div>
     <div id="dm-inspiration">
       "A shadow stirs beneath the mountain, waiting for a name."
     </div>
@@ -157,5 +151,58 @@
       Click to add a world summary...
     </p>
   </div>
+
+  <!-- Dynamic Code: Restores the data loading for world name & created date -->
+  <script>
+    // Example: reintroduce the dynamic code that sets #world-name and #created-on
+    // Adjust or expand as needed if you had more logic before.
+    function formatDate(isoDate) {
+      if (!isoDate) return "[Unknown]";
+      const date = new Date(isoDate);
+      if (isNaN(date)) return "[Unknown]";
+      const day = date.getDate();
+      const daySuffix = (d => {
+        if (d > 3 && d < 21) return 'th';
+        switch (d % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      })(day);
+      const options = { weekday: 'long', month: 'long', year: 'numeric' };
+      const formatter = new Intl.DateTimeFormat('en-GB', options);
+      const parts = formatter.formatToParts(date);
+      const weekday = parts.find(p => p.type === 'weekday')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const year = parts.find(p => p.type === 'year')?.value;
+      return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+    }
+
+    // Simulate the code that loads a "currentWorld" object from e.g. localStorage or window.name
+    let currentWorld = null;
+    try {
+      const stored = localStorage.getItem("currentWorld");
+      if (stored) {
+        currentWorld = JSON.parse(stored);
+      }
+    } catch (e) {
+      console.warn("Could not parse currentWorld from localStorage:", e);
+    }
+
+    // If you had a real 'currentWorld' with 'name' and 'created' fields:
+    const worldNameElem = document.getElementById("world-name");
+    const createdOnElem = document.getElementById("created-on");
+
+    if (currentWorld) {
+      const { name, created } = currentWorld;
+      if (name) {
+        worldNameElem.textContent = name;
+      }
+      if (created) {
+        createdOnElem.textContent = formatDate(created);
+      }
+    }
+  </script>
 </body>
 </html>
