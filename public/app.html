@@ -3,53 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <title>Living World Engine - Manage Worlds</title>
-  <link rel="stylesheet" href="landing.css" />
+  <!-- Use UnifrakturCook font -->
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
+
   <style>
-  body {
-  background-color: #2b1f13;
-  color: #f4e3c1;
-  font-family: 'Georgia', serif;
-  margin: 0;
-  padding: 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 40px;
-}
+    /* Page layout */
+    body {
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 40px;
 
-.title {
-  grid-column: 1 / span 2;
-  text-align: center;
-  margin-bottom: 20px;
-}
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 40px;
+    }
 
-.panel {
-  background-color: #3c2e20;
-  padding: 20px;
-  border-radius: 10px;
-}
-
+    /* Title Section */
+    .title {
+      grid-column: 1 / span 2;
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .title h1 {
-      font-size: 2.5em;
-      color: #ffe8b2;
+      /* UnifrakturCook for main heading */
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;   /* match index.html's heading size */
+      color: #ffd700;    /* a golden color, as in index.html */
       margin: 0;
     }
     .title p.subtitle {
-      font-size: 1.1em;
-      color: #d6c7ae;
+      /* Subtitle style similar to index.html’s .subtitle color/size */
+      font-family: 'Georgia', serif; 
+      font-size: 1.2rem;
+      color: #e0c097;
       font-style: italic;
       margin: 6px 0 0;
+      text-align: center;
     }
+
+    /* Panels */
+    .panel {
+      background-color: #3c2e20;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* h2 styling for “Your Worlds” and “Create New World” */
     h2 {
-      color: #ffe8b2;
+      font-family: 'UnifrakturCook', cursive;
+      color: #ffd700;    /* golden color */
+      font-size: 1.8rem;
+      margin-bottom: 16px;
       border-bottom: 1px solid #5a4330;
       padding-bottom: 6px;
-      margin-bottom: 16px;
     }
+
     h3 {
       margin-top: 20px;
       margin-bottom: 8px;
     }
+
+    /* List of worlds */
     ul#userWorlds {
       list-style: none;
       padding: 0;
@@ -63,6 +80,8 @@
     ul#userWorlds li.selected {
       background-color: #6f4f2a;
     }
+
+    /* Inputs and buttons */
     input[type="text"],
     input[type="file"],
     button {
@@ -81,6 +100,7 @@
       background-color: #80603e;
       cursor: pointer;
     }
+
     label {
       font-weight: bold;
       margin-top: 10px;
@@ -91,44 +111,42 @@
 <body>
   <!-- Title -->
   <div class="title">
-    <h1>Manage World</h1>
-    <p>Shape realms, forge legends.</p>
+    <h1>Manage Worlds</h1>
+    <p class="subtitle">Shape realms, forge legends.</p>
   </div>
 
   <!-- Left Panel -->
   <div class="panel">
-      <h2>Your Worlds</h2>
-      <ul id="userWorlds"><!-- Populated dynamically --></ul>
-      <button onclick="loadSelectedWorld()">Load Selected World</button>
-      <button onclick="deleteSelectedWorld()">Delete Selected World</button>
+    <h2>Your Worlds</h2>
+    <ul id="userWorlds"><!-- Populated dynamically --></ul>
+    <button onclick="loadSelectedWorld()">Load Selected World</button>
+    <button onclick="deleteSelectedWorld()">Delete Selected World</button>
 
-      <h3>Import World from File</h3>
-      <input type="file" id="importFile" accept=".json" />
-      <button onclick="importWorldFromFile()">Import</button>
+    <h3>Import World from File</h3>
+    <input type="file" id="importFile" accept=".json" />
+    <button onclick="importWorldFromFile()">Import</button>
 
-      <h3>Save to Google Drive</h3>
-      <button id="saveDriveBtn">Save to Drive</button>
+    <h3>Save to Google Drive</h3>
+    <button id="saveDriveBtn">Save to Drive</button>
 
-      <h3>Save to Local File</h3>
-      <button id="saveFileBtn">Save to File</button>
-    </div>
-
-    <!-- Right Panel: Create or load new world -->
-    <div class="panel">
-      <h2>Create New World</h2>
-      <input type="text" id="newWorldName" placeholder="Enter world name..." />
-      <div style="display: flex; gap: 10px;">
-        <button onclick="createWorldInDrive()">Create in Drive</button>
-        <button onclick="createWorldLocally()">Create Locally</button>
-      </div>
-      
-
-      <h3 style="margin-top: 30px;">Load World from File</h3>
-      <input type="file" id="loadFile" accept=".json" />
-      <button onclick="loadWorldFromFile()">Load</button>
-    </div>
+    <h3>Save to Local File</h3>
+    <button id="saveFileBtn">Save to File</button>
   </div>
 
+  <!-- Right Panel: Create or load new world -->
+  <div class="panel">
+    <h2>Create New World</h2>
+    <input type="text" id="newWorldName" placeholder="Enter world name..." />
+    <div style="display: flex; gap: 10px;">
+      <button onclick="createWorldInDrive()">Create in Drive</button>
+      <button onclick="createWorldLocally()">Create Locally</button>
+    </div>
+
+    <h3 style="margin-top: 30px;">Load World from File</h3>
+    <input type="file" id="loadFile" accept=".json" />
+    <button onclick="loadWorldFromFile()">Load</button>
+  </div>
+  
   <script src="/modules/app.js"></script>
   <script src="/modules/world-manager.js"></script>
 </body>
