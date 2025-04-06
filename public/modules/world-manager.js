@@ -44,15 +44,24 @@ function createNewWorld() {
   }
   // Construct initial world object with required structure
   const newWorld = {
-    name: name,
+    name: document.getElementById("newWorldName").value || "Unnamed World",
     created: new Date().toISOString(),
     summary: "",
-    countries: [{ name: "Unnamed Country" }],
-    towns:    [{ name: "Unnamed Town" }],
-    npcs:     [{ name: "Unnamed NPC" }],
-    bbegs:    [{ name: "Unnamed BBEG" }],
-    factions: [{ name: "Unnamed Faction" }]
+    countries: [],
+    towns: [],
+    npcs: [],
+    factions: [],
+    events: [],
+    bbeg: {},
+    market: {},
+    journal: [],
+    // optionally add:
+    campaignStart: new Date().toISOString(),
+    pins: [],
+    instabilityMeter: 0,
+    favorMeter: 0
   };
+  
   // Set a default file name for this world (used for saving)
   const fileName = name.replace(/\s+/g, '_') + ".json";
 
