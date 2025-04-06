@@ -278,3 +278,39 @@ async function createNewWorld() {
     window.location.href = "/play.html";
   }
   
+  // When a world is loaded from Google Drive or local file
+function loadWorld(worldData, filename) {
+  if (!worldData || typeof worldData !== "object") return alert("Invalid world file");
+
+  // Save to sessionStorage for access across all pages
+  sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
+  sessionStorage.setItem("worldFilename", filename || "world.json");
+
+  // Navigate to play.html
+  window.location.href = "/play.html";
+}
+
+// Load from local file
+document.getElementById("loadLocalFileBtn")?.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    try {
+      const worldData = JSON.parse(reader.result);
+      loadWorld(worldData, file.name);
+    } catch (err) {
+      alert("Failed to load file: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Example usage for Google Drive load callback
+function onGoogleDriveLoadSuccess(worldData, filename) {
+  loadWorld(worldData, filename);
+}
+
+// Export for Drive integration
+window.loadWorldFromDrive = onGoogleDriveLoadSuccess;

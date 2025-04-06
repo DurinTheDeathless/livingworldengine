@@ -1,14 +1,15 @@
 let currentWorld = null;
+let currentFileName = null;
 
 try {
-  const stored = localStorage.getItem("currentWorld");
+  const stored = sessionStorage.getItem("currentWorld");
   if (stored) {
     currentWorld = JSON.parse(stored);
+    currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
   }
 } catch (e) {
-  console.warn("Could not parse currentWorld from localStorage:", e);
+  console.warn("Could not load world from sessionStorage", e);
 }
-
 
 function formatDate(isoDate) {
   if (!isoDate) return "[Unknown]";
@@ -33,7 +34,6 @@ function formatDate(isoDate) {
   return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
 }
 
-
 function daysSince(iso) {
   if (!iso) return "?";
   const start = new Date(iso);
@@ -43,6 +43,7 @@ function daysSince(iso) {
 }
 
 function populateWorldInfo() {
+  if (!currentWorld) return;
   document.getElementById("world-name").textContent = currentWorld.name || "Unnamed World";
   document.getElementById("created-on").textContent = currentWorld.created ? formatDate(currentWorld.created) : "[Unknown]";
   document.getElementById("days-elapsed").textContent = currentWorld.campaignStart ?
@@ -54,13 +55,8 @@ function populateWorldInfo() {
   loadPins();
 }
 
-function markDirty() {
-  localStorage.setItem("currentWorld", JSON.stringify(currentWorld));
-  localStorage.setItem("worldFilename", currentFileName || "world.json");
-}
-
-// Save to file
 function saveToFile() {
+  if (!currentWorld) return;
   const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -69,23 +65,30 @@ function saveToFile() {
   URL.revokeObjectURL(a.href);
 }
 
-// Save to Drive (requires sessionStorage.user)
 function saveToDrive() {
   const token = sessionStorage.getItem("user");
   if (!token) return alert("You must be logged in to use Google Drive save.");
   const accessToken = JSON.parse(token).accessToken;
+
   fetch("/drive/save", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName: currentFileName, fileContent: currentWorld, accessToken })
+    body: JSON.stringify({
+      fileName: currentFileName,
+      fileContent: currentWorld,
+      accessToken
+    })
   })
   .then(res => res.json())
   .then(data => {
     if (!data.success) alert("Drive save failed.");
+  })
+  .catch(err => {
+    console.error("Drive save error:", err);
+    alert("Error saving to Google Drive: " + err.message);
   });
 }
 
-// Pins
 function loadPins() {
   const list = document.getElementById("pins-list");
   list.innerHTML = "";
@@ -99,7 +102,7 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty();
+      markDirty?.(); // safe optional call
       loadPins();
     };
     li.appendChild(del);
@@ -107,29 +110,28 @@ function loadPins() {
   });
 }
 
-document.getElementById("add-pin").addEventListener("click", () => {
+document.getElementById("add-pin")?.addEventListener("click", () => {
   const input = document.getElementById("new-pin");
   const text = input.value.trim();
   if (!text) return;
   if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
   currentWorld.pins.push(text);
   input.value = "";
-  markDirty();
+  markDirty?.();
   loadPins();
 });
 
-document.getElementById("inworld-date").addEventListener("input", () => {
+document.getElementById("inworld-date")?.addEventListener("input", () => {
   currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
-  markDirty();
+  markDirty?.();
 });
 
-document.getElementById("world-summary").addEventListener("input", () => {
+document.getElementById("world-summary")?.addEventListener("input", () => {
   currentWorld.summary = document.getElementById("world-summary").textContent.trim();
-  markDirty();
+  markDirty?.();
 });
 
-document.getElementById("saveDriveBtn").addEventListener("click", saveToDrive);
-document.getElementById("saveFileBtn").addEventListener("click", saveToFile);
+document.getElementById("saveDriveBtn")?.addEventListener("click", saveToDrive);
+document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
 
-// INIT
 populateWorldInfo();
