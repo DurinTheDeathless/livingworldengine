@@ -86,8 +86,9 @@ function createNewWorld() {
   // Open the new world in the play editor (pass data via window.name)
   const payload = { world: newWorld, fileName: fileName, source: token ? "drive" : "local" };
   window.name = JSON.stringify(payload);
+  window.name = JSON.stringify({ world: currentWorld, fileName: "Test2.json" });
   window.location.href = "/play.html";
-}
+  }
 
 // Download a blank world (new world JSON) without opening it
 function downloadBlankWorld() {
@@ -149,8 +150,9 @@ async function loadSelectedWorld() {
     source: worldEntry.source 
   };
   window.name = JSON.stringify(payload);
+  window.name = JSON.stringify({ world: currentWorld, fileName: "Test2.json" });
   window.location.href = "/play.html";
-}
+  }
 
 // Remove the selected world from the list (and Drive if applicable)
 async function deleteSelectedWorld() {
@@ -203,8 +205,9 @@ function loadWorldFromFile() {
       // Prepare payload and navigate to play page
       const payload = { world: worldData, fileName: fileName, source: "local" };
       window.name = JSON.stringify(payload);
+      window.name = JSON.stringify({ world: currentWorld, fileName: "Test2.json" });
       window.location.href = "/play.html";
-    } catch {
+          } catch {
       alert("Invalid file format.");
     }
   };
