@@ -18,7 +18,6 @@ const pool = new Pool({
   }
 });
 
-// Test the connection
 pool.connect((err, client, release) => {
   if (err) {
     return console.error('❌ Error acquiring client', err.stack);
@@ -32,7 +31,7 @@ pool.connect((err, client, release) => {
   });
 });
 
-module.exports = pool; // Optional: export pool if used in other files
+module.exports = pool;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,19 +45,16 @@ const pgSession = require('connect-pg-simple')(session);
 
 app.use(session({
   store: new pgSession({
-    pool: pool, // the same Pool you already defined
+    pool: pool,
     tableName: 'session'
   }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    secure: false // set to true if using HTTPS
-  }
-}));
-
-
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    secure: false
+}}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -70,13 +66,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Google OAuth callback route
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     const accessToken = req.user.accessToken;
 
-    // Store token on frontend
     res.send(`
       <script>
         sessionStorage.setItem("user", JSON.stringify({ accessToken: "${accessToken}" }));
@@ -89,7 +83,6 @@ app.get('/auth/google/callback',
 app.get('/logout', (req, res, next) => {
   const accessToken = req.user?.accessToken;
 
-  // Optionally revoke token
   if (accessToken) {
     fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
       method: 'POST',

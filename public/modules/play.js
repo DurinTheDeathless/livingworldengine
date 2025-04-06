@@ -99,7 +99,7 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty?.(); // safe optional call
+      markDirty?.();
       loadPins();
     };
     li.appendChild(del);

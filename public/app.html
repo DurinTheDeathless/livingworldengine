@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Living World Engine - Manage Worlds</title>
-  <!-- Use UnifrakturCook font -->
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
 
   <style>
-    /* Page layout */
     body {
       background-color: #2b1f13;
       color: #f4e3c1;
@@ -21,21 +19,18 @@
       gap: 40px;
     }
 
-    /* Title Section */
     .title {
       grid-column: 1 / span 2;
       text-align: center;
       margin-bottom: 20px;
     }
     .title h1 {
-      /* UnifrakturCook for main heading */
       font-family: 'UnifrakturCook', cursive;
-      font-size: 3rem;   /* match index.html's heading size */
-      color: #ffd700;    /* a golden color, as in index.html */
+      font-size: 3rem;
+      color: #ffd700;
       margin: 0;
     }
     .title p.subtitle {
-      /* Subtitle style similar to index.html’s .subtitle color/size */
       font-family: 'Georgia', serif; 
       font-size: 1.2rem;
       color: #e0c097;
@@ -44,17 +39,15 @@
       text-align: center;
     }
 
-    /* Panels */
     .panel {
       background-color: #3c2e20;
       padding: 20px;
       border-radius: 10px;
     }
 
-    /* h2 styling for “Your Worlds” and “Create New World” */
     h2 {
       font-family: 'UnifrakturCook', cursive;
-      color: #ffd700;    /* golden color */
+      color: #ffd700;
       font-size: 1.8rem;
       margin-bottom: 16px;
       border-bottom: 1px solid #5a4330;
@@ -66,7 +59,6 @@
       margin-bottom: 8px;
     }
 
-    /* List of worlds */
     ul#userWorlds {
       list-style: none;
       padding: 0;
@@ -81,7 +73,6 @@
       background-color: #6f4f2a;
     }
 
-    /* Inputs and buttons */
     input[type="text"],
     input[type="file"],
     button {
@@ -109,16 +100,14 @@
   </style>
 </head>
 <body>
-  <!-- Title -->
   <div class="title">
     <h1>Manage Worlds</h1>
     <p class="subtitle">Shape realms, forge legends.</p>
   </div>
 
-  <!-- Left Panel -->
   <div class="panel">
     <h2>Your Worlds</h2>
-    <ul id="userWorlds"><!-- Populated dynamically --></ul>
+    <ul id="userWorlds"></ul>
     <button onclick="loadSelectedWorld()">Load Selected World</button>
     <button onclick="deleteSelectedWorld()">Delete Selected World</button>
 
@@ -133,7 +122,6 @@
     <button id="saveFileBtn">Save to File</button>
   </div>
 
-  <!-- Right Panel: Create or load new world -->
   <div class="panel">
     <h2>Create New World</h2>
     <input type="text" id="newWorldName" placeholder="Enter world name..." />

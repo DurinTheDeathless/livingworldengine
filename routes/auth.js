@@ -1,4 +1,3 @@
-// routes/auth.js
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
@@ -9,7 +8,7 @@ router.get('/google', passport.authenticate('google', {
     'email',
     'https://www.googleapis.com/auth/drive'
   ],
-  prompt: 'consent', // ensures Google asks for permissions again
+  prompt: 'consent',
   accessType: 'offline',
   responseType: 'code'
 

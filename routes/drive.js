@@ -131,7 +131,7 @@ router.post('/list', async (req, res) => {
   try {
     const drive = getDriveClient(accessToken);
     const folderId = await ensureAppFolder(drive);
-    await ensureIndexFile(drive, folderId); // make sure index.json exists
+    await ensureIndexFile(drive, folderId);
 
     const files = await listWorldFiles(drive, folderId);
     res.json({ success: true, files });
@@ -157,16 +157,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const drive = getDriveClient(accessToken);
 
-    // ✅ Ensure folder exists (or create it)
     const folderId = await ensureAppFolder(drive);
 
-    // ✅ Prepare file upload
     const { Readable } = require('stream');
     const bufferStream = Readable.from(file.buffer);
 
     const fileMetadata = {
       name: fileName,
-      parents: [folderId] // 🔥 assign to folder
+      parents: [folderId]
     };
 
     const media = {
@@ -187,5 +185,49 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
+router.post("/save", async (req, res) => {
+  const { fileName, fileContent, accessToken } = req.body;
+
+  if (!accessToken || !fileName || !fileContent) {
+    return res.status(400).json({ success: false, message: "Missing data" });
+  }
+
+  try {
+    const drive = getDriveClient(accessToken);
+    const folderId = await ensureAppFolder(drive);
+
+    const search = await drive.files.list({
+      q: `name='${fileName}' and '${folderId}' in parents and trashed=false`,
+      fields: "files(id)"
+    });
+
+    const media = {
+      mimeType: "application/json",
+      body: Buffer.from(JSON.stringify(fileContent, null, 2))
+    };
+
+    if (search.data.files.length > 0) {
+      const fileId = search.data.files[0].id;
+      await drive.files.update({
+        fileId,
+        media
+      });
+    } else {
+      await drive.files.create({
+        resource: {
+          name: fileName,
+          parents: [folderId]
+        },
+        media,
+        fields: "id"
+      });
+    }
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Drive save error:", err);
+    return res.status(500).json({ success: false, message: "Save failed" });
+  }
+});
 
 module.exports = router;

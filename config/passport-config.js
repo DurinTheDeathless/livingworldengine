@@ -7,7 +7,7 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.CALLBACK_URL,
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-  profile.accessToken = accessToken; // attach the accessToken to the profile
+  profile.accessToken = accessToken;
   return done(null, profile);
 }));
 

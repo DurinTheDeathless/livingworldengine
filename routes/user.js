@@ -3,13 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
-// Middleware to check if user is authenticated
 function ensureAuth(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.status(401).json({ error: 'Unauthorized' });
 }
 
-// Get user's saved worlds
 router.get('/worlds', ensureAuth, (req, res) => {
   const userId = req.user.id;
   const userFolder = path.join(__dirname, '../saves', userId);
@@ -22,7 +20,6 @@ router.get('/worlds', ensureAuth, (req, res) => {
   res.json(files);
 });
 
-// Get contents of a saved world
 router.get('/worlds/:filename', ensureAuth, (req, res) => {
   const filePath = path.join(__dirname, '../saves', req.user.id, req.params.filename);
   if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Not found' });
@@ -31,7 +28,6 @@ router.get('/worlds/:filename', ensureAuth, (req, res) => {
   res.json(JSON.parse(data));
 });
 
-// Save a world
 router.post('/worlds/:filename', ensureAuth, (req, res) => {
   const userFolder = path.join(__dirname, '../saves', req.user.id);
   if (!fs.existsSync(userFolder)) fs.mkdirSync(userFolder, { recursive: true });
@@ -41,7 +37,6 @@ router.post('/worlds/:filename', ensureAuth, (req, res) => {
   res.json({ status: 'saved' });
 });
 
-// Delete a world
 router.delete('/worlds/:filename', ensureAuth, (req, res) => {
   const filePath = path.join(__dirname, '../saves', req.user.id, req.params.filename);
   if (fs.existsSync(filePath)) {
