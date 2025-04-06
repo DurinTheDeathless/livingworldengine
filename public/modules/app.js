@@ -1,4 +1,4 @@
-currentWorld = JSON.parse(sessionStorage.getItem("currentWorld"));
+let currentWorld = JSON.parse(sessionStorage.getItem("currentWorld"));
 let currentFileName = null;
 let source = "local";  // or "drive"
 
@@ -20,7 +20,10 @@ function capitalize(str) {
 
 // Display the world name in the UI (or "Unnamed World" if none)
 const worldNameElem = document.getElementById("world-name");
-let worldName = currentWorld.name || currentWorld.worldName;
+let worldName = "Unnamed World";
+if (currentWorld) {
+  worldName = currentWorld.name || currentWorld.worldName || "Unnamed World";
+}
 if (!worldName) {
   // If no name property, derive from file name
   if (currentFileName) {
@@ -307,10 +310,11 @@ document.getElementById("loadLocalFileBtn")?.addEventListener("change", (e) => {
   reader.readAsText(file);
 });
 
-// Example usage for Google Drive load callback
 function onGoogleDriveLoadSuccess(worldData, filename) {
   loadWorld(worldData, filename);
 }
 
-// Export for Drive integration
 window.loadWorldFromDrive = onGoogleDriveLoadSuccess;
+
+console.log("✅ app.js finished and sessionStorage is set");
+console.log("🟢 play.js is starting");

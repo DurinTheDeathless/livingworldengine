@@ -1,6 +1,3 @@
-currentWorld = JSON.parse(sessionStorage.getItem("currentWorld"));
-let currentFileName = null;
-
 try {
   const stored = sessionStorage.getItem("currentWorld");
   if (stored) {
