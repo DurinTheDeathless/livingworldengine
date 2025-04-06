@@ -1,38 +1,38 @@
-// Auto-load current world from window.name or localStorage
 let currentWorld = null;
-let currentFileName = null;
 
-if (window.name && window.name.startsWith("{")) {
-  try {
-    const payload = JSON.parse(window.name);
-    currentWorld = payload.world || null;
-    currentFileName = payload.fileName || null;
-  } catch (e) {
-    console.warn("Failed to parse world from window.name", e);
+try {
+  const stored = localStorage.getItem("currentWorld");
+  if (stored) {
+    currentWorld = JSON.parse(stored);
   }
-  window.name = ""; // clear to avoid reusing
+} catch (e) {
+  console.warn("Could not parse currentWorld from localStorage:", e);
 }
 
-if (!currentWorld) {
-  try {
-    currentWorld = JSON.parse(localStorage.getItem("currentWorld") || "{}");
-    currentFileName = localStorage.getItem("worldFilename") || null;
-  } catch (e) {
-    console.warn("Could not load world from localStorage.");
-    currentWorld = {};
-  }
-}
 
-function formatDate(iso) {
-  const date = new Date(iso);
+function formatDate(isoDate) {
+  if (!isoDate) return "[Unknown]";
+  const date = new Date(isoDate);
+  if (isNaN(date)) return "[Unknown]";
   const day = date.getDate();
-  const suffix = (day > 3 && day < 21) ? 'th' :
-    (day % 10 === 1 ? 'st' : day % 10 === 2 ? 'nd' : day % 10 === 3 ? 'rd' : 'th');
-  const month = date.toLocaleString('default', { month: 'long' });
-  const weekday = date.toLocaleString('default', { weekday: 'long' });
-  const year = date.getFullYear();
-  return `${weekday}, ${day}${suffix} of ${month} ${year}`;
+  const daySuffix = (d => {
+    if (d > 3 && d < 21) return 'th';
+    switch (d % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  })(day);
+  const options = { weekday: 'long', month: 'long', year: 'numeric' };
+  const formatter = new Intl.DateTimeFormat('en-GB', options);
+  const parts = formatter.formatToParts(date);
+  const weekday = parts.find(p => p.type === 'weekday')?.value;
+  const month = parts.find(p => p.type === 'month')?.value;
+  const year = parts.find(p => p.type === 'year')?.value;
+  return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
 }
+
 
 function daysSince(iso) {
   if (!iso) return "?";
