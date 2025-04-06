@@ -18,18 +18,27 @@
       margin-bottom: 0.4em;
     }
     h1 {
-      font-family: 'UnifrakturCook', cursive;
-      font-size: 2.5rem;
-      color: #ffd700;
-    }
-    .section-block {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #3a2d1e;
-      border: 1px solid #c7b58d;
-      border-radius: 6px;
-    }
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 3rem; /* increased size */
+  color: #ffd700;
+  text-align: center; /* center the heading */
+}
+
+#title-section h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #e0c097;
+}
+
+.section-block {
+  max-width: 1178px; /* restored to your preferred width */
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #3a2d1e;
+  border: 1px solid #c7b58d;
+  border-radius: 6px;
+}
+
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
@@ -95,14 +104,17 @@
 
   <!-- Title Section -->
   <div id="title-section" class="section-block">
-    <h1>Living World Engine</h1>
-    <h2>Where realms breathe and stories live</h2>
+    <div>
+      <h1>Living World Engine</h1>
+      <h2>Where realms breathe and stories live</h2>
+    </div>
     <div style="text-align: right; margin-top: -30px;">
       <button id="saveDriveBtn">Save to Drive</button>
       <button id="saveFileBtn">Save to File</button>
     </div>
     <hr class="divider" />
   </div>
+  
 
   <!-- World Info Section -->
   <div id="info-section" class="section-block">
