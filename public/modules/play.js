@@ -1,4 +1,4 @@
-let currentWorld = null;
+currentWorld = JSON.parse(sessionStorage.getItem("currentWorld"));
 let currentFileName = null;
 
 try {
@@ -135,3 +135,5 @@ document.getElementById("saveDriveBtn")?.addEventListener("click", saveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
 
 populateWorldInfo();
+document.addEventListener("DOMContentLoaded", populateWorldInfo);
+

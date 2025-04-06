@@ -1,4 +1,4 @@
-let currentWorld = {};
+currentWorld = JSON.parse(sessionStorage.getItem("currentWorld"));
 let currentFileName = null;
 let source = "local";  // or "drive"
 
