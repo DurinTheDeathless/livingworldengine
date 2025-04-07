@@ -14,9 +14,8 @@ try {
 function formatDate(isoDate) {
   if (!isoDate) return "[Unknown]";
   const date = new Date(isoDate);
-  if (isNaN(date)) return "[Unknown]";
   const day = date.getDate();
-  const daySuffix = (d => {
+  const suffix = (d => {
     if (d > 3 && d < 21) return 'th';
     switch (d % 10) {
       case 1: return 'st';
@@ -25,31 +24,28 @@ function formatDate(isoDate) {
       default: return 'th';
     }
   })(day);
-  const options = { weekday: 'long', month: 'long', year: 'numeric' };
-  const formatter = new Intl.DateTimeFormat('en-GB', options);
-  const parts = formatter.formatToParts(date);
-  const weekday = parts.find(p => p.type === 'weekday')?.value;
-  const month = parts.find(p => p.type === 'month')?.value;
-  const year = parts.find(p => p.type === 'year')?.value;
-  return `${weekday} ${day}${daySuffix} of ${month} ${year}`;
+  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+  const month = date.toLocaleDateString('en-US', { month: 'long' });
+  const year = date.getFullYear();
+  return `${weekday} ${day}${suffix} of ${month} ${year}`;
 }
 
 function daysSince(iso) {
-  if (!iso) return "?";
   const start = new Date(iso);
   const now = new Date();
-  const diff = now - start;
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
+  return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+}
+
+function syncEditableFields() {
+  currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
+  currentWorld.summary = document.getElementById("world-summary").textContent.trim();
 }
 
 function populateWorldInfo() {
   if (!currentWorld) return;
   document.getElementById("world-name").textContent = currentWorld.name || "Unnamed World";
   document.getElementById("created-on").textContent = currentWorld.created ? formatDate(currentWorld.created) : "[Unknown]";
-  document.getElementById("days-elapsed").textContent = currentWorld.campaignStart ?
-    daysSince(currentWorld.campaignStart) :
-    daysSince(currentWorld.created);
-
+  document.getElementById("days-elapsed").textContent = daysSince(currentWorld.campaignStart || currentWorld.created);
   document.getElementById("inworld-date").textContent = currentWorld.inWorldDate || "[Set Date]";
   document.getElementById("world-summary").textContent = currentWorld.summary || "";
   loadPins();
@@ -76,11 +72,7 @@ function loadPins() {
   });
 }
 
-function triggerSaveToDrive() {
-  window.saveToDrive(currentWorld, currentFileName);
-}
-
-document.getElementById("add-pin").addEventListener("click", () => {
+document.getElementById("add-pin")?.addEventListener("click", () => {
   const input = document.getElementById("new-pin");
   const text = input.value.trim();
   if (!text) return;
@@ -101,9 +93,18 @@ document.getElementById("world-summary").addEventListener("input", () => {
   markDirty();
 });
 
-document.getElementById("saveDriveBtn").addEventListener("click", triggerSaveToDrive);
+document.getElementById("saveDriveBtn").addEventListener("click", () => {
+  syncEditableFields();
+  window.saveToDrive(currentWorld, currentFileName);
+});
+
 document.getElementById("saveFileBtn").addEventListener("click", () => {
-  window.saveToFile(currentWorld, currentFileName);
+  const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = currentFileName || "world.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
 
 populateWorldInfo();
