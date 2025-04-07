@@ -83,29 +83,27 @@ async function triggerSaveToDrive() {
     if (!accessToken) return alert("❌ Not logged in.");
   
     const formData = new FormData();
-    formData.append("map", mapBlob); // ✅ ONLY this line
+    formData.append("map", mapBlob); 
+    // We also need to send fileName so the server code sees `req.body.fileName`.
+    formData.append("fileName", currentWorld.mapMeta?.name || "map.png");
   
     const response = await fetch("/drive/upload-image", {
       method: "POST",
       headers: {
+        // Must set Authorization with Bearer
         Authorization: `Bearer ${accessToken}`
       },
       body: formData
     });
-    
   
-    try {
-      const result = await response.json();
-      if (result.success) {
-        console.log("✅ Map uploaded to Drive.");
-      } else {
-        console.warn("⚠️ Map upload failed:", result.message || result);
-      }
-    } catch (err) {
-      console.error("❌ Invalid response from map upload:", err);
+    const result = await response.json();
+    if (result.success) {
+      console.log("✅ Map uploaded to Drive.");
+    } else {
+      console.warn("⚠️ Map upload failed:", result.message || result);
     }
   }
-}
+}  
 
 document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
