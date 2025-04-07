@@ -57,24 +57,31 @@ function saveToDrive() {
   if (!token) return alert("You must be logged in to use Google Drive save.");
   const accessToken = JSON.parse(token).accessToken;
 
+  const jsonString = JSON.stringify(currentWorld);
+  const sizeInBytes = new Blob([jsonString]).size;
+  const sizeInMB = sizeInBytes / (1024 * 1024);
+
+  if (sizeInMB > 3) {
+    return alert("Map data exceeds 3MB limit. Please use a smaller image or compress it.");
+  }
+
   fetch("/drive/save", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fileName: currentFileName,
-      fileContent: currentWorld,
-      accessToken
-    })
+    body: JSON.stringify({ fileName: currentFileName, fileContent: currentWorld, accessToken })
   })
-    .then(res => res.json())
-    .then(data => {
-      if (!data.success) alert("Drive save failed.");
-    })
-    .catch(err => {
-      console.error("Drive save error:", err);
-      alert("Error saving to Google Drive: " + err.message);
-    });
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert("Drive save failed: " + data.message);
+    }
+  })
+  .catch(err => {
+    console.error("Drive save error:", err);
+    alert("Error saving to Google Drive: " + err.message);
+  });
 }
+
 
 document.getElementById("saveDriveBtn")?.addEventListener("click", saveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);

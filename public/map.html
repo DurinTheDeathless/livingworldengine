@@ -111,15 +111,18 @@
   </div>  
 
   <div class="section-block">
-    <h2>World Map (Upload or Replace)</h2>
-    <input type="file" accept="image/*" id="uploadMapBtn" />
-    <div class="warning">
-      Uploading a map image stores it as base64 inside your world file.<br>
-      ⚠️ This can significantly increase file size.<br>
-      ⚠️ Re-uploading will delete all existing region/pin data linked to this map.
-    </div>
-    <img id="map-preview" src="" alt="Your World Map" style="display: none;" />
+  <h2>World Map (Upload or Replace)</h2>
+  <input type="file" accept="image/*" id="uploadMapBtn" />
+
+  <div class="warning" style="color: orange; font-size: 0.95em; margin-top: 10px;">
+    ⚠️ Uploaded map images are stored directly in your world file as base64.<br>
+    ⚠️ Large images (max. 3MB) can break save-to-Drive or slow down your world.<br>
+    ⚠️ Re-uploading a map will delete existing region and pin data (but not countries or towns).
   </div>
+
+  <img id="map-preview" src="" alt="Your World Map" style="display: none; margin-top: 10px;" />
+</div>
+
 
   <script src="/modules/map.js"></script>
 </body>
