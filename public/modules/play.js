@@ -1,3 +1,6 @@
+let currentWorld = null;
+let currentFileName = null;
+
 try {
   const stored = sessionStorage.getItem("currentWorld");
   if (stored) {
@@ -52,21 +55,6 @@ function populateWorldInfo() {
   loadPins();
 }
 
-function saveToFile() {
-  if (!currentWorld) return;
-  const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = currentFileName || "world.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function saveToDrive() {
-  saveToDrive(currentWorld, currentFileName);
-}
-
-
 function loadPins() {
   const list = document.getElementById("pins-list");
   list.innerHTML = "";
@@ -80,7 +68,7 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty?.();
+      markDirty();
       loadPins();
     };
     li.appendChild(del);
@@ -88,30 +76,34 @@ function loadPins() {
   });
 }
 
-document.getElementById("add-pin")?.addEventListener("click", () => {
+function triggerSaveToDrive() {
+  window.saveToDrive(currentWorld, currentFileName);
+}
+
+document.getElementById("add-pin").addEventListener("click", () => {
   const input = document.getElementById("new-pin");
   const text = input.value.trim();
   if (!text) return;
   if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
   currentWorld.pins.push(text);
   input.value = "";
-  markDirty?.();
+  markDirty();
   loadPins();
 });
 
-document.getElementById("inworld-date")?.addEventListener("input", () => {
+document.getElementById("inworld-date").addEventListener("input", () => {
   currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
-  markDirty?.();
+  markDirty();
 });
 
-document.getElementById("world-summary")?.addEventListener("input", () => {
+document.getElementById("world-summary").addEventListener("input", () => {
   currentWorld.summary = document.getElementById("world-summary").textContent.trim();
-  markDirty?.();
+  markDirty();
 });
 
-document.getElementById("saveDriveBtn")?.addEventListener("click", saveToDrive);
-document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
+document.getElementById("saveDriveBtn").addEventListener("click", triggerSaveToDrive);
+document.getElementById("saveFileBtn").addEventListener("click", () => {
+  window.saveToFile(currentWorld, currentFileName);
+});
 
 populateWorldInfo();
-document.addEventListener("DOMContentLoaded", populateWorldInfo);
-
