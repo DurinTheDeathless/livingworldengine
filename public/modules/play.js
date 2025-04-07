@@ -8,20 +8,18 @@ try {
     currentWorld = JSON.parse(stored);
     currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
     fileId = currentWorld.fileId || null;
+
+    // Optional: fallback defaults if missing
+    if (!currentWorld.name) currentWorld.name = "Unnamed World";
+    if (!currentWorld.created) currentWorld.created = new Date().toISOString();
+    if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
+
+    populateWorldInfo();
   }
 } catch (e) {
   console.warn("Could not load world from sessionStorage", e);
 }
 
-try {
-  const stored = sessionStorage.getItem("currentWorld");
-  if (stored) {
-    currentWorld = JSON.parse(stored);
-    currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
-  }
-} catch (e) {
-  console.warn("Could not load world from sessionStorage", e);
-}
 
 function formatDate(isoDate) {
   if (!isoDate) return "[Unknown]";
@@ -66,8 +64,9 @@ function populateWorldInfo() {
 function loadPins() {
   const list = document.getElementById("pins-list");
   list.innerHTML = "";
-  if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
-  currentWorld.pins.forEach((pin, i) => {
+  if (!Array.isArray(currentWorld.pins)) {
+    currentWorld.pins = [];}
+    (currentWorld.pins || []).forEach((pin, i) => {
     const li = document.createElement("li");
     li.textContent = pin;
     const del = document.createElement("span");
