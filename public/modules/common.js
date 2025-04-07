@@ -14,15 +14,34 @@ window.saveToDrive = function (worldData, fileName) {
 
 console.log("Saving to Drive:", currentFileName, "Size:", JSON.stringify(currentWorld).length, "bytes");
 
-    return fetch("/drive/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fileName: currentFileName,
-        fileContent: currentWorld,
-        accessToken
-      })      
-      })
+return fetch("/drive/save", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    fileName: currentFileName,
+    fileContent: currentWorld,
+    accessToken
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    console.log("✅ Drive save confirmed.");
+    const saveStatus = document.getElementById("saveStatus");
+    if (saveStatus) {
+      saveStatus.textContent = "Saved to Google Drive!";
+      setTimeout(() => saveStatus.textContent = "", 3000);
+    }
+  } else {
+    console.warn("⚠️ Drive save failed:", data.message || data);
+    alert("Failed to save to Google Drive.");
+  }
+})
+.catch(err => {
+  console.error("❌ Drive save error:", err);
+  alert("Error saving to Google Drive: " + err.message);
+});
+
     
       .then(res => res.json())
       .then(data => {
@@ -30,7 +49,6 @@ console.log("Saving to Drive:", currentFileName, "Size:", JSON.stringify(current
             world.fileId = data.fileId;
             sessionStorage.setItem("currentWorld", JSON.stringify(world));
           
-            // Show visual success message
             const statusEl = document.getElementById("saveStatus");
             if (statusEl) {
               statusEl.textContent = `✅ Saved to Google Drive as ${fileName}`;
