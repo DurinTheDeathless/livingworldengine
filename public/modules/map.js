@@ -46,10 +46,10 @@ document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
   if (!currentWorld) return;
 mapBlob = file;
 currentWorld.mapMeta = {
-  name: file.name,
-  size: file.size,
-  type: file.type,
-  uploaded: new Date().toISOString(),
+  name: file.name || "",
+  size: file.size || 0,
+  type: file.type || "",
+  uploaded: new Date().toISOString()
 };
 currentWorld.mapRegions = [];
 currentWorld.mapPins = [];

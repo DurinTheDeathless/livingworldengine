@@ -66,8 +66,8 @@ window.saveToDrive = function (worldData, fileName) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      fileName,
-      fileContent: worldData,
+      fileName: currentFileName,
+      fileContent: currentWorld,
       accessToken
     })
   })
