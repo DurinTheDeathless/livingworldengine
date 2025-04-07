@@ -6,16 +6,22 @@ window.addEventListener("DOMContentLoaded", () => {
   try {
     const stored = sessionStorage.getItem("currentWorld");
     if (stored) {
-      currentWorld = JSON.parse(stored);
-      currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
-      fileId = currentWorld.fileId || null;
+      try {
+        currentWorld = JSON.parse(stored);
+        currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
+        fileId = currentWorld.fileId || null;
 
-      // Optional: fallback defaults
-      if (!currentWorld.name) currentWorld.name = "Unnamed World";
-      if (!currentWorld.created) currentWorld.created = new Date().toISOString();
-      if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
+        // Fallback structure if missing
+        if (!currentWorld.name) currentWorld.name = "Unnamed World";
+        if (!currentWorld.created) currentWorld.created = new Date().toISOString();
+        if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
 
-      populateWorldInfo();
+        populateWorldInfo();
+      } catch (err) {
+        console.error("❌ Failed to parse currentWorld from sessionStorage", err);
+      }
+    } else {
+      console.warn("⚠️ No world found in sessionStorage.");
     }
   } catch (e) {
     console.warn("Could not load world from sessionStorage", e);
@@ -42,20 +48,22 @@ function formatDate(isoDate) {
 }
 
 function daysSince(iso) {
+  if (!iso) return "?";
   const start = new Date(iso);
   const now = new Date();
   return Math.floor((now - start) / (1000 * 60 * 60 * 24));
 }
 
 function syncEditableFields() {
-  currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
-  currentWorld.summary = document.getElementById("world-summary").textContent.trim();
+  currentWorld.inWorldDate = document.getElementById("inworld-date")?.textContent.trim();
+  currentWorld.summary = document.getElementById("world-summary")?.textContent.trim();
 }
 
 function populateWorldInfo() {
   if (!currentWorld) return;
+
   document.getElementById("world-name-display").textContent = currentWorld.name || "Unnamed World";
-  document.getElementById("created-on").textContent = currentWorld.created ? formatDate(currentWorld.created) : "[Unknown]";
+  document.getElementById("created-on").textContent = formatDate(currentWorld.created);
   document.getElementById("days-elapsed").textContent = daysSince(currentWorld.campaignStart || currentWorld.created);
   document.getElementById("inworld-date").textContent = currentWorld.inWorldDate || "[Set Date]";
   document.getElementById("world-summary").textContent = currentWorld.summary || "";
@@ -64,9 +72,9 @@ function populateWorldInfo() {
 
 function loadPins() {
   const list = document.getElementById("pins-list");
-  list.innerHTML = "";
+  if (!list) return;
 
-  // Ensure pins array is always initialized
+  list.innerHTML = "";
   if (!Array.isArray(currentWorld.pins)) {
     currentWorld.pins = [];
   }
@@ -80,7 +88,7 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty();
+      window.markDirty?.();
       loadPins();
     };
     li.appendChild(del);
@@ -88,34 +96,33 @@ function loadPins() {
   });
 }
 
-
 document.getElementById("add-pin")?.addEventListener("click", () => {
   const input = document.getElementById("new-pin");
-  const text = input.value.trim();
+  const text = input?.value.trim();
   if (!text) return;
   if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
   currentWorld.pins.push(text);
   input.value = "";
-  markDirty?.();
+  window.markDirty?.();
   loadPins();
 });
 
-document.getElementById("inworld-date").addEventListener("input", () => {
-  currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
-  markDirty?.();
+document.getElementById("inworld-date")?.addEventListener("input", () => {
+  currentWorld.inWorldDate = document.getElementById("inworld-date")?.textContent.trim();
+  window.markDirty?.();
 });
 
-document.getElementById("world-summary").addEventListener("input", () => {
-  currentWorld.summary = document.getElementById("world-summary").textContent.trim();
-  markDirty?.();
+document.getElementById("world-summary")?.addEventListener("input", () => {
+  currentWorld.summary = document.getElementById("world-summary")?.textContent.trim();
+  window.markDirty?.();
 });
 
-document.getElementById("saveDriveBtn").addEventListener("click", () => {
+document.getElementById("saveDriveBtn")?.addEventListener("click", () => {
   syncEditableFields();
   window.saveToDrive?.(currentWorld, currentFileName);
 });
 
-document.getElementById("saveFileBtn").addEventListener("click", () => {
+document.getElementById("saveFileBtn")?.addEventListener("click", () => {
   syncEditableFields();
   const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
