@@ -81,16 +81,15 @@ async function triggerSaveToDrive() {
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
     const accessToken = user.accessToken;
     if (!accessToken) return alert("❌ Not logged in.");
-
+  
     const formData = new FormData();
-    formData.append("map", mapBlob); // 'map' matches upload.single("map")
-    formData.append("worldFileId", currentWorld.fileId); // associate it to this world
-
+    formData.append("map", mapBlob); // ✅ ONLY this line
+  
     const response = await fetch("/drive/upload-image", {
       method: "POST",
       body: formData
     });
-
+  
     try {
       const result = await response.json();
       if (result.success) {
