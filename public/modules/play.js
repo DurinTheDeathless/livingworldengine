@@ -61,7 +61,7 @@ function syncEditableFields() {
 function populateWorldInfo() {
   if (!currentWorld) return;
 
-  document.getElementById("world-name-display").textContent = currentWorld.name || "Unnamed World";
+  document.getElementById("world-name").textContent = currentWorld.name;
   document.getElementById("created-on").textContent = formatDate(currentWorld.created);
   document.getElementById("days-elapsed").textContent = daysSince(currentWorld.campaignStart || currentWorld.created);
   document.getElementById("inworld-date").textContent = currentWorld.inWorldDate || "[Set Date]";
