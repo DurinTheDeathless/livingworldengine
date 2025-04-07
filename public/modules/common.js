@@ -1,3 +1,10 @@
+function ensureFileId(worldData, fileIdFromSession) {
+  if (!worldData.fileId && fileIdFromSession) {
+    worldData.fileId = fileIdFromSession;
+  }
+  return worldData;
+}
+
 window.markDirty = function () {
   const statusEl = document.getElementById("saveStatus");
   if (statusEl) {
@@ -12,13 +19,16 @@ window.saveToDrive = function (worldData, fileName) {
   const accessToken = JSON.parse(token).accessToken;
 
   const jsonString = JSON.stringify(worldData);
-  const sizeInMB = new Blob([jsonString]).size / (1024 * 1024);
+  const sizeInBytes = new Blob([jsonString]).size;
+  const sizeInMB = sizeInBytes / (1024 * 1024);
 
   if (sizeInMB > 3) {
     return alert("World file exceeds 3MB limit. Please reduce map size or content.");
   }
 
-  console.log("Saving to Drive:", fileName, "Size:", jsonString.length, "bytes");
+  ensureFileId(worldData, worldData.fileId || null);
+
+  console.log("Saving to Drive:", fileName, "Size:", sizeInBytes, "bytes");
 
   return fetch("/drive/save", {
     method: "POST",
@@ -29,9 +39,10 @@ window.saveToDrive = function (worldData, fileName) {
       accessToken
     })
   })
+
   .then(res => res.json())
   .then(data => {
-    if (data.success && data.fileId) {
+    if (data.success) {
       worldData.fileId = data.fileId;
       sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
       const statusEl = document.getElementById("saveStatus");

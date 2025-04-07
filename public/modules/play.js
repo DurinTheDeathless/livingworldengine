@@ -1,5 +1,17 @@
 let currentWorld = null;
 let currentFileName = null;
+let fileId = null;
+
+try {
+  const stored = sessionStorage.getItem("currentWorld");
+  if (stored) {
+    currentWorld = JSON.parse(stored);
+    currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
+    fileId = currentWorld.fileId || null;
+  }
+} catch (e) {
+  console.warn("Could not load world from sessionStorage", e);
+}
 
 try {
   const stored = sessionStorage.getItem("currentWorld");
