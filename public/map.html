@@ -2,16 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Map – Living World Engine</title>
-  <link rel="stylesheet" href="landing.css" />
+  <title>Living World Engine – World Map</title>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #2b1f13; color: #f4e3c1; font-family: Georgia, serif; padding: 50px; text-align: center; }
-    h1 { font-size: 2.5em; margin-bottom: 20px; color: #ffe8b2; }
-    p { font-size: 1.2em; color: #d6c7ae; }
+    body {
+      background-color: #2b1f13;
+      color: #f4e3c1;
+      font-family: Georgia, serif;
+      margin: 0;
+      padding: 0;
+    }
+    .section-block {
+      max-width: 1178px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #3a2d1e;
+      border: 1px solid #c7b58d;
+      border-radius: 6px;
+    }
+    h1 {
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3rem;
+      color: #ffd700;
+      text-align: center;
+    }
+    h2 {
+      text-align: center;
+      color: #e0c097;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #5c3e1a;
+      color: #f4e3c1;
+      border: 1px solid #7a5c3e;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #8a5f2e;
+    }
+    #map-preview {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 20px auto;
+      border: 1px solid #c7b58d;
+    }
+    .warning {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #dcb;
+      margin-top: -10px;
+    }
+    input[type="file"] {
+      display: block;
+      margin: 10px auto;
+    }
+    .top-buttons {
+      text-align: right;
+      margin-top: -30px;
+    }
   </style>
 </head>
 <body>
-  <h1>Map</h1>
-  <p>WIP – This page is coming soon.</p>
+
+  <div class="section-block" id="title-section">
+    <h1>Living World Engine</h1>
+    <h2>Where realms breathe and stories live</h2>
+    <div class="top-buttons">
+      <button id="saveDriveBtn">Save to Drive</button>
+      <button id="saveFileBtn">Save to File</button>
+    </div>
+    <hr class="divider">
+  </div>
+
+  <div class="section-block">
+    <h2>World Map (Upload or Replace)</h2>
+    <input type="file" accept="image/*" id="uploadMapBtn" />
+    <div class="warning">
+      Uploading a map image stores it as base64 inside your world file.<br>
+      ⚠️ This can significantly increase file size.<br>
+      ⚠️ Re-uploading will delete all existing region/pin data linked to this map.
+    </div>
+    <img id="map-preview" src="" alt="Your World Map" style="display: none;" />
+  </div>
+
+  <script src="/modules/map.js"></script>
 </body>
 </html>
