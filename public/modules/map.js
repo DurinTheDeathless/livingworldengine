@@ -27,12 +27,8 @@ function loadMapImage() {
     return;
   }
 
-  if (currentWorld?.mapMeta?.localDataURL) {
-    preview.src = currentWorld.mapMeta.localDataURL;
-    preview.style.display = "block";
-  } else {
-    preview.style.display = "none";
-  }
+  preview.style.display = "none";
+// Optionally: show "No preview available" if you want
 }
 
 // 📤 Upload new map file and reset map data
@@ -47,23 +43,18 @@ document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
 
   if (!confirm("⚠️ Replacing your map will delete all regions/pins associated with the old map.")) return;
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (!currentWorld) return;
-    mapBlob = file;
-    currentWorld.mapMeta = {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      uploaded: new Date().toISOString(),
-      localDataURL: reader.result
-    };
-    currentWorld.mapRegions = [];
-    currentWorld.mapPins = [];
-    markDirty();
-    loadMapImage();
-  };
-  reader.readAsDataURL(file);
+  if (!currentWorld) return;
+mapBlob = file;
+currentWorld.mapMeta = {
+  name: file.name,
+  size: file.size,
+  type: file.type,
+  uploaded: new Date().toISOString(),
+};
+currentWorld.mapRegions = [];
+currentWorld.mapPins = [];
+markDirty();
+loadMapImage();
 });
 
 // 💾 Save world.json locally
@@ -95,7 +86,7 @@ async function triggerSaveToDrive() {
     formData.append("file", mapBlob);
     formData.append("worldFileId", currentWorld.fileId); // associate it to this world
 
-    const res = await fetch("/drive/upload-map", {
+    const response = await fetch("/drive/upload-image", {
       method: "POST",
       headers: { Authorization: `Bearer ${accessToken}` },
       body: formData
