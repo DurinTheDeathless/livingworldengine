@@ -55,3 +55,11 @@ console.log("Saving to Drive:", currentFileName, "Size:", JSON.stringify(current
       });
   };
   
+  window.markDirty = function () {
+    const statusEl = document.getElementById("saveStatus");
+    if (statusEl) {
+      statusEl.textContent = "Unsaved changes...";
+      statusEl.style.color = "orange";
+    }
+  };
+  
