@@ -65,7 +65,12 @@ function populateWorldInfo() {
 function loadPins() {
   const list = document.getElementById("pins-list");
   list.innerHTML = "";
-  if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
+
+  // Ensure pins array is always initialized
+  if (!Array.isArray(currentWorld.pins)) {
+    currentWorld.pins = [];
+  }
+
   currentWorld.pins.forEach((pin, i) => {
     const li = document.createElement("li");
     li.textContent = pin;
@@ -75,13 +80,14 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty?.();
+      markDirty();
       loadPins();
     };
     li.appendChild(del);
     list.appendChild(li);
   });
 }
+
 
 document.getElementById("add-pin")?.addEventListener("click", () => {
   const input = document.getElementById("new-pin");
