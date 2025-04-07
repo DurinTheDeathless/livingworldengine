@@ -39,30 +39,31 @@ window.saveToDrive = function (worldData, fileName) {
       accessToken
     })
   })
-
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      worldData.fileId = data.fileId;
-      sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
-      const statusEl = document.getElementById("saveStatus");
-      if (statusEl) {
-        statusEl.textContent = `✅ Saved to Google Drive as ${fileName}`;
-        statusEl.style.color = "lightgreen";
-        setTimeout(() => (statusEl.textContent = ""), 3000);
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        if (data.fileId) {
+          worldData.fileId = data.fileId;
+          sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
+        }
+        const statusEl = document.getElementById("saveStatus");
+        if (statusEl) {
+          statusEl.textContent = `✅ Saved to Google Drive as ${fileName}`;
+          statusEl.style.color = "lightgreen";
+          setTimeout(() => (statusEl.textContent = ""), 3000);
+        }
+      } else {
+        console.warn("⚠️ Drive save failed:", data.message || data);
+        const statusEl = document.getElementById("saveStatus");
+        if (statusEl) {
+          statusEl.textContent = `❌ Failed to save.`;
+          statusEl.style.color = "orange";
+        }
+        alert("Failed to save to Google Drive.");
       }
-    } else {
-      console.warn("⚠️ Drive save failed:", data.message || data);
-      const statusEl = document.getElementById("saveStatus");
-      if (statusEl) {
-        statusEl.textContent = `❌ Failed to save.`;
-        statusEl.style.color = "orange";
-      }
-      alert("Failed to save to Google Drive.");
-    }
-  })
-  .catch(err => {
-    console.error("❌ Drive save error:", err);
-    alert("Error saving to Google Drive: " + err.message);
-  });
+    })
+    .catch(err => {
+      console.error("❌ Drive save error:", err);
+      alert("Error saving to Google Drive: " + err.message);
+    });
 };

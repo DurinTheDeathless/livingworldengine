@@ -31,30 +31,20 @@
       color: #e0c097;
       margin-bottom: 1rem;
     }
-
     #title-section {
-     max-width: 1178px;
-     margin: 20px auto;
-     padding: 20px;
-     background-color: #3a2d1e;
-     border: 1px solid #c7b58d;
-     border-radius: 6px;
-     text-align: center;
-}
-
-   #title-section h1 {
-    font-family: 'UnifrakturCook', cursive;
-    font-size: 3.2rem;
-    color: #ffd700;
-    margin-bottom: 0.2em;
-}
-
-   #title-section .subtitle {
-    font-size: 1.3rem;
-    color: #e0c097;
-    margin-bottom: 0.5em;
-}
-
+      max-width: 1178px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #3a2d1e;
+      border: 1px solid #c7b58d;
+      border-radius: 6px;
+      text-align: center;
+    }
+    #title-section .subtitle {
+      font-size: 1.3rem;
+      color: #e0c097;
+      margin-bottom: 0.5em;
+    }
     button {
       background-color: #5c3e1a;
       color: #f4e3c1;
@@ -88,14 +78,12 @@
     .top-buttons {
       text-align: center;
       margin-bottom: 0.5em;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #c7b58d;
-  margin: 10px 0;
-}
-
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #c7b58d;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -112,19 +100,18 @@
   </div>  
 
   <div class="section-block">
-  <h2>World Map (Upload or Replace)</h2>
-  <input type="file" accept="image/*" id="uploadMapBtn" />
-
-  <div class="warning" style="color: orange; font-size: 0.95em; margin-top: 10px;">
-    ⚠️ Uploaded map images are stored directly in your world file as base64.<br>
-    ⚠️ Large images (max. 3MB) can break save-to-Drive or slow down your world.<br>
-    ⚠️ Re-uploading a map will delete existing region and pin data (but not countries or towns).
+    <h2>World Map (Upload or Replace)</h2>
+    <input type="file" accept="image/*" id="uploadMapBtn" />
+    <div class="warning" style="color: orange; font-size: 0.95em; margin-top: 10px;">
+      ⚠️ Map images are saved as separate files (not embedded).<br>
+      ⚠️ Replacing a map will delete existing regions/pins (but not countries or towns).<br>
+      ⚠️ Use PNG/JPG ≤ 3MB for best performance.
+    </div>
+    <img id="map-preview" src="" alt="Your World Map" style="display: none; margin-top: 10px;" />
   </div>
 
-  <img id="map-preview" src="" alt="Your World Map" style="display: none; margin-top: 10px;" />
-</div>
-
-
+  <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>
+
 </body>
 </html>
