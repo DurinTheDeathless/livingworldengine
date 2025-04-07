@@ -88,7 +88,6 @@ async function triggerSaveToDrive() {
 
     const response = await fetch("/drive/upload-image", {
       method: "POST",
-      headers: { Authorization: `Bearer ${accessToken}` },
       body: formData
     });
 

@@ -78,8 +78,9 @@ router.post("/save", async (req, res) => {
 
     const media = {
       mimeType: "application/json",
-      body: Buffer.from(JSON.stringify(fileContent, null, 2)),
+      body: JSON.stringify(fileContent, null, 2),
     };
+    
 
     const existing = await drive.files.list({
       q: `name='${fileName}' and '${folderId}' in parents and trashed=false`,
