@@ -14,7 +14,6 @@ window.addEventListener("DOMContentLoaded", () => {
         // Fallback structure if missing
         if (!currentWorld.name) currentWorld.name = "Unnamed World";
         if (!currentWorld.created) currentWorld.created = new Date().toISOString();
-        if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
 
         populateWorldInfo();
       } catch (err) {
@@ -67,45 +66,8 @@ function populateWorldInfo() {
   document.getElementById("days-elapsed").textContent = daysSince(currentWorld.campaignStart || currentWorld.created);
   document.getElementById("inworld-date").textContent = currentWorld.inWorldDate || "[Set Date]";
   document.getElementById("world-summary").textContent = currentWorld.summary || "";
-  loadPins();
 }
 
-function loadPins() {
-  const list = document.getElementById("pins-list");
-  if (!list) return;
-
-  list.innerHTML = "";
-  if (!Array.isArray(currentWorld.pins)) {
-    currentWorld.pins = [];
-  }
-
-  currentWorld.pins.forEach((pin, i) => {
-    const li = document.createElement("li");
-    li.textContent = pin;
-    const del = document.createElement("span");
-    del.textContent = " ✖";
-    del.style.color = "red";
-    del.style.cursor = "pointer";
-    del.onclick = () => {
-      currentWorld.pins.splice(i, 1);
-      window.markDirty?.();
-      loadPins();
-    };
-    li.appendChild(del);
-    list.appendChild(li);
-  });
-}
-
-document.getElementById("add-pin")?.addEventListener("click", () => {
-  const input = document.getElementById("new-pin");
-  const text = input?.value.trim();
-  if (!text) return;
-  if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
-  currentWorld.pins.push(text);
-  input.value = "";
-  window.markDirty?.();
-  loadPins();
-});
 
 document.getElementById("inworld-date")?.addEventListener("input", () => {
   currentWorld.inWorldDate = document.getElementById("inworld-date")?.textContent.trim();
