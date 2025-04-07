@@ -83,7 +83,7 @@ async function triggerSaveToDrive() {
     if (!accessToken) return alert("❌ Not logged in.");
 
     const formData = new FormData();
-    formData.append("file", mapBlob);
+    formData.append("map", mapBlob); // 'map' matches upload.single("map")
     formData.append("worldFileId", currentWorld.fileId); // associate it to this world
 
     const response = await fetch("/drive/upload-image", {
@@ -93,7 +93,7 @@ async function triggerSaveToDrive() {
     });
 
     try {
-      const result = await res.json();
+      const result = await response.json();
       if (result.success) {
         console.log("✅ Map uploaded to Drive.");
       } else {
