@@ -40,6 +40,8 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/drive', require('./routes/drive'));
+app.use('/drive', driveRoutes);
+
 
 const pgSession = require('connect-pg-simple')(session);
 

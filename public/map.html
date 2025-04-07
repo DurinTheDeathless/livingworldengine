@@ -31,6 +31,30 @@
       color: #e0c097;
       margin-bottom: 1rem;
     }
+
+    #title-section {
+     max-width: 1178px;
+     margin: 20px auto;
+     padding: 20px;
+     background-color: #3a2d1e;
+     border: 1px solid #c7b58d;
+     border-radius: 6px;
+     text-align: center;
+}
+
+   #title-section h1 {
+    font-family: 'UnifrakturCook', cursive;
+    font-size: 3.2rem;
+    color: #ffd700;
+    margin-bottom: 0.2em;
+}
+
+   #title-section .subtitle {
+    font-size: 1.3rem;
+    color: #e0c097;
+    margin-bottom: 0.5em;
+}
+
     button {
       background-color: #5c3e1a;
       color: #f4e3c1;
@@ -62,22 +86,29 @@
       margin: 10px auto;
     }
     .top-buttons {
-      text-align: right;
-      margin-top: -30px;
-    }
+      text-align: center;
+      margin-bottom: 0.5em;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #c7b58d;
+  margin: 10px 0;
+}
+
   </style>
 </head>
 <body>
 
   <div class="section-block" id="title-section">
     <h1>Living World Engine</h1>
-    <h2>Where realms breathe and stories live</h2>
+    <h2 class="subtitle">Where realms breathe and stories live</h2>
     <div class="top-buttons">
       <button id="saveDriveBtn">Save to Drive</button>
       <button id="saveFileBtn">Save to File</button>
     </div>
     <hr class="divider">
-  </div>
+  </div>  
 
   <div class="section-block">
     <h2>World Map (Upload or Replace)</h2>
