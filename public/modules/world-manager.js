@@ -60,39 +60,22 @@ function createNewWorld() {
     .then(data => {
       if (!data.success) {
         alert("Failed to save new world to Drive.");
+      } else if (data.fileId) {
+        newWorld.fileId = data.fileId;
       }
+
+      sessionStorage.setItem("worldFileId", newWorld.fileId || "");
+      sessionStorage.setItem("currentWorld", JSON.stringify(newWorld));
+      sessionStorage.setItem("worldFilename", fileName);
+      window.location.href = "/play.html";
     })
     .catch(err => alert("Error saving to Drive: " + err));
+  } else {
+    // Local fallback
+    sessionStorage.setItem("currentWorld", JSON.stringify(newWorld));
+    sessionStorage.setItem("worldFilename", fileName);
+    window.location.href = "/play.html";
   }
-
-sessionStorage.setItem("worldFileId", worldEntry.fileId || "");
-sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
-sessionStorage.setItem("worldFilename", fileName);
-window.location.href = "/play.html";
-
-}
-
-function downloadBlankWorld() {
-  let name = document.getElementById("newWorldName").value.trim();
-  if (!name) name = "Unnamed World";
-
-  const blankWorld = {
-    name: name,
-    created: new Date().toISOString(),
-    countries: [{ name: "Unnamed Country" }],
-    towns:    [{ name: "Unnamed Town" }],
-    npcs:     [{ name: "Unnamed NPC" }],
-    bbegs:    [{ name: "Unnamed BBEG" }],
-    factions: [{ name: "Unnamed Faction" }]
-  };
-
-  const blob = new Blob([JSON.stringify(blankWorld, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = name.replace(/\s+/g, '_') + ".json";
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 async function loadSelectedWorld() {
@@ -112,17 +95,19 @@ async function loadSelectedWorld() {
       if (!res.ok) return alert("Failed to load world from Drive.");
       const data = await res.json();
       worldEntry.data = data;
+      if (data.fileId) {
+        worldEntry.data.fileId = data.fileId;
+      }
     } catch (err) {
       return alert("Error loading from Drive.");
     }
   }
 
-const worldData = worldEntry.data || worldEntry.world;
-sessionStorage.setItem("worldFileId", worldEntry.fileId || "");
-sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
-sessionStorage.setItem("worldFilename", worldEntry.fileName || "world.json");
-window.location.href = "/play.html";
-
+  const worldData = worldEntry.data || worldEntry.world;
+  sessionStorage.setItem("worldFileId", worldData.fileId || "");
+  sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
+  sessionStorage.setItem("worldFilename", worldEntry.fileName || "world.json");
+  window.location.href = "/play.html";
 }
 
 async function deleteSelectedWorld() {
