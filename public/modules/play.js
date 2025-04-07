@@ -1,5 +1,3 @@
-<script src="/modules/common.js"></script>
-
 try {
   const stored = sessionStorage.getItem("currentWorld");
   if (stored) {
