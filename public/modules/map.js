@@ -2,7 +2,7 @@ console.log("✅ map.js loaded");
 
 let currentWorld = null;
 let currentFileName = null;
-let mapBlob = null; // separate map blob for saving
+let mapBlob = null; // holds map file blob (not base64)
 let mapDriveId = null;
 
 try {
@@ -17,19 +17,17 @@ try {
   console.warn("Could not load world from sessionStorage", e);
 }
 
-// 📍 Load existing map preview
+// 📍 Load existing map preview from saved mapMeta
 function loadMapImage() {
   const preview = document.getElementById("map-preview");
 
-  // Prefer local blob if available
   if (mapBlob) {
     preview.src = URL.createObjectURL(mapBlob);
     preview.style.display = "block";
     return;
   }
 
-  // Load from drive or fallback
-  if (currentWorld?.mapMeta?.name && currentWorld.mapMeta.localDataURL) {
+  if (currentWorld?.mapMeta?.localDataURL) {
     preview.src = currentWorld.mapMeta.localDataURL;
     preview.style.display = "block";
   } else {
@@ -37,7 +35,7 @@ function loadMapImage() {
   }
 }
 
-// 📤 Upload new map
+// 📤 Upload new map file and reset map data
 document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -68,7 +66,7 @@ document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
   reader.readAsDataURL(file);
 });
 
-// 💾 Save world.json to file
+// 💾 Save world.json locally
 function saveToFile() {
   if (!currentWorld) return;
   const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
@@ -79,14 +77,14 @@ function saveToFile() {
   URL.revokeObjectURL(a.href);
 }
 
-// ☁️ Save to Drive (world.json + optional map)
+// ☁️ Save to Drive (world + map if available)
 async function triggerSaveToDrive() {
   if (!currentWorld || !currentFileName) return;
 
-  // Save world.json first
+  // First save world.json
   await window.saveToDrive(currentWorld, currentFileName);
 
-  // If map file exists, save separately
+  // Then upload map separately if it exists
   if (mapBlob && currentWorld.fileId) {
     console.log("📍 Uploading map to Drive...");
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
@@ -95,7 +93,7 @@ async function triggerSaveToDrive() {
 
     const formData = new FormData();
     formData.append("file", mapBlob);
-    formData.append("worldFileId", currentWorld.fileId); // associate
+    formData.append("worldFileId", currentWorld.fileId); // associate it to this world
 
     const res = await fetch("/drive/upload-map", {
       method: "POST",
@@ -103,11 +101,15 @@ async function triggerSaveToDrive() {
       body: formData
     });
 
-    const result = await res.json();
-    if (result.success) {
-      console.log("✅ Map uploaded to Drive.");
-    } else {
-      console.warn("⚠️ Map upload failed.");
+    try {
+      const result = await res.json();
+      if (result.success) {
+        console.log("✅ Map uploaded to Drive.");
+      } else {
+        console.warn("⚠️ Map upload failed:", result.message || result);
+      }
+    } catch (err) {
+      console.error("❌ Invalid response from map upload:", err);
     }
   }
 }
@@ -115,5 +117,5 @@ async function triggerSaveToDrive() {
 document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
 
-// Initialize
+// Run on page load
 loadMapImage();

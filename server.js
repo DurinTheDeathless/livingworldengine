@@ -35,6 +35,8 @@ module.exports = pool;
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 app.use(express.json({ limit: '20mb' }));
+app.use('/drive', driveRoutes);
+
 
 // 🗃 Session Store
 const pgSession = require('connect-pg-simple')(session);
