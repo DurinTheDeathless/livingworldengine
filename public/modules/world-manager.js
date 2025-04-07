@@ -65,7 +65,8 @@ function createNewWorld() {
     .catch(err => alert("Error saving to Drive: " + err));
   }
 
-  sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
+sessionStorage.setItem("worldFileId", worldEntry.fileId || "");
+sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
 sessionStorage.setItem("worldFilename", fileName);
 window.location.href = "/play.html";
 
@@ -116,7 +117,8 @@ async function loadSelectedWorld() {
     }
   }
 
-  const worldData = worldEntry.data || worldEntry.world;
+const worldData = worldEntry.data || worldEntry.world;
+sessionStorage.setItem("worldFileId", worldEntry.fileId || "");
 sessionStorage.setItem("currentWorld", JSON.stringify(worldData));
 sessionStorage.setItem("worldFilename", worldEntry.fileName || "world.json");
 window.location.href = "/play.html";

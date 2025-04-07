@@ -1,3 +1,5 @@
+<script src="/modules/common.js"></script>
+
 try {
   const stored = sessionStorage.getItem("currentWorld");
   if (stored) {
@@ -63,28 +65,9 @@ function saveToFile() {
 }
 
 function saveToDrive() {
-  const token = sessionStorage.getItem("user");
-  if (!token) return alert("You must be logged in to use Google Drive save.");
-  const accessToken = JSON.parse(token).accessToken;
-
-  fetch("/drive/save", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fileName: currentFileName,
-      fileContent: currentWorld,
-      accessToken
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (!data.success) alert("Drive save failed.");
-  })
-  .catch(err => {
-    console.error("Drive save error:", err);
-    alert("Error saving to Google Drive: " + err.message);
-  });
+  saveToDrive(currentWorld, currentFileName);
 }
+
 
 function loadPins() {
   const list = document.getElementById("pins-list");
