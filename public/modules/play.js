@@ -2,24 +2,25 @@ let currentWorld = null;
 let currentFileName = null;
 let fileId = null;
 
-try {
-  const stored = sessionStorage.getItem("currentWorld");
-  if (stored) {
-    currentWorld = JSON.parse(stored);
-    currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
-    fileId = currentWorld.fileId || null;
+window.addEventListener("DOMContentLoaded", () => {
+  try {
+    const stored = sessionStorage.getItem("currentWorld");
+    if (stored) {
+      currentWorld = JSON.parse(stored);
+      currentFileName = sessionStorage.getItem("worldFilename") || "world.json";
+      fileId = currentWorld.fileId || null;
 
-    // Optional: fallback defaults if missing
-    if (!currentWorld.name) currentWorld.name = "Unnamed World";
-    if (!currentWorld.created) currentWorld.created = new Date().toISOString();
-    if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
+      // Optional: fallback defaults
+      if (!currentWorld.name) currentWorld.name = "Unnamed World";
+      if (!currentWorld.created) currentWorld.created = new Date().toISOString();
+      if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
 
-    populateWorldInfo();
+      populateWorldInfo();
+    }
+  } catch (e) {
+    console.warn("Could not load world from sessionStorage", e);
   }
-} catch (e) {
-  console.warn("Could not load world from sessionStorage", e);
-}
-
+});
 
 function formatDate(isoDate) {
   if (!isoDate) return "[Unknown]";
@@ -53,7 +54,7 @@ function syncEditableFields() {
 
 function populateWorldInfo() {
   if (!currentWorld) return;
-  document.getElementById("world-name").textContent = currentWorld.name || "Unnamed World";
+  document.getElementById("world-name-display").textContent = currentWorld.name || "Unnamed World";
   document.getElementById("created-on").textContent = currentWorld.created ? formatDate(currentWorld.created) : "[Unknown]";
   document.getElementById("days-elapsed").textContent = daysSince(currentWorld.campaignStart || currentWorld.created);
   document.getElementById("inworld-date").textContent = currentWorld.inWorldDate || "[Set Date]";
@@ -64,9 +65,8 @@ function populateWorldInfo() {
 function loadPins() {
   const list = document.getElementById("pins-list");
   list.innerHTML = "";
-  if (!Array.isArray(currentWorld.pins)) {
-    currentWorld.pins = [];}
-    (currentWorld.pins || []).forEach((pin, i) => {
+  if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
+  currentWorld.pins.forEach((pin, i) => {
     const li = document.createElement("li");
     li.textContent = pin;
     const del = document.createElement("span");
@@ -75,7 +75,7 @@ function loadPins() {
     del.style.cursor = "pointer";
     del.onclick = () => {
       currentWorld.pins.splice(i, 1);
-      markDirty();
+      markDirty?.();
       loadPins();
     };
     li.appendChild(del);
@@ -90,26 +90,27 @@ document.getElementById("add-pin")?.addEventListener("click", () => {
   if (!Array.isArray(currentWorld.pins)) currentWorld.pins = [];
   currentWorld.pins.push(text);
   input.value = "";
-  markDirty();
+  markDirty?.();
   loadPins();
 });
 
 document.getElementById("inworld-date").addEventListener("input", () => {
   currentWorld.inWorldDate = document.getElementById("inworld-date").textContent.trim();
-  markDirty();
+  markDirty?.();
 });
 
 document.getElementById("world-summary").addEventListener("input", () => {
   currentWorld.summary = document.getElementById("world-summary").textContent.trim();
-  markDirty();
+  markDirty?.();
 });
 
 document.getElementById("saveDriveBtn").addEventListener("click", () => {
   syncEditableFields();
-  window.saveToDrive(currentWorld, currentFileName);
+  window.saveToDrive?.(currentWorld, currentFileName);
 });
 
 document.getElementById("saveFileBtn").addEventListener("click", () => {
+  syncEditableFields();
   const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -117,5 +118,3 @@ document.getElementById("saveFileBtn").addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(a.href);
 });
-
-populateWorldInfo();
