@@ -141,6 +141,41 @@ router.post("/upload-image", upload.single("map"), async (req, res) => {
   }
 });
 
+// === Route: Fetch Map Image by Name ===
+router.post("/fetch-image", async (req, res) => {
+  const accessToken = req.headers.authorization?.split(" ")[1];
+  const { fileName } = req.body;
+
+  if (!accessToken || !fileName) {
+    return res.status(400).json({ success: false, message: "Missing file name or access token" });
+  }
+
+  try {
+    const drive = getDriveClient(accessToken);
+    const folderId = await ensureAppFolder(drive);
+
+    const result = await drive.files.list({
+      q: `name='${fileName}' and '${folderId}' in parents and trashed=false`,
+      fields: "files(id, name)",
+    });
+
+    if (result.data.files.length === 0) {
+      return res.status(404).json({ success: false, message: "Map not found" });
+    }
+
+    const fileId = result.data.files[0].id;
+    const fileStream = await drive.files.get({ fileId, alt: "media" }, { responseType: "stream" });
+
+    fileStream.data
+      .on("error", () => res.status(500).send("Failed to stream map"))
+      .pipe(res);
+  } catch (err) {
+    console.error("Fetch map error:", err);
+    res.status(500).json({ success: false, message: "Fetch map failed" });
+  }
+});
+
+
 // === Route: List World Files ===
 router.post('/list', async (req, res) => {
   const { accessToken } = req.body;

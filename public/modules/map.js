@@ -109,4 +109,43 @@ document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveTo
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
 
 // Run on page load
-loadMapImage();
+async function loadMapImage() {
+  const preview = document.getElementById("map-preview");
+  preview.style.display = "none";
+
+  // Show local mapBlob if exists
+  if (mapBlob) {
+    preview.src = URL.createObjectURL(mapBlob);
+    preview.style.display = "block";
+    return;
+  }
+
+  // Load from Drive using stored mapMeta
+  if (currentWorld?.mapMeta?.name) {
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    const accessToken = user.accessToken;
+    if (!accessToken) return console.warn("No access token, cannot fetch map.");
+
+    try {
+      const response = await fetch("/drive/fetch-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          fileName: currentWorld.mapMeta.name,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Map not found in Drive.");
+      const blob = await response.blob();
+
+      preview.src = URL.createObjectURL(blob);
+      preview.style.display = "block";
+      console.log("✅ Map loaded from Drive.");
+    } catch (err) {
+      console.warn("⚠️ Failed to load map from Drive:", err.message);
+    }
+  }
+}
