@@ -138,24 +138,17 @@
     <hr class="divider">
   </div>  
 
-  <!-- Sidebar outside content blocks -->
-  <div id="pin-control-panel">
-    <h3>Pin Layers</h3>
-    <div style="display: flex; flex-direction: column; gap: 6px;">
-      <label><input type="checkbox" class="pin-toggle" data-type="City" checked> City</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Town" checked> Town</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Capital" checked> Capital</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Harbor" checked> Harbor</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Landmark" checked> Landmark</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Military" checked> Military</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Cave" checked> Cave</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Ruin" checked> Ruin</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Temple" checked> Temple</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Lair" checked> Lair</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Wonder" checked> Wonder</label>
-      <label><input type="checkbox" class="pin-toggle" data-type="Custom" checked> Custom</label>
-    </div>
+  <!-- Left Sidebar for Layer Toggles -->
+<div id="layer-control-panel" style="min-width: 200px; padding: 10px; background-color: #3a2d1e; border: 1px solid #c7b58d; border-radius: 6px;">
+  <h3 style="text-align: center; margin-top: 0;">Map Layers</h3>
+  <div style="display: flex; flex-direction: column; gap: 6px;">
+    <label><input type="checkbox" class="layer-toggle" data-layer="pins" checked> Pins</label>
+    <label><input type="checkbox" class="layer-toggle" data-layer="roads" checked> Roads</label>
+    <label><input type="checkbox" class="layer-toggle" data-layer="rivers" checked> Rivers</label>
+    <label><input type="checkbox" class="layer-toggle" data-layer="geography" checked> Geography</label>
   </div>
+</div>
+
 
   <div class="section-block">
     <h2>World Map (Upload or Replace)</h2>

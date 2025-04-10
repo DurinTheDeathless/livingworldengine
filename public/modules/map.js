@@ -2,7 +2,7 @@ console.log("✅ map.js loaded");
 
 let currentWorld = null;
 let currentFileName = null;
-let mapBlob = null; // holds map file blob (not base64)
+let mapBlob = null;
 let mapDriveId = null;
 
 try {
@@ -22,14 +22,12 @@ async function loadMapImage() {
   const preview = document.getElementById("map-preview");
   preview.style.display = "none";
 
-  // Show local mapBlob if exists
   if (mapBlob) {
     preview.src = URL.createObjectURL(mapBlob);
     preview.style.display = "block";
     return;
   }
 
-  // Load from Drive using stored mapMeta
   if (currentWorld?.mapMeta?.name) {
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
     const accessToken = user.accessToken;
@@ -53,19 +51,18 @@ async function loadMapImage() {
       preview.src = URL.createObjectURL(blob);
       preview.style.display = "block";
       console.log("✅ Map loaded from Drive.");
-      renderMapPins(); // 👈 call this after map loads
+      renderMapPins();
     } catch (err) {
       console.warn("⚠️ Failed to load map from Drive:", err.message);
     }
   }
 }
 
-// 📤 Upload new map file and reset map data
 document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  const maxSize = 3 * 1024 * 1024; // 3MB
+  const maxSize = 3 * 1024 * 1024;
   if (file.size > maxSize) {
     return alert("❌ Map file too large. Max size is 3MB.");
   }
@@ -86,7 +83,6 @@ document.getElementById("uploadMapBtn")?.addEventListener("change", (e) => {
   loadMapImage();
 });
 
-// 💾 Save world.json locally
 function saveToFile() {
   if (!currentWorld) return;
   const blob = new Blob([JSON.stringify(currentWorld, null, 2)], { type: "application/json" });
@@ -97,14 +93,11 @@ function saveToFile() {
   URL.revokeObjectURL(a.href);
 }
 
-// ☁️ Save to Drive (world + map if available)
 async function triggerSaveToDrive() {
   if (!currentWorld || !currentFileName) return;
 
-  // First save world.json
   await window.saveToDrive(currentWorld, currentFileName);
 
-  // Then upload map separately if it exists
   if (mapBlob && currentWorld.fileId) {
     console.log("📍 Uploading map to Drive...");
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
@@ -117,9 +110,7 @@ async function triggerSaveToDrive() {
 
     const response = await fetch("/drive/upload-image", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
       body: formData
     });
 
@@ -136,20 +127,18 @@ function renderMapPins() {
   const pinLayer = document.getElementById("pin-layer");
   if (!pinLayer || !Array.isArray(currentWorld?.mapPins)) return;
 
-  pinLayer.innerHTML = ""; // clear old pins
+  pinLayer.innerHTML = "";
 
-  const enabledTypes = Array.from(document.querySelectorAll(".pin-toggle:checked")).map(cb => cb.dataset.type);
+  const enabledLayers = Array.from(document.querySelectorAll(".layer-toggle:checked")).map(cb => cb.dataset.layer);
+  if (!enabledLayers.includes("pins")) return;
 
-  currentWorld.mapPins
-    .filter(pin => enabledTypes.includes(pin.type))
-    .forEach((pin, index) => {
-      const el = document.createElement("div");
+  currentWorld.mapPins.forEach((pin, index) => {
+    const el = document.createElement("div");
     el.className = "map-pin";
     el.style.left = `${pin.x}%`;
     el.style.top = `${pin.y}%`;
     el.title = pin.name || `Pin ${index + 1}`;
     el.innerHTML = getPinSymbol(pin.type);
-
     pinLayer.appendChild(el);
   });
 }
@@ -184,7 +173,6 @@ function getPinSymbol(type) {
   return symbols[type] || "📍";
 }
 
-
 document.getElementById("map-preview")?.addEventListener("click", (e) => {
   if (!activePinType || !currentWorld) return;
 
@@ -209,25 +197,43 @@ document.getElementById("map-preview")?.addEventListener("click", (e) => {
   renderMapPins();
 });
 
-document.querySelectorAll(".pin-toggle").forEach(label => {
+// Right-click to place pin
+document.querySelectorAll(".layer-toggle").forEach(label => {
   label.addEventListener("contextmenu", (e) => {
     e.preventDefault();
-    const type = label.dataset.type;
-    enablePinPlacement(type);
-    alert(`Click the map to place a ${type} pin.`);
+    const layer = label.dataset.layer;
+    if (layer === "pins") {
+      const type = prompt("Enter pin type (e.g., City, Cave, etc.):", "City");
+      if (type) {
+        enablePinPlacement(type);
+        alert(`Click the map to place a "${type}" pin.`);
+      }
+    }
   });
 });
 
-
 document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
-
-// Load image on page load
 window.addEventListener("DOMContentLoaded", loadMapImage);
 
+// Toggle pins on/off with top button
 document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   const layer = document.getElementById("pin-layer");
   if (!layer) return;
   const isVisible = layer.style.display !== "none";
   layer.style.display = isVisible ? "none" : "block";
+});
+
+// Toggle layer visibility (pins, roads, rivers, etc.)
+document.querySelectorAll(".layer-toggle").forEach(checkbox => {
+  checkbox.addEventListener("change", () => {
+    const layerName = checkbox.dataset.layer;
+    const layer = document.getElementById(`${layerName}-layer`);
+    if (layer) {
+      layer.style.display = checkbox.checked ? "block" : "none";
+    }
+    if (layerName === "pins") {
+      renderMapPins();
+    }
+  });
 });
