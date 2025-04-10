@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
     }
+
     .section-block {
       max-width: 1178px;
       margin: 20px auto;
@@ -20,17 +21,20 @@
       border: 1px solid #c7b58d;
       border-radius: 6px;
     }
+
     h1 {
       font-family: 'UnifrakturCook', cursive;
       font-size: 3rem;
       color: #ffd700;
       text-align: center;
     }
+
     h2 {
       text-align: center;
       color: #e0c097;
       margin-bottom: 1rem;
     }
+
     #title-section {
       max-width: 1178px;
       margin: 20px auto;
@@ -40,11 +44,13 @@
       border-radius: 6px;
       text-align: center;
     }
+
     #title-section .subtitle {
       font-size: 1.3rem;
       color: #e0c097;
       margin-bottom: 0.5em;
     }
+
     button {
       background-color: #5c3e1a;
       color: #f4e3c1;
@@ -55,9 +61,11 @@
       font-family: Georgia, serif;
       margin: 5px;
     }
+
     button:hover {
       background-color: #8a5f2e;
     }
+
     #map-preview {
       display: block;
       max-width: 100%;
@@ -65,20 +73,24 @@
       margin: 20px auto;
       border: 1px solid #c7b58d;
     }
+
     .warning {
       text-align: center;
       font-size: 0.9rem;
       color: #dcb;
       margin-top: -10px;
     }
+
     input[type="file"] {
       display: block;
       margin: 10px auto;
     }
+
     .top-buttons {
       text-align: center;
       margin-bottom: 0.5em;
     }
+
     .divider {
       border: none;
       border-top: 1px solid #c7b58d;
@@ -102,12 +114,12 @@
       cursor: pointer;
     }
 
-    /* NEW – Fixed left panel */
-    #pin-control-panel {
+    /* ✅ Fixed and clean left control panel */
+    #layer-control-panel {
       position: fixed;
       top: 180px;
       left: 20px;
-      width: 200px;
+      width: 180px;
       padding: 12px;
       background-color: #3a2d1e;
       border: 1px solid #c7b58d;
@@ -115,12 +127,17 @@
       z-index: 1000;
     }
 
-    #pin-control-panel h3 {
+    #layer-control-panel h3 {
       text-align: center;
       margin-top: 0;
       margin-bottom: 10px;
       font-size: 1.1rem;
       color: #ffd700;
+    }
+
+    #layer-control-panel label {
+      display: block;
+      margin: 4px 0;
     }
   </style>
 </head>
@@ -136,19 +153,16 @@
       <div id="saveStatus" style="text-align: center; color: lightgreen; font-weight: bold; margin-top: 10px;"></div>
     </div>
     <hr class="divider">
-  </div>  
+  </div>
 
-  <!-- Left Sidebar for Layer Toggles -->
-<div id="layer-control-panel" style="min-width: 200px; padding: 10px; background-color: #3a2d1e; border: 1px solid #c7b58d; border-radius: 6px;">
-  <h3 style="text-align: center; margin-top: 0;">Map Layers</h3>
-  <div style="display: flex; flex-direction: column; gap: 6px;">
+  <!-- ✅ Sidebar toggle controls for layers -->
+  <div id="layer-control-panel">
+    <h3>Map Layers</h3>
     <label><input type="checkbox" class="layer-toggle" data-layer="pins" checked> Pins</label>
     <label><input type="checkbox" class="layer-toggle" data-layer="roads" checked> Roads</label>
     <label><input type="checkbox" class="layer-toggle" data-layer="rivers" checked> Rivers</label>
     <label><input type="checkbox" class="layer-toggle" data-layer="geography" checked> Geography</label>
   </div>
-</div>
-
 
   <div class="section-block">
     <h2>World Map (Upload or Replace)</h2>
