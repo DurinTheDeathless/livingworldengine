@@ -104,6 +104,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
+      z-index: 10;
     }
 
     .map-pin {
@@ -139,6 +140,24 @@
       display: block;
       margin: 4px 0;
     }
+
+    .map-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+#pins-layer     { z-index: 10; }
+#roads-layer    { z-index: 9; }
+#rivers-layer   { z-index: 8; }
+#borders-layer  { z-index: 7; }
+#factions-layer { z-index: 6; }
+#corruption-layer { z-index: 6; }
+#geography-layer { z-index: 3; }
+#elevation-layer { z-index: 2; }
+
+
   </style>
 </head>
 <body>
@@ -185,7 +204,14 @@
     <div class="map-container" style="position: relative; text-align: center;">
       <div id="map-viewport" style="position: relative; display: inline-block;">
         <img id="map-preview" src="" alt="Your World Map" />
-        <div id="pin-layer"></div>
+        <div id="geography-layer" class="map-layer"></div>
+        <div id="elevation-layer" class="map-layer"></div>
+        <div id="factions-layer" class="map-layer"></div>
+        <div id="corruption-layer" class="map-layer"></div>
+        <div id="borders-layer" class="map-layer"></div>
+        <div id="rivers-layer" class="map-layer"></div>
+        <div id="roads-layer" class="map-layer"></div>
+        <div id="pins-layer" class="map-layer"></div>
       </div>
     </div>
   </div>
