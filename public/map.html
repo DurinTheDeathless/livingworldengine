@@ -80,17 +80,18 @@
       margin-bottom: 0.5em;
     }
     .divider {
-      border: none;
-      border-top: 1px solid #c7b58d;
-      margin: 10px 0;
+  border: none;
+  border-top: 1px solid #c7b58d;
+  margin: 10px 0;
+}
 
-  #pin-layer {
+#pin-layer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* we’ll change this later for editing */
+  pointer-events: none; /* enable when editing pins */
 }
 
 .map-pin {
@@ -101,8 +102,6 @@
   cursor: pointer;
 }
 
-
-    }
   </style>
 </head>
 <body>
@@ -128,11 +127,38 @@
       ⚠️ Use PNG/JPG ≤ 3MB for best performance. <br>
       ⚠️ This function is only available for logged-in users. If used via local file, we are not responsible for any data loss.
     </div>
-    <div class="map-container" style="position: relative; text-align: center;">
-      <img id="map-preview" src="" alt="Your World Map" style="display: none; margin-top: 10px; max-width: 100%;" />
-      <div id="pin-layer" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;"></div>
+  
+    <div style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
+      
+      <!-- Left Sidebar for Layer Toggles -->
+      <div id="pin-control-panel" style="min-width: 200px; padding: 10px; background-color: #3a2d1e; border: 1px solid #c7b58d; border-radius: 6px;">
+        <h3 style="text-align: center; margin-top: 0;">Pin Layers</h3>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label><input type="checkbox" class="pin-toggle" data-type="City" checked> City</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Town" checked> Town</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Capital" checked> Capital</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Harbor" checked> Harbor</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Landmark" checked> Landmark</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Military" checked> Military</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Cave" checked> Cave</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Ruin" checked> Ruin</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Temple" checked> Temple</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Lair" checked> Lair</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Wonder" checked> Wonder</label>
+          <label><input type="checkbox" class="pin-toggle" data-type="Custom" checked> Custom</label>
+        </div>
+      </div>
+  
+      <!-- Map Container -->
+      <div class="map-container" style="position: relative; text-align: center;">
+        <div id="map-viewport" style="position: relative; display: inline-block;">
+          <img id="map-preview" src="" alt="Your World Map" />
+          <div id="pin-layer"></div>
+        </div>
+      </div>
     </div>
   </div>
+  
 
   <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>

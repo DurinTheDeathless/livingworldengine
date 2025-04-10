@@ -138,17 +138,85 @@ function renderMapPins() {
 
   pinLayer.innerHTML = ""; // clear old pins
 
-  currentWorld.mapPins.forEach((pin, index) => {
-    const el = document.createElement("div");
+  const enabledTypes = Array.from(document.querySelectorAll(".pin-toggle:checked")).map(cb => cb.dataset.type);
+
+  currentWorld.mapPins
+    .filter(pin => enabledTypes.includes(pin.type))
+    .forEach((pin, index) => {
+      const el = document.createElement("div");
     el.className = "map-pin";
     el.style.left = `${pin.x}%`;
     el.style.top = `${pin.y}%`;
     el.title = pin.name || `Pin ${index + 1}`;
-    el.innerHTML = "📍"; // You can later switch this to a proper symbol by type
+    el.innerHTML = getPinSymbol(pin.type);
 
     pinLayer.appendChild(el);
   });
 }
+
+let activePinType = null;
+
+function enablePinPlacement(type) {
+  activePinType = type;
+  document.body.style.cursor = "crosshair";
+}
+
+function disablePinPlacement() {
+  activePinType = null;
+  document.body.style.cursor = "default";
+}
+
+function getPinSymbol(type) {
+  const symbols = {
+    City: "🏙️",
+    Town: "🏘️",
+    Capital: "👑",
+    Harbor: "⚓",
+    Landmark: "📌",
+    Military: "🛡️",
+    Cave: "🕳️",
+    Ruin: "🏚️",
+    Temple: "⛩️",
+    Lair: "🐉",
+    Wonder: "🌟",
+    Custom: "❓"
+  };
+  return symbols[type] || "📍";
+}
+
+
+document.getElementById("map-preview")?.addEventListener("click", (e) => {
+  if (!activePinType || !currentWorld) return;
+
+  const preview = e.target;
+  const rect = preview.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+  const name = prompt(`Enter name for this ${activePinType}:`, "");
+  if (!name) return;
+
+  const newPin = {
+    name,
+    type: activePinType,
+    x,
+    y,
+    id: Date.now(),
+  };
+
+  currentWorld.mapPins.push(newPin);
+  markDirty();
+  renderMapPins();
+});
+
+document.querySelectorAll(".pin-toggle").forEach(label => {
+  label.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    const type = label.dataset.type;
+    enablePinPlacement(type);
+    alert(`Click the map to place a ${type} pin.`);
+  });
+});
 
 
 document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
