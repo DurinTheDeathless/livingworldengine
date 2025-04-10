@@ -2,117 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Living World Engine – World Map</title>
+  <title>World Map Editor</title>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #2b1f13;
-      color: #f4e3c1;
-      font-family: Georgia, serif;
       margin: 0;
-      padding: 0;
-    }
-    .section-block {
-      max-width: 1178px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #3a2d1e;
-      border: 1px solid #c7b58d;
-      border-radius: 6px;
-    }
-    h1 {
-      font-family: 'UnifrakturCook', cursive;
-      font-size: 3rem;
-      color: #ffd700;
-      text-align: center;
-    }
-    h2 {
-      text-align: center;
-      color: #e0c097;
-      margin-bottom: 1rem;
-    }
-    #title-section {
-      max-width: 1178px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #3a2d1e;
-      border: 1px solid #c7b58d;
-      border-radius: 6px;
-      text-align: center;
-    }
-    #title-section .subtitle {
-      font-size: 1.3rem;
-      color: #e0c097;
-      margin-bottom: 0.5em;
-    }
-    button {
-      background-color: #5c3e1a;
+      font-family: Georgia, serif;
+      background-color: #1f1a15;
       color: #f4e3c1;
-      border: 1px solid #7a5c3e;
-      padding: 8px 14px;
+    }
+
+    #toolbar {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .tool-btn {
+      padding: 8px 12px;
+      background-color: #4b3621;
+      color: white;
+      border: 1px solid #a98d64;
       border-radius: 4px;
       cursor: pointer;
-      font-family: Georgia, serif;
-      margin: 5px;
+      font-size: 14px;
     }
-    button:hover {
-      background-color: #8a5f2e;
+
+    .tool-btn.active {
+      background-color: #7a5c3e;
     }
+
     #map-preview {
       display: block;
-      max-width: 100%;
+      width: 100%;
       height: auto;
-      margin: 20px auto;
-      border: 1px solid #c7b58d;
+      max-height: 100vh;
+      object-fit: contain;
+      background-color: #111;
     }
-    .warning {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #dcb;
-      margin-top: -10px;
+
+    #pinModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #2b1f13;
+      border: 2px solid #c7b58d;
+      padding: 20px;
+      z-index: 99;
+      display: none;
+      border-radius: 6px;
+      width: 300px;
     }
-    input[type="file"] {
+
+    #pinModal label {
       display: block;
-      margin: 10px auto;
+      margin: 10px 0 5px;
     }
-    .top-buttons {
-      text-align: center;
-      margin-bottom: 0.5em;
+
+    #pinModal input,
+    #pinModal select,
+    #pinModal textarea {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #a98d64;
+      background-color: #1f1a15;
+      color: white;
+      border-radius: 4px;
     }
-    .divider {
-      border: none;
-      border-top: 1px solid #c7b58d;
-      margin: 10px 0;
+
+    #pinModal button {
+      margin-top: 15px;
+      padding: 8px;
+      width: 100%;
+      background-color: #5c3e1a;
+      border: 1px solid #a98d64;
+      color: white;
+      cursor: pointer;
+    }
+
+    #pinModal button:hover {
+      background-color: #8a5f2e;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="section-block" id="title-section">
-    <h1>Living World Engine</h1>
-    <h2 class="subtitle">Where realms breathe and stories live</h2>
-    <div class="top-buttons">
-      <button id="saveDriveBtn">Save to Drive</button>
-      <button id="saveFileBtn">Save to File</button>
-      <div id="saveStatus" style="text-align: center; color: lightgreen; font-weight: bold; margin-top: 10px;"></div>
-    </div>
-    <hr class="divider">
-  </div>  
+  <div id="toolbar">
+    <button class="tool-btn" data-layer="pin">📌 Pin Layer</button>
+    <button class="tool-btn" data-layer="road">🛣 Road Layer</button>
+    <button class="tool-btn" data-layer="river">🌊 River Layer</button>
+    <button class="tool-btn" data-layer="geo">🟩 Geography Layer</button>
+    <button class="tool-btn" id="addPinBtn">➕ Add Pin</button>
+    <button class="tool-btn" id="saveDriveBtn">💾 Save to Drive</button>
+    <button class="tool-btn" id="saveFileBtn">💾 Save to File</button>
+  </div>
 
-  <div class="section-block">
-    <h2>World Map (Upload or Replace)</h2>
-    <input type="file" accept="image/*" id="uploadMapBtn" />
-    <div class="warning" style="color: orange; font-size: 0.95em; margin-top: 10px;">
-      ⚠️ Map images are saved as separate files (not embedded).<br>
-      ⚠️ Replacing a map will delete existing regions/pins (but not countries or towns).<br>
-      ⚠️ Use PNG/JPG ≤ 3MB for best performance. <br>
-      ⚠️ This function is only available for logged-in users. If used via local file, we are not responsible for any data loss.
-    </div>
-    <img id="map-preview" src="" alt="Your World Map" style="display: none; margin-top: 10px;" />
+  <img id="map-preview" alt="Map Preview" />
+
+  <!-- Modal for adding pin -->
+  <div id="pinModal">
+    <h3>Add Pin</h3>
+    <label for="pinType">Type</label>
+    <select id="pinType">
+      <option value="capital">Capital</option>
+      <option value="city">City</option>
+      <option value="town">Town</option>
+      <option value="harbor">Harbor</option>
+      <option value="landmark">Landmark</option>
+      <option value="military">Military</option>
+      <option value="cave">Cave</option>
+      <option value="ruin">Ruin</option>
+      <option value="temple">Temple</option>
+      <option value="lair">Monster Lair</option>
+      <option value="wonder">World Wonder</option>
+      <option value="custom">Custom</option>
+    </select>
+
+    <label for="pinName">Name</label>
+    <input type="text" id="pinName" placeholder="Stonehearth" />
+
+    <label for="pinNote">Note (optional)</label>
+    <textarea id="pinNote" rows="3" placeholder="Old dwarven capital..."></textarea>
+
+    <button id="confirmAddPin">Add Pin</button>
   </div>
 
   <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>
-
 </body>
 </html>
