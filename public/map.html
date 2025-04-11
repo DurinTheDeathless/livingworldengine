@@ -115,12 +115,11 @@
       cursor: pointer;
     }
 
-    /* ✅ Fixed and clean left control panel */
     #layer-control-panel {
       position: fixed;
       top: 180px;
       left: 20px;
-      width: 180px;
+      width: 200px;
       padding: 12px;
       background-color: #3a2d1e;
       border: 1px solid #c7b58d;
@@ -136,28 +135,53 @@
       color: #ffd700;
     }
 
-    #layer-control-panel label {
-      display: block;
-      margin: 4px 0;
+    .layer-toggle-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    .layer-toggle-group label {
+      margin-bottom: 4px;
+    }
+
+    .layer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-left: 20px;
+    }
+
+    .layer-controls button {
+      padding: 2px 6px;
+      font-size: 0.9rem;
+      margin: 0;
+      border: none;
+      background: none;
+      color: #ffd700;
+      cursor: pointer;
+    }
+
+    .layer-controls button:hover {
+      color: #fff;
     }
 
     .map-layer {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 5;
-}
-#pins-layer     { z-index: 10; }
-#roads-layer    { z-index: 9; }
-#rivers-layer   { z-index: 8; }
-#borders-layer  { z-index: 7; }
-#factions-layer { z-index: 6; }
-#corruption-layer { z-index: 6; }
-#geography-layer { z-index: 3; }
-#elevation-layer { z-index: 2; }
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
 
-
+    #pins-layer       { z-index: 10; }
+    #roads-layer      { z-index: 9; }
+    #rivers-layer     { z-index: 8; }
+    #borders-layer    { z-index: 7; }
+    #factions-layer   { z-index: 6; }
+    #corruption-layer { z-index: 6; }
+    #geography-layer  { z-index: 3; }
+    #elevation-layer  { z-index: 2; }
   </style>
 </head>
 <body>
@@ -174,22 +198,85 @@
     <hr class="divider">
   </div>
 
-  <!-- Fixed Sidebar for Layer Toggles -->
-<div id="layer-control-panel" style="position: fixed; top: 180px; left: 20px; width: 200px; padding: 10px; background-color: #3a2d1e; border: 1px solid #c7b58d; border-radius: 6px; z-index: 1000;">
-  <h3 style="text-align: center; margin-top: 0;">Map Layers</h3>
-  <div style="display: flex; flex-direction: column; gap: 6px;">
-    <label><input type="checkbox" class="layer-toggle" data-layer="pins" checked> Pins</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="roads" checked> Roads</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="rivers" checked> Rivers</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="geography" checked> Geography</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="mountains" checked> Mountains</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="borders" checked> Borders</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="elevation" checked> Elevation</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="corruption" checked> Corruption</label>
-    <label><input type="checkbox" class="layer-toggle" data-layer="factions" checked> Factions</label>
+  <!-- ✅ Left Control Panel with Icons -->
+  <div id="layer-control-panel">
+    <h3>Map Layers</h3>
+    <div>
+      <!-- Repeatable block -->
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="pins" checked> Pins</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="pins">✏️</button>
+          <button data-action="add" data-layer="pins">➕</button>
+          <button data-action="remove" data-layer="pins">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="roads" checked> Roads</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="roads">✏️</button>
+          <button data-action="add" data-layer="roads">➕</button>
+          <button data-action="remove" data-layer="roads">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="rivers" checked> Rivers</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="rivers">✏️</button>
+          <button data-action="add" data-layer="rivers">➕</button>
+          <button data-action="remove" data-layer="rivers">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="geography" checked> Geography</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="geography">✏️</button>
+          <button data-action="add" data-layer="geography">➕</button>
+          <button data-action="remove" data-layer="geography">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="mountains" checked> Mountains</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="mountains">✏️</button>
+          <button data-action="add" data-layer="mountains">➕</button>
+          <button data-action="remove" data-layer="mountains">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="borders" checked> Borders</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="borders">✏️</button>
+          <button data-action="add" data-layer="borders">➕</button>
+          <button data-action="remove" data-layer="borders">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="elevation" checked> Elevation</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="elevation">✏️</button>
+          <button data-action="add" data-layer="elevation">➕</button>
+          <button data-action="remove" data-layer="elevation">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="corruption" checked> Corruption</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="corruption">✏️</button>
+          <button data-action="add" data-layer="corruption">➕</button>
+          <button data-action="remove" data-layer="corruption">🗑️</button>
+        </div>
+      </div>
+      <div class="layer-toggle-group">
+        <label><input type="checkbox" class="layer-toggle" data-layer="factions" checked> Factions</label>
+        <div class="layer-controls">
+          <button data-action="edit" data-layer="factions">✏️</button>
+          <button data-action="add" data-layer="factions">➕</button>
+          <button data-action="remove" data-layer="factions">🗑️</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
 
   <div class="section-block">
     <h2>World Map (Upload or Replace)</h2>
@@ -218,6 +305,5 @@
 
   <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>
-
 </body>
 </html>
