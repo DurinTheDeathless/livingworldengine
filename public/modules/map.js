@@ -17,7 +17,6 @@ try {
   console.warn("Could not load world from sessionStorage", e);
 }
 
-// 📍 Load existing map preview from saved mapMeta
 async function loadMapImage() {
   const preview = document.getElementById("map-preview");
   preview.style.display = "none";
@@ -224,7 +223,7 @@ document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   layer.style.display = isVisible ? "none" : "block";
 });
 
-// Toggle layer visibility (pins, roads, rivers, etc.)
+// Toggle any layer visibility
 document.querySelectorAll(".layer-toggle").forEach(checkbox => {
   checkbox.addEventListener("change", () => {
     const layerName = checkbox.dataset.layer;
@@ -232,9 +231,15 @@ document.querySelectorAll(".layer-toggle").forEach(checkbox => {
     if (layer) {
       layer.style.display = checkbox.checked ? "block" : "none";
     }
-    if (layerName === "pins") {
-      renderMapPins();
-    }
+    if (layerName === "pins") renderMapPins();
+    if (layerName === "roads") renderRoadsLayer();
+    if (layerName === "rivers") renderRiversLayer();
+    if (layerName === "borders") renderBordersLayer();
+    if (layerName === "mountains") renderMountainsLayer();
+    if (layerName === "geography") renderGeographyLayer();
+    if (layerName === "elevation") renderElevationLayer();
+    if (layerName === "corruption") renderCorruptionLayer();
+    if (layerName === "factions") renderFactionsLayer();
   });
 });
 
@@ -242,40 +247,40 @@ document.querySelectorAll(".layer-toggle").forEach(checkbox => {
 function renderRoadsLayer() {
   const layer = document.getElementById("roads-layer");
   if (!layer || !Array.isArray(currentWorld?.mapRoads)) return;
-  layer.innerHTML = ""; // Will draw paths later
+  layer.innerHTML = "";
 }
 function renderRiversLayer() {
   const layer = document.getElementById("rivers-layer");
   if (!layer || !Array.isArray(currentWorld?.mapRivers)) return;
-  layer.innerHTML = ""; // Will draw freeform lines
+  layer.innerHTML = "";
 }
 function renderBordersLayer() {
   const layer = document.getElementById("borders-layer");
   if (!layer || !Array.isArray(currentWorld?.mapBorders)) return;
-  layer.innerHTML = ""; // Will fill border polygons
+  layer.innerHTML = "";
 }
 function renderMountainsLayer() {
   const layer = document.getElementById("mountains-layer");
   if (!layer || !Array.isArray(currentWorld?.mapMountains)) return;
-  layer.innerHTML = ""; // Will show mountain icons or ridgelines
+  layer.innerHTML = "";
 }
 function renderGeographyLayer() {
   const layer = document.getElementById("geography-layer");
   if (!layer || !Array.isArray(currentWorld?.mapGeography)) return;
-  layer.innerHTML = ""; // Will fill biome regions
+  layer.innerHTML = "";
 }
 function renderElevationLayer() {
   const layer = document.getElementById("elevation-layer");
   if (!layer || !Array.isArray(currentWorld?.mapElevation)) return;
-  layer.innerHTML = ""; // Will draw contour/gradient later
+  layer.innerHTML = "";
 }
 function renderCorruptionLayer() {
   const layer = document.getElementById("corruption-layer");
   if (!layer || !Array.isArray(currentWorld?.mapCorruption)) return;
-  layer.innerHTML = ""; // Will overlay dark fog or symbols
+  layer.innerHTML = "";
 }
 function renderFactionsLayer() {
   const layer = document.getElementById("factions-layer");
   if (!layer || !Array.isArray(currentWorld?.mapFactions)) return;
-  layer.innerHTML = ""; // Will draw banners or colored zones
+  layer.innerHTML = "";
 }
