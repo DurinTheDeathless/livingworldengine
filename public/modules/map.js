@@ -5,6 +5,10 @@ let currentFileName = null;
 let mapBlob = null;
 let mapDriveId = null;
 let currentZoom = 1;
+let panX = 0;
+let panY = 0;
+let isDragging = false;
+let dragStart = { x: 0, y: 0 };
 
 try {
   const stored = sessionStorage.getItem("currentWorld");
@@ -213,7 +217,53 @@ document.querySelectorAll(".layer-toggle").forEach(label => {
 
 document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
-window.addEventListener("DOMContentLoaded", loadMapImage);
+window.addEventListener("DOMContentLoaded", () => {
+  loadMapImage();
+
+  document.getElementById("zoomInBtn")?.addEventListener("click", () => {
+    currentZoom = Math.min(8, currentZoom + 0.25);
+    applyZoomPan();
+  });
+
+  document.getElementById("zoomOutBtn")?.addEventListener("click", () => {
+    currentZoom = Math.max(1, currentZoom - 0.25);
+    applyZoomPan();
+  });
+
+  document.getElementById("zoomResetBtn")?.addEventListener("click", () => {
+    currentZoom = 1;
+    panX = 0;
+    panY = 0;
+    applyZoomPan();
+  });
+
+  const zoomWrapper = document.getElementById("zoom-wrapper");
+
+  zoomWrapper.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    dragStart.x = e.clientX - panX;
+    dragStart.y = e.clientY - panY;
+    zoomWrapper.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mouseup", () => {
+    isDragging = false;
+    zoomWrapper.style.cursor = "grab";
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    panX = e.clientX - dragStart.x;
+    panY = e.clientY - dragStart.y;
+    applyZoomPan();
+  });
+});
+
+function applyZoomPan() {
+  const map = document.getElementById("map-viewport");
+  map.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
+  map.style.transformOrigin = "top left";
+}
 
 document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   const layer = document.getElementById("pins-layer");
@@ -281,22 +331,3 @@ function renderFactionsLayer() {
   if (!layer || !Array.isArray(currentWorld?.mapFactions)) return;
   layer.innerHTML = "";
 }
-
-// 📦 Zoom functions (min 1x, max 5x)
-function updateZoom(scale) {
-  const map = document.getElementById("map-viewport");
-  if (!map) return;
-  currentZoom = Math.max(1, Math.min(scale, 5));
-  map.style.transform = `scale(${currentZoom})`;
-  map.style.transformOrigin = "top center";
-}
-
-document.getElementById("zoomInBtn")?.addEventListener("click", () => {
-  updateZoom(currentZoom + 0.2);
-});
-document.getElementById("zoomOutBtn")?.addEventListener("click", () => {
-  updateZoom(currentZoom - 0.2);
-});
-document.getElementById("zoomResetBtn")?.addEventListener("click", () => {
-  updateZoom(1);
-});

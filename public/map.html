@@ -292,18 +292,34 @@
       ⚠️ This function is only available for logged-in users. If used via local file, we are not responsible for any data loss.
     </div>
 
-    <div class="map-container" style="position: relative; text-align: center;">
+    <div class="map-container" style="position: relative; text-align: center; overflow: hidden;">
       <div style="position: relative;">
-        <!-- Zoom Buttons -->
         <div id="zoom-controls" style="position: absolute; top: 10px; right: 10px; z-index: 999;">
           <button id="zoomInBtn">➕</button>
           <button id="zoomOutBtn">➖</button>
           <button id="zoomResetBtn">🔄</button>
         </div>
-    
-        <!-- Zoom Wrapper -->
-        <div id="zoom-wrapper" style="transform: scale(1); transform-origin: top left;">
-          <div id="map-viewport" style="position: relative; display: inline-block;">
+
+        <div
+          id="zoom-wrapper"
+          style="
+            width: 100%;
+            height: 800px;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+          "
+        >
+          <div
+            id="map-viewport"
+            style="
+              position: absolute;
+              left: 0;
+              top: 0;
+              transform-origin: top left;
+              transform: scale(1);
+            "
+          >
             <img id="map-preview" src="" alt="Your World Map" />
             <div id="geography-layer" class="map-layer"></div>
             <div id="elevation-layer" class="map-layer"></div>
@@ -317,7 +333,8 @@
         </div>
       </div>
     </div>
-    
+  </div>
+
 
   <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>
