@@ -1,3 +1,4 @@
+
 console.log("✅ map.js loaded");
 
 let currentWorld = null;
@@ -9,6 +10,9 @@ let panX = 0;
 let panY = 0;
 let isDragging = false;
 let dragStart = { x: 0, y: 0 };
+
+let pinInteractionMode = null; // 'add', 'edit', 'remove'
+let temporaryPinEl = null;
 
 try {
   const stored = sessionStorage.getItem("currentWorld");
@@ -139,24 +143,14 @@ function renderMapPins() {
   currentWorld.mapPins.forEach((pin, index) => {
     const el = document.createElement("div");
     el.className = "map-pin";
+    el.dataset.id = pin.id;
     el.style.left = `${pin.x}%`;
     el.style.top = `${pin.y}%`;
     el.title = pin.name || `Pin ${index + 1}`;
     el.innerHTML = getPinSymbol(pin.type);
+    el.addEventListener("click", (e) => handlePinClick(e, pin));
     pinLayer.appendChild(el);
   });
-}
-
-let activePinType = null;
-
-function enablePinPlacement(type) {
-  activePinType = type;
-  document.body.style.cursor = "crosshair";
-}
-
-function disablePinPlacement() {
-  activePinType = null;
-  document.body.style.cursor = "default";
 }
 
 function getPinSymbol(type) {
@@ -177,46 +171,29 @@ function getPinSymbol(type) {
   return symbols[type] || "📍";
 }
 
-document.getElementById("map-preview")?.addEventListener("click", (e) => {
-  if (!activePinType || !currentWorld) return;
-
-  const preview = e.target;
-  const rect = preview.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width) * 100;
-  const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-  const name = prompt(`Enter name for this ${activePinType}:`, "");
-  if (!name) return;
-
-  const newPin = {
-    name,
-    type: activePinType,
-    x,
-    y,
-    id: Date.now(),
-  };
-
-  currentWorld.mapPins.push(newPin);
-  markDirty();
-  renderMapPins();
-});
-
-document.querySelectorAll(".layer-toggle").forEach(label => {
-  label.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-    const layer = label.dataset.layer;
-    if (layer === "pins") {
-      const type = prompt("Enter pin type (e.g., City, Cave, etc.):", "City");
-      if (type) {
-        enablePinPlacement(type);
-        alert(`Click the map to place a "${type}" pin.`);
-      }
+function handlePinClick(e, pin) {
+  if (pinInteractionMode === "remove") {
+    if (confirm(`Are you sure you want to delete pin "${pin.name}"?`)) {
+      currentWorld.mapPins = currentWorld.mapPins.filter(p => p.id !== pin.id);
+      markDirty();
+      renderMapPins();
     }
-  });
-});
+  } else {
+    showPinPopup(pin, pinInteractionMode === "edit");
+  }
+}
 
-document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveToDrive);
-document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
+function showPinPopup(pin, editable) {
+  alert(`${editable ? "Edit" : "View"}: ${pin.name}
+Type: ${pin.type}`);
+}
+
+function applyZoomPan() {
+  const map = document.getElementById("map-viewport");
+  map.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
+  map.style.transformOrigin = "center center";
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   loadMapImage();
 
@@ -257,13 +234,46 @@ window.addEventListener("DOMContentLoaded", () => {
     panY = e.clientY - dragStart.y;
     applyZoomPan();
   });
-});
 
-function applyZoomPan() {
-  const map = document.getElementById("map-viewport");
-  map.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
-  map.style.transformOrigin = "top left";
-}
+  // Add event listeners for pin tool actions
+  document.querySelectorAll(".layer-controls button").forEach(button => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.action;
+      const layer = button.dataset.layer;
+      if (layer === "pins") {
+        pinInteractionMode = action;
+        if (action === "add") {
+          alert("Click the map to place a pin.");
+        }
+      }
+    });
+  });
+
+  document.getElementById("map-preview")?.addEventListener("click", (e) => {
+    if (pinInteractionMode !== "add" || !currentWorld) return;
+
+    const rect = e.target.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const name = prompt("Enter pin name:");
+    if (!name) return;
+    const type = prompt("Enter pin type (City, Town, Capital, etc):", "City");
+    if (!type) return;
+
+    const newPin = {
+      name,
+      type,
+      x,
+      y,
+      id: Date.now()
+    };
+    currentWorld.mapPins.push(newPin);
+    markDirty();
+    renderMapPins();
+    pinInteractionMode = null;
+  });
+});
 
 document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   const layer = document.getElementById("pins-layer");
