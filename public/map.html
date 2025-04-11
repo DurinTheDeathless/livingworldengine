@@ -293,19 +293,31 @@
     </div>
 
     <div class="map-container" style="position: relative; text-align: center;">
-      <div id="map-viewport" style="position: relative; display: inline-block;">
-        <img id="map-preview" src="" alt="Your World Map" />
-        <div id="geography-layer" class="map-layer"></div>
-        <div id="elevation-layer" class="map-layer"></div>
-        <div id="factions-layer" class="map-layer"></div>
-        <div id="corruption-layer" class="map-layer"></div>
-        <div id="borders-layer" class="map-layer"></div>
-        <div id="rivers-layer" class="map-layer"></div>
-        <div id="roads-layer" class="map-layer"></div>
-        <div id="pins-layer" class="map-layer"></div>
+      <div style="position: relative;">
+        <!-- Zoom Buttons -->
+        <div id="zoom-controls" style="position: absolute; top: 10px; right: 10px; z-index: 999;">
+          <button id="zoomInBtn">➕</button>
+          <button id="zoomOutBtn">➖</button>
+          <button id="zoomResetBtn">🔄</button>
+        </div>
+    
+        <!-- Zoom Wrapper -->
+        <div id="zoom-wrapper" style="transform: scale(1); transform-origin: top left;">
+          <div id="map-viewport" style="position: relative; display: inline-block;">
+            <img id="map-preview" src="" alt="Your World Map" />
+            <div id="geography-layer" class="map-layer"></div>
+            <div id="elevation-layer" class="map-layer"></div>
+            <div id="factions-layer" class="map-layer"></div>
+            <div id="corruption-layer" class="map-layer"></div>
+            <div id="borders-layer" class="map-layer"></div>
+            <div id="rivers-layer" class="map-layer"></div>
+            <div id="roads-layer" class="map-layer"></div>
+            <div id="pins-layer" class="map-layer"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+    
 
   <script src="/modules/common.js"></script>
   <script src="/modules/map.js"></script>

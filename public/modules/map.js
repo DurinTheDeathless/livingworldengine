@@ -4,6 +4,7 @@ let currentWorld = null;
 let currentFileName = null;
 let mapBlob = null;
 let mapDriveId = null;
+let currentZoom = 1;
 
 try {
   const stored = sessionStorage.getItem("currentWorld");
@@ -196,7 +197,6 @@ document.getElementById("map-preview")?.addEventListener("click", (e) => {
   renderMapPins();
 });
 
-// Right-click to place pin
 document.querySelectorAll(".layer-toggle").forEach(label => {
   label.addEventListener("contextmenu", (e) => {
     e.preventDefault();
@@ -215,7 +215,6 @@ document.getElementById("saveDriveBtn")?.addEventListener("click", triggerSaveTo
 document.getElementById("saveFileBtn")?.addEventListener("click", saveToFile);
 window.addEventListener("DOMContentLoaded", loadMapImage);
 
-// Toggle pins on/off with top button
 document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   const layer = document.getElementById("pins-layer");
   if (!layer) return;
@@ -223,7 +222,6 @@ document.getElementById("togglePinsBtn")?.addEventListener("click", () => {
   layer.style.display = isVisible ? "none" : "block";
 });
 
-// Toggle any layer visibility
 document.querySelectorAll(".layer-toggle").forEach(checkbox => {
   checkbox.addEventListener("change", () => {
     const layerName = checkbox.dataset.layer;
@@ -243,7 +241,6 @@ document.querySelectorAll(".layer-toggle").forEach(checkbox => {
   });
 });
 
-// 🧱 Placeholder Render Functions for Future Layers
 function renderRoadsLayer() {
   const layer = document.getElementById("roads-layer");
   if (!layer || !Array.isArray(currentWorld?.mapRoads)) return;
@@ -284,3 +281,22 @@ function renderFactionsLayer() {
   if (!layer || !Array.isArray(currentWorld?.mapFactions)) return;
   layer.innerHTML = "";
 }
+
+// 📦 Zoom functions (min 1x, max 5x)
+function updateZoom(scale) {
+  const map = document.getElementById("map-viewport");
+  if (!map) return;
+  currentZoom = Math.max(1, Math.min(scale, 5));
+  map.style.transform = `scale(${currentZoom})`;
+  map.style.transformOrigin = "top center";
+}
+
+document.getElementById("zoomInBtn")?.addEventListener("click", () => {
+  updateZoom(currentZoom + 0.2);
+});
+document.getElementById("zoomOutBtn")?.addEventListener("click", () => {
+  updateZoom(currentZoom - 0.2);
+});
+document.getElementById("zoomResetBtn")?.addEventListener("click", () => {
+  updateZoom(1);
+});
