@@ -347,52 +347,6 @@
            <div id="pins-layer" class="map-layer"></div>
         </div>
 
-  <div id="drag-pin-preview" class="map-pin" style="display: none; pointer-events: none;"></div>
-
-  <!-- Floating Pin UI Window -->
-<div id="pin-popup" style="
-  display: none;
-  position: absolute;
-  background-color: #3a2d1e;
-  color: #f4e3c1;
-  border: 1px solid #c7b58d;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 1001;
-  width: 220px;
-  font-family: Georgia, serif;
-">
-  <div style="text-align: right;">
-    <button id="closePinPopupBtn" style="background: none; border: none; color: #f4e3c1; font-size: 1.1rem; cursor: pointer;">✖</button>
-  </div>
-  <label>Name:<br><input type="text" id="pinNameInput" style="width: 100%; margin-bottom: 6px;"></label><br>
-  <label>Type:<br>
-    <select id="pinTypeSelect" style="width: 100%; margin-bottom: 6px;">
-      <option>City</option>
-      <option>Town</option>
-      <option>Capital</option>
-      <option>Harbor</option>
-      <option>Landmark</option>
-      <option>Military</option>
-      <option>Cave</option>
-      <option>Ruin</option>
-      <option>Temple</option>
-      <option>Lair</option>
-      <option>Wonder</option>
-      <option>Custom</option>
-    </select>
-  </label><br>
-  <label>ID:<br><input type="text" id="pinIdDisplay" readonly style="width: 100%; background-color: #2b1f13; border: none;"></label><br><br>
-  <button id="confirmAddPinBtn" style="width: 100%;">Confirm</button>
-</div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <strong id="popup-title">Pin Info</strong>
-            <button id="close-popup" style="background: none; border: none; color: #ffd700; cursor: pointer;">❌</button>
-            </div>
-            <div id="popup-content" style="margin-top: 10px;"></div>
-          </div>
-
         </div> <!-- 👈 This closes #zoom-wrapper -->
       </div>
     </div>

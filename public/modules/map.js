@@ -317,25 +317,37 @@ window.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
       const action = button.dataset.action;
       const layer = button.dataset.layer;
-
+  
       if (layer === "pins") {
-        // Reset button styles
+        const isSameMode = pinInteractionMode === action;
+  
+        // Reset everything if toggling off
+        if (isSameMode) {
+          pinInteractionMode = null;
+          button.style.backgroundColor = "";
+          if (tempPin) {
+            tempPin.remove();
+            tempPin = null;
+          }
+          return;
+        }
+  
+        // Clear other highlights
         document.querySelectorAll(".layer-controls button").forEach(btn => {
           btn.style.backgroundColor = "";
         });
-        button.style.backgroundColor = "#8a5f2e"; // Highlight selected
+  
+        // Activate selected mode
         pinInteractionMode = action;
-
-        // Clear temp pin when leaving 'add' mode
+        button.style.backgroundColor = "#8a5f2e";
+  
         if (action !== "add" && tempPin) {
           tempPin.remove();
           tempPin = null;
         }
       }
-
-      // TODO: Future tool types (e.g. roads, borders) can go here
     });
-  });
+  });  
 });
 
   
@@ -366,9 +378,11 @@ if (mapPreview && pinsLayer) {
   });
 
   // 📌 Add pin and open a map UI pop-up at click location
-  mapPreview.addEventListener("click", () => {
+  mapPreview.addEventListener("click", (e) => {
     if (pinInteractionMode !== "add" || !tempPinCoords || !currentWorld) return;
-
+      // Prevent creating a new pin if clicking inside a popup
+      if (e.target.closest(".pin-popup")) return;
+      
     const id = `pin-${Date.now()}`;
 
     const popup = document.createElement("div");
@@ -384,6 +398,9 @@ if (mapPreview && pinsLayer) {
     popup.style.color = "#f4e3c1";
     popup.style.borderRadius = "6px";
     popup.style.zIndex = "999";
+    popup.style.transform += ` scale(${1 / currentZoom})`;
+    popup.style.transformOrigin = "top left";
+
 
     popup.innerHTML = `
       <label style="display:block;margin-bottom:4px;">
