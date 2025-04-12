@@ -195,7 +195,8 @@
       padding: 8px;
       position: absolute;
       z-index: 1000;
-      transform: translate(-50%, -100%);
+      pointer-events: auto;
+      transform-origin: top left;
     }
 
 
@@ -345,7 +346,11 @@
            <div id="rivers-layer" class="map-layer"></div>
            <div id="roads-layer" class="map-layer"></div>
            <div id="pins-layer" class="map-layer"></div>
-        </div>
+        </div> <!-- 👈 This closes #map-viewport -->
+
+        <!-- Floating popups for map interaction -->
+        <div id="map-popups" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; pointer-events: none;"></div>
+
 
         </div> <!-- 👈 This closes #zoom-wrapper -->
       </div>

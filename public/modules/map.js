@@ -267,6 +267,12 @@ function applyZoomPan() {
   if (!map) return;
   map.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
   map.style.transformOrigin = "center center";
+  // Rescale any open popups
+document.querySelectorAll(".pin-popup").forEach(popup => {
+  popup.style.transform = `translate(-50%, -100%) scale(${1 / currentZoom})`;
+  popup.style.transformOrigin = "top left";
+});
+
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -389,8 +395,8 @@ if (mapPreview && pinsLayer) {
     popup.className = "pin-popup";
     popup.dataset.id = id;
     popup.style.position = "absolute";
-    popup.style.left = `${tempPinCoords.x}%`;
-    popup.style.top = `${tempPinCoords.y}%`;
+    popup.style.left = `calc(${tempPinCoords.x}% + ${panX}px)`;
+    popup.style.top = `calc(${tempPinCoords.y}% + ${panY}px)`;
     popup.style.transform = "translate(-50%, -100%)";
     popup.style.background = "#3a2d1e";
     popup.style.border = "1px solid #ffd700";
@@ -398,7 +404,9 @@ if (mapPreview && pinsLayer) {
     popup.style.color = "#f4e3c1";
     popup.style.borderRadius = "6px";
     popup.style.zIndex = "999";
-    popup.style.transform += ` scale(${1 / currentZoom})`;
+    popup.style.pointerEvents = "auto";
+    popup.dataset.zoomScale = currentZoom; // store zoom level to update later
+    popup.style.transform = `translate(-50%, -100%) scale(${1 / currentZoom})`;
     popup.style.transformOrigin = "top left";
 
 
