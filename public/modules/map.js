@@ -354,6 +354,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   });  
+
+  	// 🧩 Fallback render on page load (if map loaded locally, not Drive)
+    if (currentWorld?.mapPins?.length > 0) {
+      renderMapPins();
+    }
 });
 
   
@@ -386,17 +391,37 @@ if (mapPreview && pinsLayer) {
   // 📌 Add pin and open a map UI pop-up at click location
   mapPreview.addEventListener("click", (e) => {
     if (pinInteractionMode !== "add" || !tempPinCoords || !currentWorld) return;
-      // Prevent creating a new pin if clicking inside a popup
-      if (e.target.closest(".pin-popup")) return;
-      
+    if (e.target.closest(".pin-popup")) return;
+  
+    // ❌ Exit Add Mode immediately to prevent multiple popups
+    pinInteractionMode = null;
+    if (tempPin) {
+      tempPin.remove();
+      tempPin = null;
+    }
+    // 🔄 Remove highlight from the Add button
+    document.querySelectorAll(".layer-controls button").forEach(btn => {
+      if (btn.dataset.layer === "pins" && btn.dataset.action === "add") {
+        btn.style.backgroundColor = "";
+      }
+    });
+  
     const id = `pin-${Date.now()}`;
-
+  
     const popup = document.createElement("div");
     popup.className = "pin-popup";
     popup.dataset.id = id;
     popup.style.position = "absolute";
-    popup.style.left = `calc(${tempPinCoords.x}% + ${panX}px)`;
-    popup.style.top = `calc(${tempPinCoords.y}% + ${panY}px)`;
+    
+    const viewport = document.getElementById("map-viewport");
+    const vpRect = viewport.getBoundingClientRect();
+
+    const popupLeft = (e.clientX - vpRect.left);
+    const popupTop = (e.clientY - vpRect.top);
+
+    popup.style.left = `${popupLeft}px`;
+    popup.style.top = `${popupTop}px`;
+
     popup.style.transform = "translate(-50%, -100%)";
     popup.style.background = "#3a2d1e";
     popup.style.border = "1px solid #ffd700";
