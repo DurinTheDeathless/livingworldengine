@@ -416,8 +416,9 @@ if (mapPreview && pinsLayer) {
     const viewport = document.getElementById("map-viewport");
     const vpRect = viewport.getBoundingClientRect();
 
-    const popupLeft = (e.clientX - vpRect.left);
-    const popupTop = (e.clientY - vpRect.top);
+    // Correct for zoom and pan
+    const popupLeft = (e.clientX - vpRect.left - panX) / currentZoom;
+    const popupTop = (e.clientY - vpRect.top - panY) / currentZoom;
 
     popup.style.left = `${popupLeft}px`;
     popup.style.top = `${popupTop}px`;
